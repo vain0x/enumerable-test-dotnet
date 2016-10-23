@@ -22,6 +22,6 @@ module Program =
       if isAllPassed
         then 0
         else -1
-    let printer = TestPrinter(Console.Out)
+    let printer = TestPrinter(Console.Out, Console.BufferWidth - 1)
     printer.PrintAsync(result) |> Async.RunSynchronously
     exitCode

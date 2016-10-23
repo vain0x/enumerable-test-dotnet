@@ -8,8 +8,17 @@ open EnumerableTest.Runner
 type StructuralTextWriter(writer: TextWriter) =
   let indent = ref 0
 
+  let indentLength () =
+    !indent * 2
+
   let createIndent () =
-    String.replicate (!indent * 2) " "
+    String.replicate (indentLength ()) " "
+
+  member this.Indent =
+    indent
+
+  member this.IndentLength =
+    indentLength ()
 
   member this.AddIndent() =
     indent |> incr

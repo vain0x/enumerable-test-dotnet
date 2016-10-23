@@ -5,8 +5,11 @@ open System.IO
 open EnumerableTest
 open EnumerableTest.Runner
 
-type TestPrinter(writer: TextWriter) =
+type TestPrinter(writer: TextWriter, width: int) =
   let printer = StructuralTextWriter(writer)
+
+  let printSepartorAsync () =
+    printer.WriteLineAsync(String.replicate (width - printer.IndentLength) "-")
 
   let printTestResultAsync i testName (testResult: TestResult) =
     async {
@@ -48,7 +51,7 @@ type TestPrinter(writer: TextWriter) =
         let isAllPassed = tests |> Seq.forall (fun test -> test.IsPassed)
         if not isAllPassed then
           if typeIndex > 0 then
-            do! printer.WriteLineAsync("----- ----- ----- ----- -----")
+            do! printSepartorAsync ()
           do! printer.WriteLineAsync(sprintf "type %s" typ.FullName)
           use indenting = printer.AddIndent()
           for test in tests do
