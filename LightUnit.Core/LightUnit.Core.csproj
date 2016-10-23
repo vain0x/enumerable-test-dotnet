@@ -8,7 +8,7 @@
     <ProjectGuid>{A728A0CF-4F66-4DD8-9A37-8B58E0F4F545}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LightUnit.Core</RootNamespace>
+    <RootNamespace>LightUnit</RootNamespace>
     <AssemblyName>LightUnit.Core</AssemblyName>
     <DefaultLanguage>ja-JP</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
