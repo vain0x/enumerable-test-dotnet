@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Utility.fs" />
+    <Compile Include="TestObject.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LightUnit.Core\LightUnit.Core.csproj">
