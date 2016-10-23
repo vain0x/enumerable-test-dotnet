@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LightUnit.Sandbox
+namespace EnumerableTest.Sandbox
 {
     public class Class1
     {

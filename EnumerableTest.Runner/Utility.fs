@@ -1,4 +1,4 @@
-﻿namespace LightUnit.Runner
+﻿namespace EnumerableTest.Runner
 
 module Seq =
   let indexed xs =

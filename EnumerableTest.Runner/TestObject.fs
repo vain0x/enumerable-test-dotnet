@@ -1,8 +1,8 @@
-﻿namespace LightUnit.Runner
+﻿namespace EnumerableTest.Runner
 
 open System
 open System.Reflection
-open LightUnit
+open EnumerableTest
 open Basis.Core
 
 type TestCase =

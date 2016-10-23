@@ -1,9 +1,9 @@
-﻿namespace LightUnit.Runner
+﻿namespace EnumerableTest.Runner
 
 open System
 open System.IO
 open System.Text
-open LightUnit.Runner
+open EnumerableTest.Runner
 
 type StructuralTextWriter(writer: TextWriter) =
   let indent = ref 0

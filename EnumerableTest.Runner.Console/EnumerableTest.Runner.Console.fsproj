@@ -7,12 +7,12 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5c6bb045-a91b-4a8f-94ee-c14b3f6b585f</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>LightUnit.Runner.Console</RootNamespace>
-    <AssemblyName>LightUnit.Runner.Console</AssemblyName>
+    <RootNamespace>EnumerableTest.Runner.Console</RootNamespace>
+    <AssemblyName>EnumerableTest.Runner.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
-    <Name>LightUnit.Runner.Console</Name>
+    <Name>EnumerableTest.Runner.Console</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\LightUnit.Runner.Console.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\EnumerableTest.Runner.Console.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -34,7 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\LightUnit.Runner.Console.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\EnumerableTest.Runner.Console.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
@@ -54,13 +54,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LightUnit.Core\LightUnit.Core.csproj">
-      <Name>LightUnit.Core</Name>
+    <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
+      <Name>EnumerableTest.Core</Name>
       <Project>{a728a0cf-4f66-4dd8-9a37-8b58e0f4f545}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\LightUnit.Runner\LightUnit.Runner.fsproj">
-      <Name>LightUnit.Runner</Name>
+    <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
+      <Name>EnumerableTest.Runner</Name>
       <Project>{08b6b12c-8032-4641-a8f9-ce3a6a59c97a}</Project>
       <Private>True</Private>
     </ProjectReference>
@@ -81,7 +81,7 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

@@ -1,9 +1,9 @@
-﻿namespace LightUnit.Runner.Console
+﻿namespace EnumerableTest.Runner.Console
 
 open System
 open System.IO
-open LightUnit
-open LightUnit.Runner
+open EnumerableTest
+open EnumerableTest.Runner
 
 type TestPrinter(writer: TextWriter) =
   let printer = StructuralTextWriter(writer)

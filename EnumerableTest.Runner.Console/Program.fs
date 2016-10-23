@@ -1,9 +1,9 @@
-﻿namespace LightUnit.Runner.Console
+﻿namespace EnumerableTest.Runner.Console
 
 open System
 open System.IO
 open System.Reflection
-open LightUnit.Runner
+open EnumerableTest.Runner
 
 module Program =
   [<EntryPoint>]
