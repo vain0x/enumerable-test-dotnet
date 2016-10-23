@@ -8,7 +8,7 @@ open EnumerableTest.Runner
 type TestPrinter(writer: TextWriter, width: int) =
   let printer = StructuralTextWriter(writer)
 
-  let printSepartorAsync () =
+  let printSeparatorAsync () =
     printer.WriteLineAsync(String.replicate (width - printer.IndentLength) "-")
 
   let printTestResultAsync i testName (testResult: TestResult) =
@@ -45,16 +45,27 @@ type TestPrinter(writer: TextWriter, width: int) =
           }
       )
 
+  let printSummaryAsync testSuiteResult =
+    let (count, violateCount, errorCount) = testSuiteResult |> TestSuiteResult.countResults
+    let message = sprintf "Total: %d, Violated: %d, Error: %d" count violateCount errorCount
+    printer.WriteLineAsync(message)
+
   member this.PrintAsync(resultSet: seq<Type * Test[]>) =
     async {
+      // Don't print all-green test classes.
+      let resultSet =
+        resultSet |> Seq.filter
+          (fun (typ, tests) -> tests |> Seq.exists (fun test -> not test.IsPassed))
+        |> Seq.toArray
       for (typeIndex, (typ, tests)) in resultSet |> Seq.indexed do
-        let isAllPassed = tests |> Seq.forall (fun test -> test.IsPassed)
-        if not isAllPassed then
-          if typeIndex > 0 then
-            do! printSepartorAsync ()
-          do! printer.WriteLineAsync(sprintf "type %s" typ.FullName)
-          use indenting = printer.AddIndent()
-          for test in tests do
-            if not test.IsPassed then
-              do! printTestAsync 0 test
+        if typeIndex > 0 then
+          do! printSeparatorAsync ()
+        do! printer.WriteLineAsync(sprintf "type %s" typ.FullName)
+        use indenting = printer.AddIndent()
+        for (testIndex, test) in tests |> Seq.indexed do
+          if not test.IsPassed then
+            do! printTestAsync testIndex test
+      if resultSet.Length > 0 then
+        do! printSeparatorAsync ()
+      do! printSummaryAsync resultSet
     }

@@ -63,6 +63,18 @@ namespace EnumerableTest
             }
         }
 
+        internal IEnumerable<TestResult> InnerResults
+        {
+            get
+            {
+                return
+                    Match(
+                        result => new[] { result },
+                        tests => tests.SelectMany(test => test.InnerResults)
+                    );
+            }
+        }
+
         #region Factory
         internal static Test OfAssertion(string name, TestResult result)
         {

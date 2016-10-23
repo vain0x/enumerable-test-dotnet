@@ -14,6 +14,12 @@ type TestObject =
 type TestSuite =
   seq<TestObject>
 
+type TestObjectResult =
+  Type * Test []
+
+type TestSuiteResult =
+  seq<TestObjectResult>
+
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestObject =
   let internal testMethods (typ: Type) =
@@ -55,7 +61,7 @@ module TestObject =
     else
       None
 
-  let runAsync (testObject: TestObject) =
+  let runAsync (testObject: TestObject): Async<TestObjectResult> =
     async {
       let typ = testObject |> fst
       let instance = testObject |> snd
@@ -80,7 +86,30 @@ module TestSuite =
   let ofAssembly (assembly: Assembly): TestSuite =
     assembly.GetTypes() |> Seq.choose TestObject.tryCreate
 
-  let runAsync (testSuite: TestSuite) =
+  let runAsync (testSuite: TestSuite): Async<TestSuiteResult> =
     testSuite
     |> Seq.map TestObject.runAsync
     |> Async.Parallel
+    |> Async.map (fun x -> x :> seq<_>)
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestObjectResult =
+  let allTestResult (testObjectResult: TestObjectResult) =
+    testObjectResult |> snd |> Seq.collect (fun test -> test.InnerResults)
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestSuiteResult =
+  let allTestResult (testSuiteResult: TestSuiteResult) =
+    testSuiteResult |> Seq.collect TestObjectResult.allTestResult
+
+  let countResults testSuiteResult =
+    let results = testSuiteResult |> allTestResult
+    results |> Seq.fold
+      (fun (count, violateCount, errorCount) (result: TestResult) ->
+        let count = count + 1
+        result.Match
+          ( fun () -> (count, violateCount, errorCount)
+          , fun _ -> (count, violateCount + 1, errorCount)
+          , fun _ -> (count, violateCount, errorCount + 1)
+          )
+      ) (0, 0, 0)
