@@ -51,8 +51,11 @@ with
   static member OfMethod(testCase, error) =
     TestError.Create(TestErrorMethod.Method testCase, error)
 
+type TestMethodResult =
+  Result<Test, TestError>
+
 type TestObjectResult =
-  TestObject * Result<Test, TestError> []
+  TestObject * TestMethodResult []
 
 type TestSuiteResult =
   seq<TestObjectResult>

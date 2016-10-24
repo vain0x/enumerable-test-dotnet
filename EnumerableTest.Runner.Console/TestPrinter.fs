@@ -48,6 +48,21 @@ type TestPrinter(writer: TextWriter, width: int) =
           }
       )
 
+  let printTestMethodResultAsync i (testMethodResult: TestMethodResult) =
+    async {
+      match testMethodResult with
+      | Success test when test.IsPassed -> ()
+      | Success test ->
+        do! printer.WriteLineAsync(sprintf "method %s" test.Name)
+        use indenting = printer.AddIndent()
+        return! printTestAsync i test
+      | Failure testError ->
+        let methodName = testError |> TestError.methodName
+        do! printer.WriteLineAsync(sprintf "method %s" methodName)
+        use indenting = printer.AddIndent()
+        return! printTestErrorAsync testError
+    }
+
   let printSummaryAsync testSuiteResult =
     let (count, violateCount, errorCount) = testSuiteResult |> TestSuiteResult.countResults
     let message = sprintf "Total: %d, Violated: %d, Error: %d" count violateCount errorCount
@@ -63,18 +78,13 @@ type TestPrinter(writer: TextWriter, width: int) =
             |> Seq.exists (function | Passed _ -> false | _ -> true)
           )
         |> Seq.toArray
-      for (typeIndex, (testObject, tests)) in testSuiteResult |> Seq.indexed do
+      for (typeIndex, (testObject, testMethodResults)) in testSuiteResult |> Seq.indexed do
         if typeIndex > 0 then
           do! printSeparatorAsync ()
         do! printer.WriteLineAsync(sprintf "type %s" testObject.Type.FullName)
         use indenting = printer.AddIndent()
-        for (testIndex, test) in tests |> Seq.indexed do
-          match test with
-          | Success test when test.IsPassed -> ()
-          | Success test ->
-            do! printTestAsync testIndex test
-          | Failure error ->
-            do! printTestErrorAsync error
+        for (testIndex, testMethodResult) in testMethodResults |> Seq.indexed do
+          do! testMethodResult |> printTestMethodResultAsync testIndex
       if testSuiteResult.Length > 0 then
         do! printSeparatorAsync ()
       do! printSummaryAsync testSuiteResult
