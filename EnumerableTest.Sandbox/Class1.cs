@@ -59,8 +59,8 @@ namespace EnumerableTest.Sandbox
 
         public IEnumerable<Test> failing_group()
         {
-            yield return test_all_zero(new int[] { }).ToTest("empty case");
-            yield return test_all_zero(new[] { 0, 0, 1 }).ToTest("array case");
+            yield return test_all_zero(new int[] { }).ToTestGroup("empty case");
+            yield return test_all_zero(new[] { 0, 0, 1 }).ToTestGroup("array case");
         }
 
         public void Dispose()

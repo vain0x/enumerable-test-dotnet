@@ -8,9 +8,9 @@ namespace EnumerableTest
 {
     public static class TestExtension
     {
-        public static Test ToTest(this IEnumerable<Test> tests, string testName)
+        public static Test ToTestGroup(this IEnumerable<Test> tests, string testName)
         {
-            return Test.OfTests(testName, tests);
+            return Test.OfTestGroup(testName, tests);
         }
     }
 }

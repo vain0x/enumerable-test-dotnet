@@ -86,7 +86,7 @@ module TestObject =
           Run                   =
             fun this ->
               let tests = m.Invoke(this, [||]) :?> seq<Test>
-              Test.OfTests(m.Name, tests)
+              Test.OfTestGroup(m.Name, tests)
         }
       )
 

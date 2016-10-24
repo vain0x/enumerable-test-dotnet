@@ -91,9 +91,9 @@ namespace EnumerableTest
             return OfAssertion(name, AssertionResult.OfViolated(message));
         }
 
-        public static Test OfTests(string name, IEnumerable<Test> tests)
+        public static Test OfTestGroup(string name, IEnumerable<Test> testGroup)
         {
-            return new CompositeTest(name, tests.ToArray());
+            return new CompositeTest(name, testGroup.ToArray());
         }
         #endregion
 
