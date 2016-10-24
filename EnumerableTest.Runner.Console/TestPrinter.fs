@@ -61,25 +61,32 @@ type TestPrinter(writer: TextWriter, width: int) =
         return! printTestErrorAsync testError
     }
 
-  let printSummaryAsync testSuiteResult =
-    let (count, violateCount, errorCount) = testSuiteResult |> TestSuiteResult.countResults
-    let message = sprintf "Total: %d, Violated: %d, Error: %d" count violateCount errorCount
-    printer.WriteLineAsync(message)
-
-  member this.PrintAsync(testSuiteResult: TestSuiteResult) =
+  member this.PrintSummaryAsync(count: AssertionCount) =
     async {
-      let testSuiteResult =
-        testSuiteResult
-        |> Seq.filter (TestClassResult.isAllPassed >> not)
-        |> Seq.toArray
-      for (typeIndex, (testClass, testMethodResults)) in testSuiteResult |> Seq.indexed do
-        if typeIndex > 0 then
-          do! printSeparatorAsync ()
+      do! printSeparatorAsync ()
+      let message =
+        sprintf "Total: %d, Violated: %d, Error: %d"
+          count.TotalCount
+          count.ViolatedCount
+          count.ErrorCount
+      return! printer.WriteLineAsync(message)
+    }
+
+  member this.PrintAsync(testClassResult: TestClassResult) =
+    async {
+      if testClassResult |> TestClassResult.isAllPassed |> not then
+        let (testClass, testMethodResults) = testClassResult
+        do! printSeparatorAsync ()
         do! printer.WriteLineAsync(sprintf "type: %s" testClass.Type.FullName)
         use indenting = printer.AddIndent()
         for (testIndex, testMethodResult) in testMethodResults |> Seq.indexed do
           do! testMethodResult |> printTestMethodResultAsync testIndex
-      if testSuiteResult.Length > 0 then
-        do! printSeparatorAsync ()
-      do! printSummaryAsync testSuiteResult
     }
+
+  interface IObserver<TestClassResult> with
+    override this.OnNext(testClassResult) =
+      this.PrintAsync(testClassResult) |> Async.RunSynchronously
+
+    override this.OnError(_) = ()
+
+    override this.OnCompleted() = ()

@@ -39,24 +39,3 @@ module TestClassResult =
         | Success test when test.IsPassed -> true
         | _ -> false
       )
-
-[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestSuiteResult =
-  let allAssertionResults (testSuiteResult: TestSuiteResult) =
-    testSuiteResult |> Seq.collect TestClassResult.allAssertionResults
-
-  let countResults testSuiteResult =
-    let results = testSuiteResult |> allAssertionResults
-    results |> Seq.fold
-      (fun (count, violateCount, errorCount) (result: Result<AssertionResult, TestError>) ->
-        let count = count + 1
-        match result with
-        | Success assertionResult ->
-          match assertionResult with
-          | Passed              -> (count, violateCount, errorCount)
-          | Violated _          -> (count, violateCount + 1, errorCount)
-        | Failure _             -> (count, violateCount, errorCount + 1)
-      ) (0, 0, 0)
-
-  let isAllPassed testSuiteResult =
-    testSuiteResult |> Seq.forall TestClassResult.isAllPassed

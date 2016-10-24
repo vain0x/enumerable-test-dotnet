@@ -14,14 +14,17 @@ module Program =
       files |> Seq.map (fun file -> Assembly.LoadFile(file.FullName))
     let testSuite =
       assemblies |> Seq.collect TestSuite.ofAssembly
-    let result =
-      testSuite |> TestSuite.runAsync |> Async.RunSynchronously
-    let isAllPassed =
-      result |> TestSuiteResult.isAllPassed
+    let results =
+      testSuite |> TestSuite.runAsync
+    let printer = TestPrinter(Console.Out, Console.BufferWidth - 1)
+    let counter = AssertionCounter()
+    results.Subscribe(printer) |> ignore<IDisposable>
+    results.Subscribe(counter) |> ignore<IDisposable>
+    results.Connect()
+    results |> Observable.wait
+    printer.PrintSummaryAsync(counter.Current) |> Async.RunSynchronously
     let exitCode =
-      if isAllPassed
+      if counter.IsAllGreen
         then 0
         else -1
-    let printer = TestPrinter(Console.Out, Console.BufferWidth - 1)
-    printer.PrintAsync(result) |> Async.RunSynchronously
     exitCode
