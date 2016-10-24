@@ -19,10 +19,10 @@ namespace EnumerableTest.Sandbox
             yield return Test.Equal(1, count);
         }
 
-        public IEnumerable<Test> test_error()
+        public IEnumerable<Test> test_catch()
         {
             var list = new List<int>();
-            yield return Test.Throw<Exception>(() => list[0]);
+            yield return Test.Catch<Exception>(() => list[0]);
         }
 
         public IEnumerable<Test> failing_increment()
@@ -34,6 +34,16 @@ namespace EnumerableTest.Sandbox
                 count++;
                 yield return Test.Equal(-1, count);
             }
+        }
+
+        public IEnumerable<Test> failing_catch_not_thrown()
+        {
+            yield return Test.Catch<Exception>(() => { });
+        }
+
+        public IEnumerable<Test> failing_catch()
+        {
+            yield return Test.Catch<ArgumentException>(() => { throw new Exception(); });
         }
 
         public IEnumerable<Test> throwing_increment()

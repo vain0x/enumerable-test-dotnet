@@ -113,10 +113,10 @@ namespace EnumerableTest
             }
         }
 
-        static Test ThrowImpl<E>(Action f)
+        static Test CatchImpl<E>(Action f)
             where E : Exception
         {
-            var name = "Test.Throw";
+            var name = "Test.Catch";
             try
             {
                 f();
@@ -131,16 +131,16 @@ namespace EnumerableTest
             }
         }
 
-        public static Test Throw<E>(Action f)
+        public static Test Catch<E>(Action f)
             where E : Exception
         {
-            return ThrowImpl<E>(f);
+            return CatchImpl<E>(f);
         }
 
-        public static Test Throw<E>(Func<object> f)
+        public static Test Catch<E>(Func<object> f)
             where E : Exception
         {
-            return Throw<E>(() => { f(); });
+            return Catch<E>(() => { f(); });
         }
         #endregion
     }
