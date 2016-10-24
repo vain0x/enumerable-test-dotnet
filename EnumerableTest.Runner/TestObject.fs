@@ -118,8 +118,8 @@ module TestClass =
       Result.catch (fun () -> instance |> Disposable.dispose)
       |> Result.mapFailure (fun e -> TestError.OfDispose (testCase, e))
 
-    let tryRunCase (testCase: TestMethod) testObject =
-      testObject |> tryInstantiate
+    let tryRunTestMethod (testCase: TestMethod) testClass =
+      testClass |> tryInstantiate
       |> Result.bind
         (fun instance ->
           let methodResult =
@@ -134,15 +134,15 @@ module TestClass =
             methodResult
         )
 
-    let tryRunCasesAsync (testObject: TestClass) =
+    let tryRunCasesAsync (testClass: TestClass) =
       let results =
-        testObject.Methods
+        testClass.Methods
         |> Seq.map
           (fun testCase ->
-            async { return testObject |> tryRunCase testCase }
+            async { return testClass |> tryRunTestMethod testCase }
           )
         |> Async.Parallel
-      (testObject, results)
+      (testClass, results)
 
     /// We report up to one instantiation error
     /// because we don't want to see the same error for each test method.

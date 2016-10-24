@@ -37,8 +37,8 @@ type TestPrinter(writer: TextWriter, width: int) =
 
   let rec printTestAsync i (test: Test) =
     test.Match
-      ( fun testResult ->
-          printAssertionResultAsync i test.Name testResult
+      ( fun assertionResult ->
+          printAssertionResultAsync i test.Name assertionResult
       , fun tests ->
           async {
             do! printer.WriteLineAsync(sprintf "test group %s" test.Name)
@@ -78,15 +78,15 @@ type TestPrinter(writer: TextWriter, width: int) =
       // Don't print all-green test classes.
       let testSuiteResult =
         testSuiteResult |> Seq.filter
-          (fun testObjectResult ->
-            testObjectResult |> TestClassResult.allTestResult
+          (fun testClassResult ->
+            testClassResult |> TestClassResult.allTestResult
             |> Seq.exists (function | Passed _ -> false | _ -> true)
           )
         |> Seq.toArray
-      for (typeIndex, (testObject, testMethodResults)) in testSuiteResult |> Seq.indexed do
+      for (typeIndex, (testClass, testMethodResults)) in testSuiteResult |> Seq.indexed do
         if typeIndex > 0 then
           do! printSeparatorAsync ()
-        do! printer.WriteLineAsync(sprintf "type %s" testObject.Type.FullName)
+        do! printer.WriteLineAsync(sprintf "type %s" testClass.Type.FullName)
         use indenting = printer.AddIndent()
         for (testIndex, testMethodResult) in testMethodResults |> Seq.indexed do
           do! testMethodResult |> printTestMethodResultAsync testIndex
