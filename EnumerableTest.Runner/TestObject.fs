@@ -8,25 +8,26 @@ open Basis.Core
 type GroupTest =
   Test.GroupTest
 
-type TestClassInstance =
+type TestInstance =
   obj
 
 type TestMethod =
   {
     Method                      : MethodInfo
-    Run                         : TestClassInstance -> GroupTest
+    Run                         : TestInstance -> GroupTest
   }
 
 type TestClass =
   {
     Type                        : Type
-    Create                      : unit -> TestClassInstance
+    Create                      : unit -> TestInstance
     Cases                       : seq<TestMethod>
   }
 
 type TestSuite =
   seq<TestClass>
 
+/// Where the exception was thrown.
 [<RequireQualifiedAccess>]
 type TestErrorMethod =
   | Constructor
@@ -93,7 +94,7 @@ module TestObject =
         }
       )
 
-  let instantiate (typ: Type): unit -> TestClassInstance =
+  let instantiate (typ: Type): unit -> TestInstance =
     let defaultConstructor =
       typ.GetConstructor([||])
     fun () -> defaultConstructor.Invoke([||])
