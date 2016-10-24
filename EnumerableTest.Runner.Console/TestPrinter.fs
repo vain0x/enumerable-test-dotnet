@@ -79,8 +79,8 @@ type TestPrinter(writer: TextWriter, width: int) =
       let testSuiteResult =
         testSuiteResult |> Seq.filter
           (fun testClassResult ->
-            testClassResult |> TestClassResult.allTestResult
-            |> Seq.exists (function | Passed _ -> false | _ -> true)
+            testClassResult |> TestClassResult.allAssertionResults
+            |> Seq.exists (function | Success test when test.IsPassed -> false | _ -> true)
           )
         |> Seq.toArray
       for (typeIndex, (testClass, testMethodResults)) in testSuiteResult |> Seq.indexed do
