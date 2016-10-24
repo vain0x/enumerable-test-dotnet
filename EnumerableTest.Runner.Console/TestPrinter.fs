@@ -19,29 +19,29 @@ type TestPrinter(writer: TextWriter, width: int) =
       return! printer.WriteLineAsync(string testError.Error)
     }
 
-  let printTestResultAsync i testName (result: Result<TestResult, TestError>) =
+  let printTestResultAsync i testName (result: TestResult) =
     async {
       let mark =
-        match result with
-        | Passed _              -> "."
-        | Violated _            -> "*"
-        | Error _               -> "!"
+        result.Match
+          ( fun ()      -> "."
+          , fun _       -> "*"
+          )
       do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark testName)
       use indenting = printer.AddIndent()
       return!
-        match result with
-        | Passed _              -> Async.result ()
-        | Violated message      -> printer.WriteLineAsync(message)
-        | Error testError       -> testError |> printTestErrorAsync
+        result.Match
+          ( fun ()              -> Async.result ()
+          , fun message         -> printer.WriteLineAsync(message)
+          )
     }
 
   let rec printTestAsync i (test: Test) =
     test.Match
       ( fun testResult ->
-          printTestResultAsync i test.Name (testResult |> Success)
+          printTestResultAsync i test.Name testResult
       , fun tests ->
           async {
-            do! printer.WriteLineAsync(sprintf "method %s" test.Name)
+            do! printer.WriteLineAsync(sprintf "test group %s" test.Name)
             use indenting = printer.AddIndent()
             for (i, test) in tests |> Seq.indexed do
               do! printTestAsync i test
