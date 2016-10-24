@@ -55,11 +55,7 @@ type TestPrinter(writer: TextWriter, width: int) =
         for  (i, test) in test.Tests |> Seq.indexed do
           do! printTestAsync i test
       | Failure testError ->
-        let methodName =
-          match testError.Method with
-          | TestErrorMethod.Constructor -> "constructor"
-          | TestErrorMethod.Method testCase
-          | TestErrorMethod.Dispose testCase -> testCase.Method.Name
+        let methodName = testError |> TestError.methodName
         do! printer.WriteLineAsync(sprintf "method %s" methodName)
         use indenting = printer.AddIndent()
         return! printTestErrorAsync testError

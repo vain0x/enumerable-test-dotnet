@@ -178,6 +178,12 @@ module TestSuite =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestError =
+  let methodName (testError: TestError) =
+    match testError.Method with
+    | TestErrorMethod.Constructor               -> "constructor"
+    | TestErrorMethod.Method testCase
+    | TestErrorMethod.Dispose testCase          -> testCase.Method.Name
+
   /// Gets the name of the method where the exception was thrown.
   let errorMethodName (testError: TestError) =
     match testError.Method with
