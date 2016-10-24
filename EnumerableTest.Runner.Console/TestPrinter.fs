@@ -14,7 +14,7 @@ type TestPrinter(writer: TextWriter, width: int) =
 
   let printTestErrorAsync testError =
     async {
-      let methodName  = testError |> TestError.methodName
+      let methodName  = testError |> TestError.errorMethodName
       do! printer.WriteLineAsync(sprintf "RUNTIME ERROR in %s" methodName)
       return! printer.WriteLineAsync(string testError.Error)
     }
