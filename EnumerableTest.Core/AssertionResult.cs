@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EnumerableTest
 {
-    abstract class TestResult
+    abstract class AssertionResult
     {
         public abstract X Match<X>(Func<X> onPassed, Func<string, X> onViolated);
 
@@ -27,8 +27,8 @@ namespace EnumerableTest
             }
         }
 
-        sealed class PassedTestResult
-            : TestResult
+        sealed class PassedAssertionResult
+            : AssertionResult
         {
             public override X Match<X>(Func<X> onPassed, Func<string, X> onViolated)
             {
@@ -36,12 +36,12 @@ namespace EnumerableTest
             }
         }
 
-        sealed class ViolatedTestResult
-            : TestResult
+        sealed class ViolatedAssertionResult
+            : AssertionResult
         {
             public string Message { get; }
 
-            public ViolatedTestResult(string message)
+            public ViolatedAssertionResult(string message)
             {
                 Message = message;
             }
@@ -52,14 +52,14 @@ namespace EnumerableTest
             }
         }
 
-        public static TestResult OfPassed
+        public static AssertionResult OfPassed
         {
-            get { return new PassedTestResult(); }
+            get { return new PassedAssertionResult(); }
         }
 
-        public static TestResult OfViolated(string message)
+        public static AssertionResult OfViolated(string message)
         {
-            return new ViolatedTestResult(message);
+            return new ViolatedAssertionResult(message);
         }
     }
 }

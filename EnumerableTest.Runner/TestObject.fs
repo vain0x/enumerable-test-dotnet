@@ -184,8 +184,8 @@ module TestError =
 module TestResultExtension =
   let (|Passed|Violated|Error|) =
     function
-    | Success (testResult: TestResult) ->
-      match testResult.Match(Choice1Of2, Choice2Of2) with
+    | Success (assertionResult: AssertionResult) ->
+      match assertionResult.Match(Choice1Of2, Choice2Of2) with
       | Choice1Of2 () -> Passed
       | Choice2Of2 message -> Violated message
     | Failure error ->
@@ -210,7 +210,7 @@ module TestSuiteResult =
   let countResults testSuiteResult =
     let results = testSuiteResult |> allTestResult
     results |> Seq.fold
-      (fun (count, violateCount, errorCount) (result: Result<TestResult, TestError>) ->
+      (fun (count, violateCount, errorCount) (result: Result<AssertionResult, TestError>) ->
         let count = count + 1
         match result with
         | Passed _              -> (count, violateCount, errorCount)

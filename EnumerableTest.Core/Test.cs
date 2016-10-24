@@ -10,7 +10,7 @@ namespace EnumerableTest
     {
         internal string Name { get; }
 
-        internal abstract X Match<X>(Func<TestResult, X> onAssertion, Func<IEnumerable<Test>, X> onComposite);
+        internal abstract X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onComposite);
 
         protected Test(string name)
         {
@@ -20,14 +20,14 @@ namespace EnumerableTest
         sealed class AssertionTest
             : Test
         {
-            public TestResult Result { get; }
+            public AssertionResult Result { get; }
 
-            internal override X Match<X>(Func<TestResult, X> onAssertion, Func<IEnumerable<Test>, X> onComposite)
+            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onComposite)
             {
                 return onAssertion(Result);
             }
 
-            public AssertionTest(string name, TestResult result)
+            public AssertionTest(string name, AssertionResult result)
                 : base(name)
             {
                 Result = result;
@@ -39,7 +39,7 @@ namespace EnumerableTest
         {
             public IEnumerable<Test> Tests { get; }
 
-            internal override X Match<X>(Func<TestResult, X> onAssertion, Func<IEnumerable<Test>, X> onComposite)
+            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onComposite)
             {
                 return onComposite(Tests);
             }
@@ -63,7 +63,7 @@ namespace EnumerableTest
             }
         }
 
-        internal IEnumerable<TestResult> InnerResults
+        internal IEnumerable<AssertionResult> InnerResults
         {
             get
             {
@@ -76,19 +76,19 @@ namespace EnumerableTest
         }
 
         #region Factory
-        internal static Test OfAssertion(string name, TestResult result)
+        internal static Test OfAssertion(string name, AssertionResult result)
         {
             return new AssertionTest(name, result);
         }
 
         public static Test Pass(string name)
         {
-            return OfAssertion(name, TestResult.OfPassed);
+            return OfAssertion(name, AssertionResult.OfPassed);
         }
 
         public static Test Violate(string name, string message)
         {
-            return OfAssertion(name, TestResult.OfViolated(message));
+            return OfAssertion(name, AssertionResult.OfViolated(message));
         }
 
         public static Test OfTests(string name, IEnumerable<Test> tests)

@@ -19,7 +19,7 @@ type TestPrinter(writer: TextWriter, width: int) =
       return! printer.WriteLineAsync(string testError.Error)
     }
 
-  let printTestResultAsync i testName (result: TestResult) =
+  let printAssertionResultAsync i testName (result: AssertionResult) =
     async {
       let mark =
         result.Match
@@ -38,7 +38,7 @@ type TestPrinter(writer: TextWriter, width: int) =
   let rec printTestAsync i (test: Test) =
     test.Match
       ( fun testResult ->
-          printTestResultAsync i test.Name testResult
+          printAssertionResultAsync i test.Name testResult
       , fun tests ->
           async {
             do! printer.WriteLineAsync(sprintf "test group %s" test.Name)
