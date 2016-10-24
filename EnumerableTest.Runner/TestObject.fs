@@ -110,17 +110,25 @@ module TestObject =
       Result.catch testObject.Create
       |> Result.mapFailure TestError.OfConstructor
 
+    let tryDispose testCase instance =
+      Result.catch (fun () -> instance |> Disposable.dispose)
+      |> Result.mapFailure (fun e -> TestError.OfDispose (testCase, e))
+
     let tryRunCase (testCase: TestCase) testObject =
       testObject |> tryInstantiate
       |> Result.bind
         (fun instance ->
-          Result.catch (fun () -> instance |> testCase.Run)
-          |> Result.mapFailure (fun e -> TestError.OfMethod (testCase, e))
+          let methodResult =
+            Result.catch (fun () -> instance |> testCase.Run)
+            |> Result.mapFailure (fun e -> TestError.OfMethod (testCase, e))
+          let disposeResult =
+            instance |> tryDispose testCase
+          match (methodResult, disposeResult) with
+          | Success _, Failure error ->
+            Failure error
+          | _ ->
+            methodResult
         )
-
-    let tryDispose testCase instance =
-      Result.catch (fun () -> instance |> Disposable.dispose)
-      |> Result.mapFailure (fun e -> TestError.OfDispose (testCase, e))
 
     let tryRunCasesAsync (testObject: TestObject) =
       let results =

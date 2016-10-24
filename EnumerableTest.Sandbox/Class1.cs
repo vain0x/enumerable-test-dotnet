@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 namespace EnumerableTest.Sandbox
 {
     public class Class1
+        : IDisposable
     {
+        Exception disposingException;
+
         public IEnumerable<Test> test_increment()
         {
             var count = 0;
@@ -38,6 +41,20 @@ namespace EnumerableTest.Sandbox
             var count = 0;
             yield return Test.Equal(0, count);
             throw new Exception("custom error message");
+        }
+
+        public IEnumerable<Test> throwing_in_dispose()
+        {
+            disposingException = new Exception("disposing exception");
+            yield return Test.Equal(1, 1);
+        }
+
+        public void Dispose()
+        {
+            if (disposingException != null)
+            {
+                throw disposingException;
+            }
         }
     }
 }
