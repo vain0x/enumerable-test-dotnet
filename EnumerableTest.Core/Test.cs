@@ -10,7 +10,7 @@ namespace EnumerableTest
     {
         internal string Name { get; }
 
-        internal abstract X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onComposite);
+        internal abstract X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup);
 
         protected Test(string name)
         {
@@ -22,7 +22,7 @@ namespace EnumerableTest
         {
             public AssertionResult Result { get; }
 
-            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onComposite)
+            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup)
             {
                 return onAssertion(Result);
             }
@@ -34,17 +34,17 @@ namespace EnumerableTest
             }
         }
 
-        sealed class CompositeTest
+        sealed class GroupTest
             : Test
         {
             public IEnumerable<Test> Tests { get; }
 
-            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onComposite)
+            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup)
             {
-                return onComposite(Tests);
+                return onGroup(Tests);
             }
 
-            public CompositeTest(string name, IEnumerable<Test> tests)
+            public GroupTest(string name, IEnumerable<Test> tests)
                 : base(name)
             {
                 Tests = tests;
@@ -93,7 +93,7 @@ namespace EnumerableTest
 
         public static Test OfTestGroup(string name, IEnumerable<Test> testGroup)
         {
-            return new CompositeTest(name, testGroup.ToArray());
+            return new GroupTest(name, testGroup.ToArray());
         }
         #endregion
 
