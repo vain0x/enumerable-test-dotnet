@@ -21,7 +21,7 @@ type TestClass =
   {
     Type                        : Type
     Create                      : unit -> TestInstance
-    Cases                       : seq<TestMethod>
+    Methods                     : seq<TestMethod>
   }
 
 type TestSuite =
@@ -104,7 +104,7 @@ module TestObject =
       {
         Type                    = typ
         Create                  = typ |> instantiate
-        Cases                   = typ |> testCases
+        Methods                 = typ |> testCases
       } |> Some
     else
       None
@@ -136,7 +136,7 @@ module TestObject =
 
     let tryRunCasesAsync (testObject: TestClass) =
       let results =
-        testObject.Cases
+        testObject.Methods
         |> Seq.map
           (fun testCase ->
             async { return testObject |> tryRunCase testCase }
