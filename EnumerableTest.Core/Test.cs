@@ -12,7 +12,7 @@ namespace EnumerableTest
 
         internal abstract X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup);
 
-        protected Test(string name)
+        internal Test(string name)
         {
             Name = name;
         }
