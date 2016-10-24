@@ -39,7 +39,7 @@ type TestPrinter(writer: TextWriter, width: int) =
       | AssertionTest assertionResult ->
         return! printAssertionResultAsync i test.Name assertionResult
       | GroupTest tests ->
-        do! printer.WriteLineAsync(sprintf "test group %s" test.Name)
+        do! printer.WriteLineAsync(sprintf "test group: %s" test.Name)
         use indenting = printer.AddIndent()
         for (i, test) in tests |> Seq.indexed do
           do! printTestAsync i test
@@ -50,13 +50,13 @@ type TestPrinter(writer: TextWriter, width: int) =
       match testMethodResult with
       | Success test when test.IsPassed -> ()
       | Success test ->
-        do! printer.WriteLineAsync(sprintf "method %s" test.Name)
+        do! printer.WriteLineAsync(sprintf "method: %s" test.Name)
         use indenting = printer.AddIndent()
         for  (i, test) in test.Tests |> Seq.indexed do
           do! printTestAsync i test
       | Failure testError ->
         let methodName = testError |> TestError.methodName
-        do! printer.WriteLineAsync(sprintf "method %s" methodName)
+        do! printer.WriteLineAsync(sprintf "method: %s" methodName)
         use indenting = printer.AddIndent()
         return! printTestErrorAsync testError
     }
@@ -75,7 +75,7 @@ type TestPrinter(writer: TextWriter, width: int) =
       for (typeIndex, (testClass, testMethodResults)) in testSuiteResult |> Seq.indexed do
         if typeIndex > 0 then
           do! printSeparatorAsync ()
-        do! printer.WriteLineAsync(sprintf "type %s" testClass.Type.FullName)
+        do! printer.WriteLineAsync(sprintf "type: %s" testClass.Type.FullName)
         use indenting = printer.AddIndent()
         for (testIndex, testMethodResult) in testMethodResults |> Seq.indexed do
           do! testMethodResult |> printTestMethodResultAsync testIndex
