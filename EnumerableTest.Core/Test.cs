@@ -91,21 +91,9 @@ namespace EnumerableTest
             return OfAssertion(name, TestResult.OfViolated(message));
         }
 
-        public static Test Error(string name, Exception error)
-        {
-            return OfAssertion(name, TestResult.OfError(error));
-        }
-
         public static Test OfTests(string name, IEnumerable<Test> tests)
         {
-            try
-            {
-                return new CompositeTest(name, tests.ToArray());
-            }
-            catch (Exception error)
-            {
-                return Error(name, error);
-            }
+            return new CompositeTest(name, tests.ToArray());
         }
 
         public static Test OfTests(IEnumerable<Test> tests)

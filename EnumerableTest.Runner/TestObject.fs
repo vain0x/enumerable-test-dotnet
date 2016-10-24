@@ -5,17 +5,54 @@ open System.Reflection
 open EnumerableTest
 open Basis.Core
 
+type TestClassInstance =
+  obj
+
 type TestCase =
-  MethodInfo * Lazy<Test>
+  {
+    Method                      : MethodInfo
+    Run                         : TestClassInstance -> Test
+  }
 
 type TestObject =
-  Type * Lazy<Result<seq<TestCase> * IDisposable, exn>>
+  {
+    Type                        : Type
+    Create                      : unit -> TestClassInstance
+    Cases                       : seq<TestCase>
+  }
 
 type TestSuite =
   seq<TestObject>
 
+[<RequireQualifiedAccess>]
+type TestErrorMethod =
+  | Constructor
+  | Method                      of TestCase
+  | Dispose                     of TestCase
+
+type TestError =
+  {
+    Method                      : TestErrorMethod
+    Error                       : Exception
+  }
+with
+  static member Create(errorMethod, error) =
+    {
+      Method                    = errorMethod
+      Error                     = error
+    }
+
+  static member OfConstructor(error) =
+    TestError.Create(TestErrorMethod.Constructor, error)
+
+  static member OfDispose(testCase, error) =
+    TestError.Create(TestErrorMethod.Dispose testCase, error)
+
+  static member OfMethod(testCase, error) =
+    TestError.Create(TestErrorMethod.Method testCase, error)
+
 type TestObjectResult =
-  Type * Test []
+  TestObject * Result<Test, TestError> []
 
 type TestSuiteResult =
   seq<TestObjectResult>
@@ -36,50 +73,82 @@ module TestObject =
     typ.GetConstructor([||]) |> isNull |> not
     && typ |> testMethods |> Seq.isEmpty |> not
 
-  let internal testCases (it: obj) =
-    it.GetType()
+  let internal testCases (typ: Type) =
+    typ
     |> testMethods
     |> Seq.map
       (fun m ->
-        let thunk () =
-          let tests = m.Invoke(it, [||]) :?> seq<Test>
-          Test.OfTests(m.Name, tests)
-        (m, lazy thunk ())
+        {
+          Method                = m
+          Run                   =
+            fun this ->
+              let tests = m.Invoke(this, [||]) :?> seq<Test>
+              Test.OfTests(m.Name, tests)
+        }
       )
+
+  let instantiate (typ: Type): unit -> TestClassInstance =
+    let defaultConstructor =
+      typ.GetConstructor([||])
+    fun () -> defaultConstructor.Invoke([||])
 
   let tryCreate (typ: Type): option<TestObject> =
     if typ |> isTestClass then
-      let thunk () =
-        let defaultConstructor =
-          typ.GetConstructor([||])
-        Result.catch (fun () -> defaultConstructor.Invoke([||]))
-        |> Result.map
-          (fun instance ->
-            (instance |> testCases, instance |> Disposable.ofObj)
-          )
-      (typ, lazy thunk ()) |> Some
+      {
+        Type                    = typ
+        Create                  = typ |> instantiate
+        Cases                   = typ |> testCases
+      } |> Some
     else
       None
 
-  let runAsync (testObject: TestObject): Async<TestObjectResult> =
-    async {
-      let typ = testObject |> fst
-      let instance = testObject |> snd
-      let! result =
-        async {
-          match instance.Value with
-          | Success (cases, disposable) ->
-            use disposable = disposable
-            let! results =
-              cases
-              |> Seq.map (fun (_, test) -> Async.run (fun () -> test.Value))
-              |> Async.Parallel
-            return results
-          | Failure error ->
-            return [| Test.Error("constructor", error) |]
-        }
-      return (typ, result)
-    }
+  let runAsync =
+    let tryInstantiate (testObject: TestObject) =
+      Result.catch testObject.Create
+      |> Result.mapFailure TestError.OfConstructor
+
+    let tryRunCase (testCase: TestCase) testObject =
+      testObject |> tryInstantiate
+      |> Result.bind
+        (fun instance ->
+          Result.catch (fun () -> instance |> testCase.Run)
+          |> Result.mapFailure (fun e -> TestError.OfMethod (testCase, e))
+        )
+
+    let tryDispose testCase instance =
+      Result.catch (fun () -> instance |> Disposable.dispose)
+      |> Result.mapFailure (fun e -> TestError.OfDispose (testCase, e))
+
+    let tryRunCasesAsync (testObject: TestObject) =
+      let results =
+        testObject.Cases
+        |> Seq.map
+          (fun testCase ->
+            async { return testObject |> tryRunCase testCase }
+          )
+        |> Async.Parallel
+      (testObject, results)
+
+    /// We report up to one instantiation error
+    /// because we don't want to see the same error for each test method.
+    let unitfyInstantiationErrors results =
+      let (failureList, successList) =
+        results |> Array.partition
+          (function
+            | Failure ({ TestError.Method = TestErrorMethod.Constructor }) -> true
+            | x -> false
+          )
+      Array.append
+        (failureList |> Seq.tryHead |> Option.toArray)
+        successList
+
+    fun testObject ->
+      async {
+        let (testObject, a) = testObject |> tryRunCasesAsync
+        let! results = a
+        let results = results |> unitfyInstantiationErrors
+        return (testObject, results)
+      }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuite =
@@ -93,9 +162,34 @@ module TestSuite =
     |> Async.map (fun x -> x :> seq<_>)
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestError =
+  let methodName (testError: TestError) =
+    match testError.Method with
+    | TestErrorMethod.Constructor               -> "constructor"
+    | TestErrorMethod.Method testCase           -> testCase.Method.Name
+    | TestErrorMethod.Dispose _                 -> "Dispose"
+
+[<AutoOpen>]
+module TestResultExtension =
+  let (|Passed|Violated|Error|) =
+    function
+    | Success (testResult: TestResult) ->
+      match testResult.Match(Choice1Of2, Choice2Of2) with
+      | Choice1Of2 () -> Passed
+      | Choice2Of2 message -> Violated message
+    | Failure error ->
+      Error error
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestObjectResult =
   let allTestResult (testObjectResult: TestObjectResult) =
-    testObjectResult |> snd |> Seq.collect (fun test -> test.InnerResults)
+    testObjectResult
+    |> snd
+    |> Seq.collect
+      (function
+        | Success test -> test.InnerResults |> Seq.map Success
+        | Failure error -> seq { yield Failure error }
+      )
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuiteResult =
@@ -105,11 +199,10 @@ module TestSuiteResult =
   let countResults testSuiteResult =
     let results = testSuiteResult |> allTestResult
     results |> Seq.fold
-      (fun (count, violateCount, errorCount) (result: TestResult) ->
+      (fun (count, violateCount, errorCount) (result: Result<TestResult, TestError>) ->
         let count = count + 1
-        result.Match
-          ( fun () -> (count, violateCount, errorCount)
-          , fun _ -> (count, violateCount + 1, errorCount)
-          , fun _ -> (count, violateCount, errorCount + 1)
-          )
+        match result with
+        | Passed _              -> (count, violateCount, errorCount)
+        | Violated _            -> (count, violateCount + 1, errorCount)
+        | Error _               -> (count, violateCount, errorCount + 1)
       ) (0, 0, 0)

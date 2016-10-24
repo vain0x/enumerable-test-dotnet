@@ -8,15 +8,14 @@ namespace EnumerableTest
 {
     abstract class TestResult
     {
-        public abstract X Match<X>(Func<X> onPassed, Func<string, X> onViolated, Func<Exception, X> onError);
+        public abstract X Match<X>(Func<X> onPassed, Func<string, X> onViolated);
 
-        public void Match(Action onPassed, Action<string> onViolated, Action<Exception> onError)
+        public void Match(Action onPassed, Action<string> onViolated)
         {
             var unit = (object)null;
             Match(
                 () => { onPassed(); return unit; },
-                message => { onViolated(message); return unit; },
-                error => { onError(error); return unit; }
+                message => { onViolated(message); return unit; }
             );
         }
 
@@ -24,14 +23,14 @@ namespace EnumerableTest
         {
             get
             {
-                return Match(() => true, message => false, error => false);
+                return Match(() => true, message => false);
             }
         }
 
         sealed class PassedTestResult
             : TestResult
         {
-            public override X Match<X>(Func<X> onPassed, Func<string, X> onViolated, Func<Exception, X> onError)
+            public override X Match<X>(Func<X> onPassed, Func<string, X> onViolated)
             {
                 return onPassed();
             }
@@ -47,25 +46,9 @@ namespace EnumerableTest
                 Message = message;
             }
 
-            public override X Match<X>(Func<X> onPassed, Func<string, X> onViolated, Func<Exception, X> onError)
+            public override X Match<X>(Func<X> onPassed, Func<string, X> onViolated)
             {
                 return onViolated(Message);
-            }
-        }
-
-        sealed class ErrorTestResult
-            : TestResult
-        {
-            public Exception Error { get; }
-
-            public override X Match<X>(Func<X> onPassed, Func<string, X> onViolated, Func<Exception, X> onError)
-            {
-                return onError(Error);
-            }
-
-            public ErrorTestResult(Exception error)
-            {
-                Error = error;
             }
         }
 
@@ -77,11 +60,6 @@ namespace EnumerableTest
         public static TestResult OfViolated(string message)
         {
             return new ViolatedTestResult(message);
-        }
-
-        public static TestResult OfError(Exception error)
-        {
-            return new ErrorTestResult(error);
         }
     }
 }
