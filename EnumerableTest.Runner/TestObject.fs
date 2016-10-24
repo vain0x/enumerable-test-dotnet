@@ -11,7 +11,7 @@ type GroupTest =
 type TestClassInstance =
   obj
 
-type TestCase =
+type TestMethod =
   {
     Method                      : MethodInfo
     Run                         : TestClassInstance -> GroupTest
@@ -21,7 +21,7 @@ type TestObject =
   {
     Type                        : Type
     Create                      : unit -> TestClassInstance
-    Cases                       : seq<TestCase>
+    Cases                       : seq<TestMethod>
   }
 
 type TestSuite =
@@ -30,8 +30,8 @@ type TestSuite =
 [<RequireQualifiedAccess>]
 type TestErrorMethod =
   | Constructor
-  | Method                      of TestCase
-  | Dispose                     of TestCase
+  | Method                      of TestMethod
+  | Dispose                     of TestMethod
 
 type TestError =
   {
@@ -117,7 +117,7 @@ module TestObject =
       Result.catch (fun () -> instance |> Disposable.dispose)
       |> Result.mapFailure (fun e -> TestError.OfDispose (testCase, e))
 
-    let tryRunCase (testCase: TestCase) testObject =
+    let tryRunCase (testCase: TestMethod) testObject =
       testObject |> tryInstantiate
       |> Result.bind
         (fun instance ->
