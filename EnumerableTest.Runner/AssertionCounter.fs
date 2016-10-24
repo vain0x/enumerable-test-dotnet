@@ -30,17 +30,17 @@ type AssertionCounter() =
       |> Seq.fold
         (fun count result ->
           let totalCount = count.TotalCount + 1
-          let (violatedCount, errorCount) =
+          let (violatedCountIncrement, errorCountIncrement) =
             match result with
             | Success assertionResult ->
               match assertionResult with
-              | Passed          -> (count.ViolatedCount, count.ErrorCount)
-              | Violated _      -> (count.ViolatedCount + 1, count.ErrorCount)
-            | Failure _         -> (count.ViolatedCount, count.ErrorCount + 1)
+              | Passed          -> (0, 0)
+              | Violated _      -> (1, 0)
+            | Failure _         -> (0, 1)
           {
             TotalCount          = totalCount
-            ViolatedCount       = violatedCount
-            ErrorCount          = errorCount
+            ViolatedCount       = count.ViolatedCount + violatedCountIncrement
+            ErrorCount          = count.ErrorCount + errorCountIncrement
           }
         ) (!count)
     count := newCount
