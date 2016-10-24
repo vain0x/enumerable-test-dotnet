@@ -17,7 +17,7 @@ type TestMethod =
     Run                         : TestClassInstance -> GroupTest
   }
 
-type TestObject =
+type TestClass =
   {
     Type                        : Type
     Create                      : unit -> TestClassInstance
@@ -25,7 +25,7 @@ type TestObject =
   }
 
 type TestSuite =
-  seq<TestObject>
+  seq<TestClass>
 
 [<RequireQualifiedAccess>]
 type TestErrorMethod =
@@ -58,7 +58,7 @@ type TestMethodResult =
   Result<GroupTest, TestError>
 
 type TestObjectResult =
-  TestObject * TestMethodResult []
+  TestClass * TestMethodResult []
 
 type TestSuiteResult =
   seq<TestObjectResult>
@@ -98,7 +98,7 @@ module TestObject =
       typ.GetConstructor([||])
     fun () -> defaultConstructor.Invoke([||])
 
-  let tryCreate (typ: Type): option<TestObject> =
+  let tryCreate (typ: Type): option<TestClass> =
     if typ |> isTestClass then
       {
         Type                    = typ
@@ -109,7 +109,7 @@ module TestObject =
       None
 
   let runAsync =
-    let tryInstantiate (testObject: TestObject) =
+    let tryInstantiate (testObject: TestClass) =
       Result.catch testObject.Create
       |> Result.mapFailure TestError.OfConstructor
 
@@ -133,7 +133,7 @@ module TestObject =
             methodResult
         )
 
-    let tryRunCasesAsync (testObject: TestObject) =
+    let tryRunCasesAsync (testObject: TestClass) =
       let results =
         testObject.Cases
         |> Seq.map
