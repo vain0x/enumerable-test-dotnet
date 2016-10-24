@@ -95,11 +95,6 @@ namespace EnumerableTest
         {
             return new CompositeTest(name, tests.ToArray());
         }
-
-        public static Test OfTests(IEnumerable<Test> tests)
-        {
-            return OfTests("", tests);
-        }
         #endregion
 
         #region Assertions

@@ -49,6 +49,20 @@ namespace EnumerableTest.Sandbox
             yield return Test.Equal(1, 1);
         }
 
+        public IEnumerable<Test> test_all_zero(IEnumerable<int> list)
+        {
+            foreach (var x in list)
+            {
+                yield return Test.Equal(0, x);
+            }
+        }
+
+        public IEnumerable<Test> failing_group()
+        {
+            yield return test_all_zero(new int[] { }).ToTest("empty case");
+            yield return test_all_zero(new[] { 0, 0, 1 }).ToTest("array case");
+        }
+
         public void Dispose()
         {
             if (disposingException != null)

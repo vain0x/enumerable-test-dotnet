@@ -8,11 +8,6 @@ namespace EnumerableTest
 {
     public static class TestExtension
     {
-        public static Test ToTest(this IEnumerable<Test> tests)
-        {
-            return Test.OfTests(tests);
-        }
-
         public static Test ToTest(this IEnumerable<Test> tests, string testName)
         {
             return Test.OfTests(testName, tests);
