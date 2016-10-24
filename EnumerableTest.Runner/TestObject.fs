@@ -5,13 +5,16 @@ open System.Reflection
 open EnumerableTest
 open Basis.Core
 
+type GroupTest =
+  Test.GroupTest
+
 type TestClassInstance =
   obj
 
 type TestCase =
   {
     Method                      : MethodInfo
-    Run                         : TestClassInstance -> Test
+    Run                         : TestClassInstance -> GroupTest
   }
 
 type TestObject =
@@ -52,7 +55,7 @@ with
     TestError.Create(TestErrorMethod.Method testCase, error)
 
 type TestMethodResult =
-  Result<Test, TestError>
+  Result<GroupTest, TestError>
 
 type TestObjectResult =
   TestObject * TestMethodResult []

@@ -34,7 +34,7 @@ namespace EnumerableTest
             }
         }
 
-        sealed class GroupTest
+        internal sealed class GroupTest
             : Test
         {
             public IEnumerable<Test> Tests { get; }
@@ -91,7 +91,7 @@ namespace EnumerableTest
             return OfAssertion(name, AssertionResult.OfViolated(message));
         }
 
-        public static Test OfTestGroup(string name, IEnumerable<Test> testGroup)
+        internal static GroupTest OfTestGroup(string name, IEnumerable<Test> testGroup)
         {
             return new GroupTest(name, testGroup.ToArray());
         }
