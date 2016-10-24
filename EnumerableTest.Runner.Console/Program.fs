@@ -18,7 +18,7 @@ module Program =
       testSuite |> TestSuite.runAsync |> Async.RunSynchronously
     let isAllPassed =
       result
-      |> Seq.collect TestObjectResult.allTestResult
+      |> Seq.collect TestClassResult.allTestResult
       |> Seq.forall (function | Passed _ -> true | _ -> false)
     let exitCode =
       if isAllPassed

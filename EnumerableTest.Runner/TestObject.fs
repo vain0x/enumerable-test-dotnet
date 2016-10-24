@@ -58,14 +58,14 @@ with
 type TestMethodResult =
   Result<GroupTest, TestError>
 
-type TestObjectResult =
+type TestClassResult =
   TestClass * TestMethodResult []
 
 type TestSuiteResult =
-  seq<TestObjectResult>
+  seq<TestClassResult>
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestObject =
+module TestClass =
   let internal testMethods (typ: Type) =
     typ.GetMethods(BindingFlags.Instance ||| BindingFlags.Public ||| BindingFlags.NonPublic)
     |> Seq.filter
@@ -168,11 +168,11 @@ module TestObject =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuite =
   let ofAssembly (assembly: Assembly): TestSuite =
-    assembly.GetTypes() |> Seq.choose TestObject.tryCreate
+    assembly.GetTypes() |> Seq.choose TestClass.tryCreate
 
   let runAsync (testSuite: TestSuite): Async<TestSuiteResult> =
     testSuite
-    |> Seq.map TestObject.runAsync
+    |> Seq.map TestClass.runAsync
     |> Async.Parallel
     |> Async.map (fun x -> x :> seq<_>)
 
@@ -196,8 +196,8 @@ module TestResultExtension =
       Error error
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestObjectResult =
-  let allTestResult (testObjectResult: TestObjectResult) =
+module TestClassResult =
+  let allTestResult (testObjectResult: TestClassResult) =
     testObjectResult
     |> snd
     |> Seq.collect
@@ -209,7 +209,7 @@ module TestObjectResult =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuiteResult =
   let allTestResult (testSuiteResult: TestSuiteResult) =
-    testSuiteResult |> Seq.collect TestObjectResult.allTestResult
+    testSuiteResult |> Seq.collect TestClassResult.allTestResult
 
   let countResults testSuiteResult =
     let results = testSuiteResult |> allTestResult

@@ -79,7 +79,7 @@ type TestPrinter(writer: TextWriter, width: int) =
       let testSuiteResult =
         testSuiteResult |> Seq.filter
           (fun testObjectResult ->
-            testObjectResult |> TestObjectResult.allTestResult
+            testObjectResult |> TestClassResult.allTestResult
             |> Seq.exists (function | Passed _ -> false | _ -> true)
           )
         |> Seq.toArray
