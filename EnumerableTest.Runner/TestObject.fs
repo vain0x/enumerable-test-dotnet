@@ -184,13 +184,6 @@ module TestError =
     | TestErrorMethod.Method testCase           -> testCase.Method.Name
     | TestErrorMethod.Dispose _                 -> "Dispose"
 
-[<AutoOpen>]
-module AssertionResultExtension =
-  let (|Passed|Violated|) (assertionResult: AssertionResult) =
-    match assertionResult.Match(Choice1Of2, Choice2Of2) with
-    | Choice1Of2 () -> Passed
-    | Choice2Of2 message -> Violated message
-
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassResult =
   let allAssertionResults (testClassResult: TestClassResult) =

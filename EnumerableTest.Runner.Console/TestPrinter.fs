@@ -22,31 +22,28 @@ type TestPrinter(writer: TextWriter, width: int) =
   let printAssertionResultAsync i testName (result: AssertionResult) =
     async {
       let mark =
-        result.Match
-          ( fun ()      -> "."
-          , fun _       -> "*"
-          )
+        match result with
+        | Passed          -> "."
+        | Violated _      -> "*"
       do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark testName)
       use indenting = printer.AddIndent()
-      return!
-        result.Match
-          ( fun ()              -> Async.result ()
-          , fun message         -> printer.WriteLineAsync(message)
-          )
+      match result with
+      | Passed            -> ()
+      | Violated message  ->
+        return! printer.WriteLineAsync(message)
     }
 
   let rec printTestAsync i (test: Test) =
-    test.Match
-      ( fun assertionResult ->
-          printAssertionResultAsync i test.Name assertionResult
-      , fun tests ->
-          async {
-            do! printer.WriteLineAsync(sprintf "test group %s" test.Name)
-            use indenting = printer.AddIndent()
-            for (i, test) in tests |> Seq.indexed do
-              do! printTestAsync i test
-          }
-      )
+    async {
+      match test with
+      | AssertionTest assertionResult ->
+        return! printAssertionResultAsync i test.Name assertionResult
+      | GroupTest tests ->
+        do! printer.WriteLineAsync(sprintf "test group %s" test.Name)
+        use indenting = printer.AddIndent()
+        for (i, test) in tests |> Seq.indexed do
+          do! printTestAsync i test
+    }
 
   let printTestMethodResultAsync i (testMethodResult: TestMethodResult) =
     async {
