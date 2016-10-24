@@ -75,13 +75,9 @@ type TestPrinter(writer: TextWriter, width: int) =
 
   member this.PrintAsync(testSuiteResult: TestSuiteResult) =
     async {
-      // Don't print all-green test classes.
       let testSuiteResult =
-        testSuiteResult |> Seq.filter
-          (fun testClassResult ->
-            testClassResult |> TestClassResult.allAssertionResults
-            |> Seq.exists (function | Success test when test.IsPassed -> false | _ -> true)
-          )
+        testSuiteResult
+        |> Seq.filter (TestClassResult.isAllPassed >> not)
         |> Seq.toArray
       for (typeIndex, (testClass, testMethodResults)) in testSuiteResult |> Seq.indexed do
         if typeIndex > 0 then
