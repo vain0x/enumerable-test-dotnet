@@ -11,6 +11,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "EnumerableTest.Runner.Conso
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumerableTest.Sandbox", "EnumerableTest.Sandbox\EnumerableTest.Sandbox.csproj", "{F58DDF9E-6DD2-41C9-9960-0EEC5319D560}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "EnumerableTest.UnitTest", "EnumerableTest.UnitTest\EnumerableTest.UnitTest.fsproj", "{BF400546-8BCC-467F-908A-EC71F75E06A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F58DDF9E-6DD2-41C9-9960-0EEC5319D560}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F58DDF9E-6DD2-41C9-9960-0EEC5319D560}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F58DDF9E-6DD2-41C9-9960-0EEC5319D560}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF400546-8BCC-467F-908A-EC71F75E06A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF400546-8BCC-467F-908A-EC71F75E06A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF400546-8BCC-467F-908A-EC71F75E06A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF400546-8BCC-467F-908A-EC71F75E06A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
