@@ -84,7 +84,7 @@ module TestClass =
 
   /// We report up to one instantiation error
   /// because we don't want to see the same error for each test method.
-  let internal unitfyInstantiationErrors results =
+  let internal unifyInstantiationErrors results =
     let (failureList, successList) =
       results |> Array.partition
         (function
@@ -98,7 +98,7 @@ module TestClass =
   let runAsync testClass: Async<TestClassResult> =
     async {
       let! results = testClass |> tryRunTestMethodsAsync
-      let results = results |> unitfyInstantiationErrors
+      let results = results |> unifyInstantiationErrors
       return (testClass, results)
     }
 
