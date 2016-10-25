@@ -29,7 +29,6 @@ type AssertionCounter() =
       |> TestClassResult.allAssertionResults
       |> Seq.fold
         (fun count result ->
-          let totalCount = count.TotalCount + 1
           let (violatedCountIncrement, errorCountIncrement) =
             match result with
             | Success assertionResult ->
@@ -38,7 +37,7 @@ type AssertionCounter() =
               | Violated _      -> (1, 0)
             | Failure _         -> (0, 1)
           {
-            TotalCount          = totalCount
+            TotalCount          = count.TotalCount + 1
             ViolatedCount       = count.ViolatedCount + violatedCountIncrement
             ErrorCount          = count.ErrorCount + errorCountIncrement
           }
