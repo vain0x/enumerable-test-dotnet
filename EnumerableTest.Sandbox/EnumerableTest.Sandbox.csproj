@@ -7,8 +7,8 @@
     <ProjectGuid>{F58DDF9E-6DD2-41C9-9960-0EEC5319D560}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LightUnit.Sandbox</RootNamespace>
-    <AssemblyName>LightUnit.Sandbox</AssemblyName>
+    <RootNamespace>EnumerableTest.Sandbox</RootNamespace>
+    <AssemblyName>EnumerableTest.Sandbox</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,16 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Class2.cs" />
+    <Compile Include="Class3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LightUnit.Core\LightUnit.Core.csproj">
+    <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
       <Project>{a728a0cf-4f66-4dd8-9a37-8b58e0f4f545}</Project>
-      <Name>LightUnit.Core</Name>
+      <Name>EnumerableTest.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

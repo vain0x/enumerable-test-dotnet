@@ -1,4 +1,4 @@
-﻿namespace LightUnit.Runner.Console.AssemblyInfo
+﻿namespace EnumerableTest.Runner.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // アセンブリに関する一般情報は、以下の属性セットによって
 // 制御されます。アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更します。
-[<assembly: AssemblyTitle("LightUnit.Runner.Console")>]
+[<assembly: AssemblyTitle("EnumerableTest.Runner")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("LightUnit.Runner.Console")>]
+[<assembly: AssemblyProduct("EnumerableTest.Runner")>]
 [<assembly: AssemblyCopyright("Copyright ©  2016")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
@@ -22,7 +22,7 @@ open System.Runtime.InteropServices
 [<assembly: ComVisible(false)>]
 
 // このプロジェクトが COM に公開される場合、次の GUID がタイプ ライブラリの ID になります
-[<assembly: Guid("5c6bb045-a91b-4a8f-94ee-c14b3f6b585f")>]
+[<assembly: Guid("08b6b12c-8032-4641-a8f9-ce3a6a59c97a")>]
 
 // アセンブリのバージョン情報は、以下の 4 つの値で構成されます。:
 // 

@@ -1,1 +1,3 @@
-
+NUGET
+  remote: https://www.nuget.org/api/v2
+    Basis.Core (1.1.3)
