@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -97,6 +98,31 @@ namespace EnumerableTest
         public static Test NotEqual<X>(X unexpected, X actual)
         {
             return NotEqual(unexpected, actual, StructuralComparisons.StructuralEqualityComparer);
+        }
+
+        static Test SelectEquality<X, Y>(
+            string name,
+            Y target,
+            X source,
+            Expression<Func<X, Y>> f,
+            IEqualityComparer comparer,
+            bool expected
+        )
+        {
+            var actual = f.Compile().Invoke(source);
+            var assertion = new SelectEqualAssertion(target, source, actual, f, comparer, expected);
+            return OfAssertion(name, assertion);
+        }
+
+        static Test SelectEqual<X, Y>(string name, Y expected, X source, Expression<Func<X, Y>> f)
+        {
+            var comparer = StructuralComparisons.StructuralEqualityComparer;
+            return SelectEquality(name, expected, source, f, comparer, true);
+        }
+
+        public static Test Satisfy<X>(X value, Expression<Func<X, bool>> predicate)
+        {
+            return SelectEqual(nameof(Satisfy), true, value, predicate);
         }
 
         public static Test Catch<E>(Action f)

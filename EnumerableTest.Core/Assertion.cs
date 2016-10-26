@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,6 +51,37 @@ namespace EnumerableTest
             Target = target;
             Expected = expected;
             Comparer = comparer;
+            IsPassed = comparer.Equals(Actual, Target) == Expected;
+        }
+    }
+
+    sealed class SelectEqualAssertion
+        : Assertion
+    {
+        public object Target { get; }
+        public object Source { get; }
+        public object Actual { get; }
+        public Expression Func { get; }
+        public IEqualityComparer Comparer { get; }
+        public bool Expected { get; }
+
+        public override bool IsPassed { get; }
+
+        public SelectEqualAssertion(
+            object target,
+            object source,
+            object actual,
+            Expression func,
+            IEqualityComparer comparer,
+            bool expected
+        )
+        {
+            Target = target;
+            Source = source;
+            Actual = actual;
+            Func = func;
+            Comparer = comparer;
+            Expected = expected;
             IsPassed = comparer.Equals(Actual, Target) == Expected;
         }
     }
