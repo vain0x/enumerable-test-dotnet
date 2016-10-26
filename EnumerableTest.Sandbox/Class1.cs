@@ -73,6 +73,12 @@ namespace EnumerableTest.Sandbox
             yield return test_all_zero(new[] { 0, 0, 1 }).ToTestGroup("array case");
         }
 
+        public IEnumerable<Test> test_structural_equality()
+        {
+            yield return Test.Equal(new[] { 0, 1, 2 }, new[] { 0, 1, 2 });
+            yield return Test.Equal(Tuple.Create(new[] { 0 }), Tuple.Create(new[] { 0 }));
+        }
+
         public void Dispose()
         {
             if (disposingException != null)

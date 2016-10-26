@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -101,7 +102,7 @@ namespace EnumerableTest
         public static Test Equal<X>(X expected, X actual)
         {
             var name = "Test.Equal";
-            if (Equals(actual, expected))
+            if (StructuralComparisons.StructuralEqualityComparer.Equals(actual, expected))
             {
                 return Pass(name);
             }
