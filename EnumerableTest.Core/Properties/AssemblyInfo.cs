@@ -31,3 +31,4 @@ using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("EnumerableTest.Runner")]
 [assembly: InternalsVisibleTo("EnumerableTest.Runner.Console")]
+[assembly: InternalsVisibleTo("EnumerableTest.UnitTest")]

@@ -86,6 +86,30 @@ module Observable =
     |> ignore<IDisposable>
     event.WaitOne() |> ignore<bool>
 
+  /// Creates a connectable observable
+  /// which executes async tasks when connected and notifies each result.
+  let ofParallel asyncs =
+    let subject = Subject()
+    let computation =
+      async {
+        let! (_: array<unit>) =
+          asyncs |> Seq.map
+            (fun a ->
+              async {
+                let! x = a
+                (subject :> IObserver<_>).OnNext(x)
+              }
+            )
+          |> Async.Parallel
+        (subject :> IObserver<_>).OnCompleted()
+      }
+    { new IConnectableObservable<_> with
+        override this.Connect() =
+          Async.Start(computation)
+        override this.Subscribe(observer) =
+          (subject :> IObservable<_>).Subscribe(observer)
+    }
+
 module String =
   open Basis.Core
 

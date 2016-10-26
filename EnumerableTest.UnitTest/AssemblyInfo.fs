@@ -1,4 +1,4 @@
-﻿namespace EnumerableTest.Runner.Console.AssemblyInfo
+﻿namespace EnumerableTest.UnitTest.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // アセンブリに関する一般情報は、以下の属性セットによって
 // 制御されます。アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更します。
-[<assembly: AssemblyTitle("EnumerableTest.Runner.Console")>]
+[<assembly: AssemblyTitle("EnumerableTest.UnitTest")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("EnumerableTest.Runner.Console")>]
+[<assembly: AssemblyProduct("EnumerableTest.UnitTest")>]
 [<assembly: AssemblyCopyright("Copyright ©  2016")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
@@ -22,7 +22,7 @@ open System.Runtime.InteropServices
 [<assembly: ComVisible(false)>]
 
 // このプロジェクトが COM に公開される場合、次の GUID がタイプ ライブラリの ID になります
-[<assembly: Guid("5c6bb045-a91b-4a8f-94ee-c14b3f6b585f")>]
+[<assembly: Guid("bf400546-8bcc-467f-908a-ec71f75e06a6")>]
 
 // アセンブリのバージョン情報は、以下の 4 つの値で構成されます。:
 // 
@@ -36,8 +36,6 @@ open System.Runtime.InteropServices
 // [<assembly: AssemblyVersion("1.0.*")>]
 [<assembly: AssemblyVersion("1.0.0.0")>]
 [<assembly: AssemblyFileVersion("1.0.0.0")>]
-
-[<assembly: InternalsVisibleToAttribute("EnumerableTest.UnitTest")>]
 
 do
     ()
