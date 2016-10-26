@@ -8,10 +8,10 @@ module TestTest =
   let passedTest = Test.Pass("pass")
   let violatedTest = Test.Violate("violate", "it violated")
 
-  let assertionResult1 = AssertionResult.PassedAssertionResult.Instance
-  let assertionResult2 = AssertionResult.ViolatedAssertionResult("assertion2 violated")
-  let assertionTest1 = Test.OfAssertion("assertion1", assertionResult1)
-  let assertionTest2 = Test.OfAssertion("assertion2", assertionResult2)
+  let assertion1 = Assertion.PassedAssertion.Instance
+  let assertion2 = Assertion.ViolatedAssertion("assertion2 violated")
+  let assertionTest1 = Test.OfAssertion("assertion1", assertion1)
+  let assertionTest2 = Test.OfAssertion("assertion2", assertion2)
   let groupTest =
     Test.OfTestGroup("group1", seq [assertionTest1; assertionTest2])
 
@@ -31,11 +31,11 @@ module TestTest =
       do! groupTest |> assertSatisfies (fun t -> t.IsPassed |> not)
     }
 
-  let ``test InnerResults`` =
+  let ``test Assertions`` =
     test {
-      do! passedTest.InnerResults |> assertSatisfies (Seq.length >> (=) 1)
-      do! violatedTest.InnerResults |> assertSatisfies (Seq.length >> (=) 1)
-      do! emptyGroupTest.InnerResults |> assertSeqEquals []
-      do! groupTest.InnerResults |> assertSeqEquals [assertionResult1; assertionResult2]
-      do! nestedGroupTest.InnerResults |> assertSatisfies (Seq.length >> (=) 3)
+      do! passedTest.Assertions |> assertSatisfies (Seq.length >> (=) 1)
+      do! violatedTest.Assertions |> assertSatisfies (Seq.length >> (=) 1)
+      do! emptyGroupTest.Assertions |> assertSeqEquals []
+      do! groupTest.Assertions |> assertSeqEquals [assertion1; assertion2]
+      do! nestedGroupTest.Assertions |> assertSatisfies (Seq.length >> (=) 3)
     }

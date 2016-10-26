@@ -19,7 +19,7 @@ type TestPrinter(writer: TextWriter, width: int) =
       return! printer.WriteLineAsync(string testError.Error)
     }
 
-  let printAssertionResultAsync i testName (result: AssertionResult) =
+  let printAssertionAsync i testName (result: Assertion) =
     async {
       let mark =
         match result with
@@ -37,7 +37,7 @@ type TestPrinter(writer: TextWriter, width: int) =
     async {
       match test with
       | AssertionTest test ->
-        return! printAssertionResultAsync i test.Name test.Result
+        return! printAssertionAsync i test.Name test.Assertion
       | GroupTest test ->
         do! printer.WriteLineAsync(sprintf "Group: %s" test.Name)
         use indenting = printer.AddIndent()

@@ -3,12 +3,12 @@
 open EnumerableTest
 
 [<AutoOpen>]
-module AssertionResultExtension =
-  let (|True|False|) (assertionResult: AssertionResult) =
-    match assertionResult with
-    | :? AssertionResult.PassedAssertionResult as a ->
+module AssertionExtension =
+  let (|True|False|) (assertion: Assertion) =
+    match assertion with
+    | :? Assertion.PassedAssertion as a ->
       True a
-    | :? AssertionResult.ViolatedAssertionResult as a ->
+    | :? Assertion.ViolatedAssertion as a ->
       False a
     | a -> failwithf "Unknown assertion: %A" a
 

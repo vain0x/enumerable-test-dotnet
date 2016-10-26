@@ -11,7 +11,7 @@ namespace EnumerableTest
     {
         internal string Name { get; }
         internal abstract bool IsPassed { get; }
-        internal abstract IEnumerable<AssertionResult> InnerResults { get; }
+        internal abstract IEnumerable<Assertion> Assertions { get; }
 
         internal Test(string name)
         {
@@ -21,17 +21,17 @@ namespace EnumerableTest
         internal sealed class AssertionTest
             : Test
         {
-            public AssertionResult Result { get; }
+            public Assertion Assertion { get; }
 
-            internal override bool IsPassed => Result.IsPassed;
+            internal override bool IsPassed => Assertion.IsPassed;
 
-            internal override IEnumerable<AssertionResult> InnerResults { get; }
+            internal override IEnumerable<Assertion> Assertions { get; }
 
-            public AssertionTest(string name, AssertionResult result)
+            public AssertionTest(string name, Assertion assertion)
                 : base(name)
             {
-                Result = result;
-                InnerResults = new[] { Result };
+                Assertion = assertion;
+                Assertions = new[] { Assertion };
             }
         }
 
@@ -40,31 +40,31 @@ namespace EnumerableTest
         {
             public IEnumerable<Test> Tests { get; }
             internal override bool IsPassed { get; }
-            internal override IEnumerable<AssertionResult> InnerResults { get;}
+            internal override IEnumerable<Assertion> Assertions { get;}
 
             public GroupTest(string name, IEnumerable<Test> tests)
                 : base(name)
             {
                 Tests = tests;
                 IsPassed = Tests.All(test => test.IsPassed);
-                InnerResults = tests.SelectMany(test => test.InnerResults);
+                Assertions = tests.SelectMany(test => test.Assertions);
             }
         }
 
         #region Factory
-        internal static Test OfAssertion(string name, AssertionResult result)
+        internal static Test OfAssertion(string name, Assertion result)
         {
             return new AssertionTest(name, result);
         }
 
         public static Test Pass(string name)
         {
-            return OfAssertion(name, AssertionResult.PassedAssertionResult.Instance);
+            return OfAssertion(name, Assertion.PassedAssertion.Instance);
         }
 
         public static Test Violate(string name, string message)
         {
-            return OfAssertion(name, new AssertionResult.ViolatedAssertionResult(message));
+            return OfAssertion(name, new Assertion.ViolatedAssertion(message));
         }
 
         internal static GroupTest OfTestGroup(string name, IEnumerable<Test> testGroup)

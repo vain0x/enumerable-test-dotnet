@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace EnumerableTest
 {
-    abstract class AssertionResult
+    abstract class Assertion
     {
         public abstract bool IsPassed { get; }
 
-        public sealed class PassedAssertionResult
-            : AssertionResult
+        public sealed class PassedAssertion
+            : Assertion
         {
             public override bool IsPassed => true;
 
-            public static AssertionResult Instance { get; } =
-                new PassedAssertionResult();
+            public static Assertion Instance { get; } =
+                new PassedAssertion();
         }
 
-        public sealed class ViolatedAssertionResult
-            : AssertionResult
+        public sealed class ViolatedAssertion
+            : Assertion
         {
             public string Message { get; }
 
             public override bool IsPassed => false;
 
-            public ViolatedAssertionResult(string message)
+            public ViolatedAssertion(string message)
             {
                 Message = message;
             }
