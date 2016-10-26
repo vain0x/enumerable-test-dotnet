@@ -79,6 +79,11 @@ namespace EnumerableTest.Sandbox
             yield return Test.Equal(Tuple.Create(new[] { 0 }), Tuple.Create(new[] { 0 }));
         }
 
+        public IEnumerable<Test> test_SelectEqual()
+        {
+            yield return Test.Satisfy(new List<int> { 0, 1, 2 }, list => list.Count < 0);
+        }
+
         public void Dispose()
         {
             if (disposingException != null)
