@@ -9,27 +9,27 @@ namespace EnumerableTest
     abstract class Assertion
     {
         public abstract bool IsPassed { get; }
+    }
 
-        public sealed class PassedAssertion
-            : Assertion
+    sealed class PassedAssertion
+        : Assertion
+    {
+        public override bool IsPassed => true;
+
+        public static Assertion Instance { get; } =
+            new PassedAssertion();
+    }
+
+    sealed class ViolatedAssertion
+        : Assertion
+    {
+        public string Message { get; }
+
+        public override bool IsPassed => false;
+
+        public ViolatedAssertion(string message)
         {
-            public override bool IsPassed => true;
-
-            public static Assertion Instance { get; } =
-                new PassedAssertion();
-        }
-
-        public sealed class ViolatedAssertion
-            : Assertion
-        {
-            public string Message { get; }
-
-            public override bool IsPassed => false;
-
-            public ViolatedAssertion(string message)
-            {
-                Message = message;
-            }
+            Message = message;
         }
     }
 }
