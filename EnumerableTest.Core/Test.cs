@@ -74,10 +74,19 @@ namespace EnumerableTest
         #endregion
 
         #region Assertions
+        static Test Equality<X>(string name, X target, X actual, IEqualityComparer comparer, bool expected)
+        {
+            return OfAssertion(name, new EqualAssertion(actual, target, expected, comparer));
+        }
+
+        public static Test Equal<X>(X expected, X actual, IEqualityComparer comparer)
+        {
+            return Equality(nameof(Equal), expected, actual, comparer, true);
+        }
+
         public static Test Equal<X>(X expected, X actual)
         {
-            var comparer = StructuralComparisons.StructuralEqualityComparer;
-            return OfAssertion(nameof(Equal), new EqualAssertion(actual, expected, true, comparer));
+            return Equal(expected, actual, StructuralComparisons.StructuralEqualityComparer);
         }
 
         public static Test Catch<E>(Action f)
