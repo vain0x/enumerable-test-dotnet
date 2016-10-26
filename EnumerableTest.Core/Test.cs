@@ -77,16 +77,8 @@ namespace EnumerableTest
         public static Test Equal<X>(X expected, X actual)
         {
             var name = "Test.Equal";
-            if (StructuralComparisons.StructuralEqualityComparer.Equals(actual, expected))
-            {
-                return Pass(name);
-            }
-            else
-            {
-                var format =
-                    "Expected = {0}\r\nActual = {1}";
-                return Violate(name, string.Format(format, expected, actual));
-            }
+            var comparer = StructuralComparisons.StructuralEqualityComparer;
+            return OfAssertion(name, new EqualAssertion(actual, expected, true, comparer));
         }
 
         static Test CatchImpl<E>(Action f)
@@ -96,14 +88,11 @@ namespace EnumerableTest
             try
             {
                 f();
-
-                var format =
-                    "An exception should be thrown but wasn't.\r\nExpected: typeof({0})";
-                return Violate(name, string.Format(format, typeof(E)));
+                return OfAssertion(name, new CatchAssertion(typeof(E), null));
             }
-            catch (E)
+            catch (E exception)
             {
-                return Pass(name);
+                return OfAssertion(name, new CatchAssertion(typeof(E), exception));
             }
         }
 
