@@ -76,15 +76,14 @@ namespace EnumerableTest
         #region Assertions
         public static Test Equal<X>(X expected, X actual)
         {
-            var name = "Test.Equal";
             var comparer = StructuralComparisons.StructuralEqualityComparer;
-            return OfAssertion(name, new EqualAssertion(actual, expected, true, comparer));
+            return OfAssertion(nameof(Equal), new EqualAssertion(actual, expected, true, comparer));
         }
 
         static Test CatchImpl<E>(Action f)
             where E : Exception
         {
-            var name = "Test.Catch";
+            var name = nameof(Catch);
             try
             {
                 f();
