@@ -2,6 +2,7 @@
 
 open System
 open Basis.Core
+open EnumerableTest
 
 type AssertionCount =
   {
@@ -18,14 +19,14 @@ type AssertionCounter() =
       ErrorCount                = 0
     }
 
-  let addAssertionResult result (count: AssertionCount) =
+  let addAssertion result (count: AssertionCount) =
     let (violatedCountIncrement, errorCountIncrement) =
       match result with
-      | Success assertionResult ->
-        match assertionResult with
-        | Passed                -> (0, 0)
-        | Violated _            -> (1, 0)
-      | Failure _               -> (0, 1)
+      | Success assertion ->
+        if (assertion: Assertion).IsPassed 
+          then (0, 0)
+          else (1, 0)
+      | Failure _ -> (0, 1)
     {
       TotalCount                = count.TotalCount + 1
       ViolatedCount             = count.ViolatedCount + violatedCountIncrement
@@ -34,8 +35,8 @@ type AssertionCounter() =
 
   let addTestClassResult testClassResult count =
     testClassResult
-    |> TestClassResult.allAssertionResults
-    |> Seq.fold (fun count result -> count |> addAssertionResult result) count
+    |> TestClassResult.allAssertions
+    |> Seq.fold (fun count result -> count |> addAssertion result) count
 
   let isAllGreen (count: AssertionCount) =
     count.ViolatedCount = 0 && count.ErrorCount = 0

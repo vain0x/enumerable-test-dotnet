@@ -22,18 +22,18 @@ module TestError =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassResult =
-  let allAssertionResults (testClassResult: TestClassResult) =
+  let allAssertions (testClassResult: TestClassResult) =
     testClassResult
     |> snd
     |> Seq.collect
       (function
-        | Success test -> test.InnerResults |> Seq.map Success
+        | Success test -> test.Assertions |> Seq.map Success
         | Failure error -> seq { yield Failure error }
       )
 
   let isAllPassed testClassResult =
     testClassResult
-    |> allAssertionResults
+    |> allAssertions
     |> Seq.forall
       (function
         | Success test when test.IsPassed -> true

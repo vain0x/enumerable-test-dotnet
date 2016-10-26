@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="AssertionExtension.fs" />
     <Compile Include="StructuralTextWriter.fs" />
     <Compile Include="TestPrinter.fs" />
     <Compile Include="Program.fs" />

@@ -46,8 +46,8 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Utility.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="AssertionExtension.fs" />
     <Compile Include="TestExtension.fs" />
-    <Compile Include="AssertionResultExtension.fs" />
     <Compile Include="TestSuite.fs" />
     <Compile Include="TestSuiteResult.fs" />
     <Compile Include="AssertionCounter.fs" />

@@ -10,28 +10,28 @@ namespace EnumerableTest
     public abstract class Test
     {
         internal string Name { get; }
-
-        internal abstract X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup);
+        internal abstract bool IsPassed { get; }
+        internal abstract IEnumerable<Assertion> Assertions { get; }
 
         internal Test(string name)
         {
             Name = name;
         }
 
-        sealed class AssertionTest
+        internal sealed class AssertionTest
             : Test
         {
-            public AssertionResult Result { get; }
+            public Assertion Assertion { get; }
 
-            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup)
-            {
-                return onAssertion(Result);
-            }
+            internal override bool IsPassed => Assertion.IsPassed;
 
-            public AssertionTest(string name, AssertionResult result)
+            internal override IEnumerable<Assertion> Assertions { get; }
+
+            public AssertionTest(string name, Assertion assertion)
                 : base(name)
             {
-                Result = result;
+                Assertion = assertion;
+                Assertions = new[] { Assertion };
             }
         }
 
@@ -39,57 +39,32 @@ namespace EnumerableTest
             : Test
         {
             public IEnumerable<Test> Tests { get; }
-
-            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup)
-            {
-                return onGroup(Tests);
-            }
+            internal override bool IsPassed { get; }
+            internal override IEnumerable<Assertion> Assertions { get;}
 
             public GroupTest(string name, IEnumerable<Test> tests)
                 : base(name)
             {
                 Tests = tests;
-            }
-        }
-
-        internal bool IsPassed
-        {
-            get
-            {
-                return
-                    Match(
-                        result => result.IsPassed,
-                        tests => tests.All(test => test.IsPassed)
-                    );
-            }
-        }
-
-        internal IEnumerable<AssertionResult> InnerResults
-        {
-            get
-            {
-                return
-                    Match(
-                        result => new[] { result },
-                        tests => tests.SelectMany(test => test.InnerResults)
-                    );
+                IsPassed = Tests.All(test => test.IsPassed);
+                Assertions = tests.SelectMany(test => test.Assertions);
             }
         }
 
         #region Factory
-        internal static Test OfAssertion(string name, AssertionResult result)
+        internal static Test OfAssertion(string name, Assertion result)
         {
             return new AssertionTest(name, result);
         }
 
         public static Test Pass(string name)
         {
-            return OfAssertion(name, AssertionResult.OfPassed);
+            return OfAssertion(name, TrueAssertion.Instance);
         }
 
         public static Test Violate(string name, string message)
         {
-            return OfAssertion(name, AssertionResult.OfViolated(message));
+            return OfAssertion(name, new FalseAssertion(message));
         }
 
         internal static GroupTest OfTestGroup(string name, IEnumerable<Test> testGroup)
@@ -101,41 +76,23 @@ namespace EnumerableTest
         #region Assertions
         public static Test Equal<X>(X expected, X actual)
         {
-            var name = "Test.Equal";
-            if (StructuralComparisons.StructuralEqualityComparer.Equals(actual, expected))
-            {
-                return Pass(name);
-            }
-            else
-            {
-                var format =
-                    "Expected = {0}\r\nActual = {1}";
-                return Violate(name, string.Format(format, expected, actual));
-            }
-        }
-
-        static Test CatchImpl<E>(Action f)
-            where E : Exception
-        {
-            var name = "Test.Catch";
-            try
-            {
-                f();
-
-                var format =
-                    "An exception should be thrown but wasn't.\r\nExpected: typeof({0})";
-                return Violate(name, string.Format(format, typeof(E)));
-            }
-            catch (E)
-            {
-                return Pass(name);
-            }
+            var comparer = StructuralComparisons.StructuralEqualityComparer;
+            return OfAssertion(nameof(Equal), new EqualAssertion(actual, expected, true, comparer));
         }
 
         public static Test Catch<E>(Action f)
             where E : Exception
         {
-            return CatchImpl<E>(f);
+            var name = nameof(Catch);
+            try
+            {
+                f();
+                return OfAssertion(name, new CatchAssertion(typeof(E), null));
+            }
+            catch (E exception)
+            {
+                return OfAssertion(name, new CatchAssertion(typeof(E), exception));
+            }
         }
 
         public static Test Catch<E>(Func<object> f)
