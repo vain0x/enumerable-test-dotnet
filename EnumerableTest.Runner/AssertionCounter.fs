@@ -2,6 +2,7 @@
 
 open System
 open Basis.Core
+open EnumerableTest
 
 type AssertionCount =
   {
@@ -22,10 +23,10 @@ type AssertionCounter() =
     let (violatedCountIncrement, errorCountIncrement) =
       match result with
       | Success assertion ->
-        match assertion with
-        | Passed                -> (0, 0)
-        | Violated _            -> (1, 0)
-      | Failure _               -> (0, 1)
+        if (assertion: Assertion).IsPassed 
+          then (0, 0)
+          else (1, 0)
+      | Failure _ -> (0, 1)
     {
       TotalCount                = count.TotalCount + 1
       ViolatedCount             = count.ViolatedCount + violatedCountIncrement
