@@ -11,23 +11,23 @@ namespace EnumerableTest
         public abstract bool IsPassed { get; }
     }
 
-    sealed class PassedAssertion
+    sealed class TrueAssertion
         : Assertion
     {
         public override bool IsPassed => true;
 
         public static Assertion Instance { get; } =
-            new PassedAssertion();
+            new TrueAssertion();
     }
 
-    sealed class ViolatedAssertion
+    sealed class FalseAssertion
         : Assertion
     {
         public string Message { get; }
 
         public override bool IsPassed => false;
 
-        public ViolatedAssertion(string message)
+        public FalseAssertion(string message)
         {
             Message = message;
         }

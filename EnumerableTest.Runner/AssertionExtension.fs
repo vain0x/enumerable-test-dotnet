@@ -6,9 +6,9 @@ open EnumerableTest
 module AssertionExtension =
   let (|True|False|) (assertion: Assertion) =
     match assertion with
-    | :? PassedAssertion as a ->
+    | :? TrueAssertion as a ->
       True a
-    | :? ViolatedAssertion as a ->
+    | :? FalseAssertion as a ->
       False a
     | a -> failwithf "Unknown assertion: %A" a
 

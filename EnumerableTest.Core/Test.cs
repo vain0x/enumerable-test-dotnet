@@ -59,12 +59,12 @@ namespace EnumerableTest
 
         public static Test Pass(string name)
         {
-            return OfAssertion(name, PassedAssertion.Instance);
+            return OfAssertion(name, TrueAssertion.Instance);
         }
 
         public static Test Violate(string name, string message)
         {
-            return OfAssertion(name, new ViolatedAssertion(message));
+            return OfAssertion(name, new FalseAssertion(message));
         }
 
         internal static GroupTest OfTestGroup(string name, IEnumerable<Test> testGroup)
