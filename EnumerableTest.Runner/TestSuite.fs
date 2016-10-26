@@ -2,6 +2,7 @@
 
 open System
 open System.Reflection
+open System.Threading
 open EnumerableTest
 open Basis.Core
 
@@ -108,24 +109,6 @@ module TestSuite =
     assembly.GetTypes() |> Seq.choose TestClass.tryCreate
 
   let runAsync (testSuite: TestSuite) =
-    let subject = Observable.Subject()
-    let start () =
-      async {
-        let! units =
-          testSuite
-          |> Seq.map
-            (fun testClass ->
-              async {
-                let! result = testClass |> TestClass.runAsync
-                (subject :> IObserver<_>).OnNext(result)
-              }
-            )
-          |> Async.Parallel
-        (subject :> IObserver<_>).OnCompleted()
-      } |> Async.Start
-    { new Observable.IConnectableObservable<_> with
-        override this.Connect() =
-          start ()
-        override this.Subscribe(observer) =
-          (subject :> IObservable<_>).Subscribe(observer)
-    }
+    testSuite
+    |> Seq.map TestClass.runAsync
+    |> Observable.ofParallel
