@@ -80,7 +80,7 @@ namespace EnumerableTest
             return OfAssertion(nameof(Equal), new EqualAssertion(actual, expected, true, comparer));
         }
 
-        static Test CatchImpl<E>(Action f)
+        public static Test Catch<E>(Action f)
             where E : Exception
         {
             var name = nameof(Catch);
@@ -93,12 +93,6 @@ namespace EnumerableTest
             {
                 return OfAssertion(name, new CatchAssertion(typeof(E), exception));
             }
-        }
-
-        public static Test Catch<E>(Action f)
-            where E : Exception
-        {
-            return CatchImpl<E>(f);
         }
 
         public static Test Catch<E>(Func<object> f)
