@@ -10,28 +10,28 @@ namespace EnumerableTest
     public abstract class Test
     {
         internal string Name { get; }
-
-        internal abstract X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup);
+        internal abstract bool IsPassed { get; }
+        internal abstract IEnumerable<AssertionResult> InnerResults { get; }
 
         internal Test(string name)
         {
             Name = name;
         }
 
-        sealed class AssertionTest
+        internal sealed class AssertionTest
             : Test
         {
             public AssertionResult Result { get; }
 
-            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup)
-            {
-                return onAssertion(Result);
-            }
+            internal override bool IsPassed => Result.IsPassed;
+
+            internal override IEnumerable<AssertionResult> InnerResults { get; }
 
             public AssertionTest(string name, AssertionResult result)
                 : base(name)
             {
                 Result = result;
+                InnerResults = new[] { Result };
             }
         }
 
@@ -39,40 +39,15 @@ namespace EnumerableTest
             : Test
         {
             public IEnumerable<Test> Tests { get; }
-
-            internal override X Match<X>(Func<AssertionResult, X> onAssertion, Func<IEnumerable<Test>, X> onGroup)
-            {
-                return onGroup(Tests);
-            }
+            internal override bool IsPassed { get; }
+            internal override IEnumerable<AssertionResult> InnerResults { get;}
 
             public GroupTest(string name, IEnumerable<Test> tests)
                 : base(name)
             {
                 Tests = tests;
-            }
-        }
-
-        internal bool IsPassed
-        {
-            get
-            {
-                return
-                    Match(
-                        result => result.IsPassed,
-                        tests => tests.All(test => test.IsPassed)
-                    );
-            }
-        }
-
-        internal IEnumerable<AssertionResult> InnerResults
-        {
-            get
-            {
-                return
-                    Match(
-                        result => new[] { result },
-                        tests => tests.SelectMany(test => test.InnerResults)
-                    );
+                IsPassed = Tests.All(test => test.IsPassed);
+                InnerResults = tests.SelectMany(test => test.InnerResults);
             }
         }
 
