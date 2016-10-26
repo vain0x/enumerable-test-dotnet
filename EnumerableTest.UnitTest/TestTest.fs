@@ -8,8 +8,8 @@ module TestTest =
   let passedTest = Test.Pass("pass")
   let violatedTest = Test.Violate("violate", "it violated")
 
-  let assertionResult1 = AssertionResult.OfPassed
-  let assertionResult2 = AssertionResult.OfViolated "assertion2 violated"
+  let assertionResult1 = AssertionResult.PassedAssertionResult.Instance
+  let assertionResult2 = AssertionResult.ViolatedAssertionResult("assertion2 violated")
   let assertionTest1 = Test.OfAssertion("assertion1", assertionResult1)
   let assertionTest2 = Test.OfAssertion("assertion2", assertionResult2)
   let groupTest =
