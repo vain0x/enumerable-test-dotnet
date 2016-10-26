@@ -89,6 +89,16 @@ namespace EnumerableTest
             return Equal(expected, actual, StructuralComparisons.StructuralEqualityComparer);
         }
 
+        public static Test NotEqual<X>(X unexpected, X actual, IEqualityComparer comparer)
+        {
+            return Equality(nameof(NotEqual), unexpected, actual, comparer, false);
+        }
+
+        public static Test NotEqual<X>(X unexpected, X actual)
+        {
+            return NotEqual(unexpected, actual, StructuralComparisons.StructuralEqualityComparer);
+        }
+
         public static Test Catch<E>(Action f)
             where E : Exception
         {
