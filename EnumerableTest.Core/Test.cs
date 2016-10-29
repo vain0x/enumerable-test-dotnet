@@ -16,9 +16,29 @@ namespace EnumerableTest
     /// </summary>
     public abstract class Test
     {
-        internal string Name { get; }
-        internal abstract bool IsPassed { get; }
-        internal abstract IEnumerable<Assertion> Assertions { get; }
+        /// <summary>
+        /// Gets the name.
+        /// <para lang="ja">
+        /// テストの名前を取得する。
+        /// </para>
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the test was passed.
+        /// <para lang="ja">
+        /// テストが成功したかどうかを取得する。
+        /// </para>
+        /// </summary>
+        public abstract bool IsPassed { get; }
+
+        /// <summary>
+        /// Gets all assertions in the test.
+        /// <para lang="ja">
+        /// テスト内のすべての表明を取得する。
+        /// </para>
+        /// </summary>
+        public abstract IEnumerable<Assertion> Assertions { get; }
 
         internal Test(string name)
         {
@@ -212,16 +232,37 @@ namespace EnumerableTest
         #endregion
     }
 
-    internal sealed class AssertionTest
+    /// <summary>
+    /// Represents a unit test which consists of a single assertion.
+    /// </summary>
+    public sealed class AssertionTest
         : Test
     {
+        /// <summary>
+        /// Gets the assertion.
+        /// <para lang="ja">
+        /// テスト内の唯一の表明を取得する。
+        /// </para>
+        /// </summary>
         public Assertion Assertion { get; }
 
-        internal override bool IsPassed => Assertion.IsPassed;
+        /// <summary>
+        /// Gets a value indicating whether the test was passed.
+        /// <para lang="ja">
+        /// テストが成功したかどうかを取得する。
+        /// </para>
+        /// </summary>
+        public override bool IsPassed => Assertion.IsPassed;
 
-        internal override IEnumerable<Assertion> Assertions { get; }
+        /// <summary>
+        /// Gets all assertions in the test.
+        /// <para lang="ja">
+        /// テスト内のすべての表明を取得する。
+        /// </para>
+        /// </summary>
+        public override IEnumerable<Assertion> Assertions { get; }
 
-        public AssertionTest(string name, Assertion assertion)
+        internal AssertionTest(string name, Assertion assertion)
             : base(name)
         {
             Assertion = assertion;
@@ -229,14 +270,37 @@ namespace EnumerableTest
         }
     }
 
-    internal sealed class GroupTest
+    /// <summary>
+    /// Represents a unit test which consists of 0+ tests.
+    /// </summary>
+    public sealed class GroupTest
         : Test
     {
+        /// <summary>
+        /// Gets inner tests.
+        /// <para lang="ja">
+        /// 内部のテストを取得する。
+        /// </para>
+        /// </summary>
         public IEnumerable<Test> Tests { get; }
-        internal override bool IsPassed { get; }
-        internal override IEnumerable<Assertion> Assertions { get; }
 
-        public GroupTest(string name, IEnumerable<Test> tests)
+        /// <summary>
+        /// Gets a value indicating whether the test was passed.
+        /// <para lang="ja">
+        /// テストが成功したかどうかを取得する。
+        /// </para>
+        /// </summary>
+        public override bool IsPassed { get; }
+
+        /// <summary>
+        /// Gets all assertions in the test.
+        /// <para lang="ja">
+        /// テスト内のすべての表明を取得する。
+        /// </para>
+        /// </summary>
+        public override IEnumerable<Assertion> Assertions { get; }
+
+        internal GroupTest(string name, IEnumerable<Test> tests)
             : base(name)
         {
             Tests = tests;

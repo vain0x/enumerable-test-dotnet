@@ -20,7 +20,7 @@ namespace EnumerableTest
         /// <param name="tests"></param>
         /// <param name="testName"></param>
         /// <returns></returns>
-        public static Test ToTestGroup(this IEnumerable<Test> tests, string testName)
+        public static GroupTest ToTestGroup(this IEnumerable<Test> tests, string testName)
         {
             return Test.OfTestGroup(testName, tests);
         }
