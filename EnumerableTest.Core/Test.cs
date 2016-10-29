@@ -77,11 +77,6 @@ namespace EnumerableTest
         {
             return OfAssertion(name, new FalseAssertion(message));
         }
-
-        internal static GroupTest OfTestGroup(string name, IEnumerable<Test> testGroup)
-        {
-            return new GroupTest(name, testGroup.ToArray());
-        }
         #endregion
 
         #region Assertions
@@ -303,7 +298,7 @@ namespace EnumerableTest
         internal GroupTest(string name, IEnumerable<Test> tests)
             : base(name)
         {
-            Tests = tests;
+            Tests = tests.ToArray();
             IsPassed = Tests.All(test => test.IsPassed);
             Assertions = tests.SelectMany(test => test.Assertions);
         }

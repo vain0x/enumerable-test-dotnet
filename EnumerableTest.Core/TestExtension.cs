@@ -22,7 +22,7 @@ namespace EnumerableTest
         /// <returns></returns>
         public static GroupTest ToTestGroup(this IEnumerable<Test> tests, string testName)
         {
-            return Test.OfTestGroup(testName, tests);
+            return new GroupTest(testName, tests);
         }
     }
 }

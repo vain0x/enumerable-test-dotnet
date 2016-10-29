@@ -13,15 +13,15 @@ module TestTest =
   let assertionTest1 = Test.OfAssertion("assertion1", assertion1)
   let assertionTest2 = Test.OfAssertion("assertion2", assertion2)
   let groupTest =
-    Test.OfTestGroup("group1", seq [assertionTest1; assertionTest2])
+    (seq [assertionTest1; assertionTest2]).ToTestGroup("group1")
 
   let emptyGroupTest =
-    Test.OfTestGroup("empty group", Seq.empty)
+    Seq.empty.ToTestGroup("empty group")
 
   let nestedGroupTest =
-    let innerTest1 = Test.OfTestGroup("inner group1", seq [assertionTest1])
-    let innerTest2 = Test.OfTestGroup("inner group2", seq [assertionTest2])
-    Test.OfTestGroup("outer group", seq [ innerTest1; innerTest2; Test.Pass("pass") ])
+    let innerTest1 = (seq [assertionTest1]).ToTestGroup("inner group1") :> Test
+    let innerTest2 = (seq [assertionTest2]).ToTestGroup("inner group2") :> Test
+    (seq [ innerTest1; innerTest2; Test.Pass("pass") ]).ToTestGroup("outer group")
 
   let ``test IsPassed`` =
     test {
