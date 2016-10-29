@@ -25,39 +25,6 @@ namespace EnumerableTest
             Name = name;
         }
 
-        internal sealed class AssertionTest
-            : Test
-        {
-            public Assertion Assertion { get; }
-
-            internal override bool IsPassed => Assertion.IsPassed;
-
-            internal override IEnumerable<Assertion> Assertions { get; }
-
-            public AssertionTest(string name, Assertion assertion)
-                : base(name)
-            {
-                Assertion = assertion;
-                Assertions = new[] { Assertion };
-            }
-        }
-
-        internal sealed class GroupTest
-            : Test
-        {
-            public IEnumerable<Test> Tests { get; }
-            internal override bool IsPassed { get; }
-            internal override IEnumerable<Assertion> Assertions { get;}
-
-            public GroupTest(string name, IEnumerable<Test> tests)
-                : base(name)
-            {
-                Tests = tests;
-                IsPassed = Tests.All(test => test.IsPassed);
-                Assertions = tests.SelectMany(test => test.Assertions);
-            }
-        }
-
         #region Factory
         internal static Test OfAssertion(string name, Assertion result)
         {
@@ -243,5 +210,38 @@ namespace EnumerableTest
             return Catch<E>(() => { f(); });
         }
         #endregion
+    }
+
+    internal sealed class AssertionTest
+        : Test
+    {
+        public Assertion Assertion { get; }
+
+        internal override bool IsPassed => Assertion.IsPassed;
+
+        internal override IEnumerable<Assertion> Assertions { get; }
+
+        public AssertionTest(string name, Assertion assertion)
+            : base(name)
+        {
+            Assertion = assertion;
+            Assertions = new[] { Assertion };
+        }
+    }
+
+    internal sealed class GroupTest
+        : Test
+    {
+        public IEnumerable<Test> Tests { get; }
+        internal override bool IsPassed { get; }
+        internal override IEnumerable<Assertion> Assertions { get; }
+
+        public GroupTest(string name, IEnumerable<Test> tests)
+            : base(name)
+        {
+            Tests = tests;
+            IsPassed = Tests.All(test => test.IsPassed);
+            Assertions = tests.SelectMany(test => test.Assertions);
+        }
     }
 }
