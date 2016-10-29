@@ -3,7 +3,7 @@
 open System
 open System.Reflection
 open Basis.Core
-open EnumerableTest
+open EnumerableTest.Sdk
 
 /// Represents an instance of a test class.
 type TestInstance =

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using EnumerableTest.Sdk;
 
 namespace EnumerableTest
 {
@@ -225,82 +226,5 @@ namespace EnumerableTest
             return Catch<E>(() => { f(); });
         }
         #endregion
-    }
-
-    /// <summary>
-    /// Represents a unit test which consists of a single assertion.
-    /// </summary>
-    public sealed class AssertionTest
-        : Test
-    {
-        /// <summary>
-        /// Gets the assertion.
-        /// <para lang="ja">
-        /// テスト内の唯一の表明を取得する。
-        /// </para>
-        /// </summary>
-        public Assertion Assertion { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the test was passed.
-        /// <para lang="ja">
-        /// テストが成功したかどうかを取得する。
-        /// </para>
-        /// </summary>
-        public override bool IsPassed => Assertion.IsPassed;
-
-        /// <summary>
-        /// Gets all assertions in the test.
-        /// <para lang="ja">
-        /// テスト内のすべての表明を取得する。
-        /// </para>
-        /// </summary>
-        public override IEnumerable<Assertion> Assertions { get; }
-
-        internal AssertionTest(string name, Assertion assertion)
-            : base(name)
-        {
-            Assertion = assertion;
-            Assertions = new[] { Assertion };
-        }
-    }
-
-    /// <summary>
-    /// Represents a unit test which consists of 0+ tests.
-    /// </summary>
-    public sealed class GroupTest
-        : Test
-    {
-        /// <summary>
-        /// Gets inner tests.
-        /// <para lang="ja">
-        /// 内部のテストを取得する。
-        /// </para>
-        /// </summary>
-        public IEnumerable<Test> Tests { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the test was passed.
-        /// <para lang="ja">
-        /// テストが成功したかどうかを取得する。
-        /// </para>
-        /// </summary>
-        public override bool IsPassed { get; }
-
-        /// <summary>
-        /// Gets all assertions in the test.
-        /// <para lang="ja">
-        /// テスト内のすべての表明を取得する。
-        /// </para>
-        /// </summary>
-        public override IEnumerable<Assertion> Assertions { get; }
-
-        internal GroupTest(string name, IEnumerable<Test> tests)
-            : base(name)
-        {
-            Tests = tests.ToArray();
-            IsPassed = Tests.All(test => test.IsPassed);
-            Assertions = tests.SelectMany(test => test.Assertions);
-        }
     }
 }

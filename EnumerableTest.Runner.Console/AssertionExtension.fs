@@ -1,7 +1,7 @@
 ﻿namespace EnumerableTest.Runner.Console
 
-open EnumerableTest
 open EnumerableTest.Runner
+open EnumerableTest.Sdk
 
 [<AutoOpen>]
 module AssertionExtension =

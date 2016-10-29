@@ -2,6 +2,7 @@
 
 open System
 open EnumerableTest
+open EnumerableTest.Sdk
 
 [<AutoOpen>]
 module TestExtension =

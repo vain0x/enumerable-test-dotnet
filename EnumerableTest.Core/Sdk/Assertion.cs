@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EnumerableTest
+namespace EnumerableTest.Sdk
 {
     /// <summary>
     /// Represents a assertion for unit tests.

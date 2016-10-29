@@ -3,6 +3,7 @@
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest
+open EnumerableTest.Sdk
 
 module TestTest =
   let passedTest = Test.Pass("pass")
