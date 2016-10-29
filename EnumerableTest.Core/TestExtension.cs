@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EnumerableTest.Sdk;
 
 namespace EnumerableTest
 {
@@ -20,9 +21,9 @@ namespace EnumerableTest
         /// <param name="tests"></param>
         /// <param name="testName"></param>
         /// <returns></returns>
-        public static Test ToTestGroup(this IEnumerable<Test> tests, string testName)
+        public static GroupTest ToTestGroup(this IEnumerable<Test> tests, string testName)
         {
-            return Test.OfTestGroup(testName, tests);
+            return new GroupTest(testName, tests);
         }
     }
 }

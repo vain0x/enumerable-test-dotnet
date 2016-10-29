@@ -28,7 +28,7 @@ module TestClass =
       Run                   =
         fun this ->
           let tests = m.Invoke(this, [||]) :?> seq<Test>
-          Test.OfTestGroup(m.Name, tests)
+          tests.ToTestGroup(m.Name)
     }
 
   let internal testMethods (typ: Type) =

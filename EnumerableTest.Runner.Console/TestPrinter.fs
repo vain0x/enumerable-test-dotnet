@@ -4,6 +4,7 @@ open System
 open System.IO
 open EnumerableTest
 open EnumerableTest.Runner
+open EnumerableTest.Sdk
 open Basis.Core
 
 type TestPrinter(writer: TextWriter, width: int) =

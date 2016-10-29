@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using EnumerableTest.Sdk;
 
 namespace EnumerableTest
 {
@@ -16,46 +17,33 @@ namespace EnumerableTest
     /// </summary>
     public abstract class Test
     {
-        internal string Name { get; }
-        internal abstract bool IsPassed { get; }
-        internal abstract IEnumerable<Assertion> Assertions { get; }
+        /// <summary>
+        /// Gets the name.
+        /// <para lang="ja">
+        /// テストの名前を取得する。
+        /// </para>
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the test was passed.
+        /// <para lang="ja">
+        /// テストが成功したかどうかを取得する。
+        /// </para>
+        /// </summary>
+        public abstract bool IsPassed { get; }
+
+        /// <summary>
+        /// Gets all assertions in the test.
+        /// <para lang="ja">
+        /// テスト内のすべての表明を取得する。
+        /// </para>
+        /// </summary>
+        public abstract IEnumerable<Assertion> Assertions { get; }
 
         internal Test(string name)
         {
             Name = name;
-        }
-
-        internal sealed class AssertionTest
-            : Test
-        {
-            public Assertion Assertion { get; }
-
-            internal override bool IsPassed => Assertion.IsPassed;
-
-            internal override IEnumerable<Assertion> Assertions { get; }
-
-            public AssertionTest(string name, Assertion assertion)
-                : base(name)
-            {
-                Assertion = assertion;
-                Assertions = new[] { Assertion };
-            }
-        }
-
-        internal sealed class GroupTest
-            : Test
-        {
-            public IEnumerable<Test> Tests { get; }
-            internal override bool IsPassed { get; }
-            internal override IEnumerable<Assertion> Assertions { get;}
-
-            public GroupTest(string name, IEnumerable<Test> tests)
-                : base(name)
-            {
-                Tests = tests;
-                IsPassed = Tests.All(test => test.IsPassed);
-                Assertions = tests.SelectMany(test => test.Assertions);
-            }
         }
 
         #region Factory
@@ -89,11 +77,6 @@ namespace EnumerableTest
         public static Test Violate(string name, string message)
         {
             return OfAssertion(name, new FalseAssertion(message));
-        }
-
-        internal static GroupTest OfTestGroup(string name, IEnumerable<Test> testGroup)
-        {
-            return new GroupTest(name, testGroup.ToArray());
         }
         #endregion
 
