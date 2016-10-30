@@ -22,9 +22,9 @@ module TestClass =
     typ.GetConstructor([||]) |> isNull |> not
     && typ |> testMethodInfos |> Seq.isEmpty |> not
 
-  let internal testMethod m =
+  let internal testMethod (m: MethodInfo) =
     {
-      Method                = m
+      MethodName            = m.Name
       Run                   =
         fun this ->
           let tests = m.Invoke(this, [||]) :?> seq<Test>

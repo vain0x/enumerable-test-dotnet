@@ -11,7 +11,7 @@ type TestInstance =
 
 type TestMethod =
   {
-    Method                      : MethodInfo
+    MethodName                  : string
     Run                         : TestInstance -> GroupTest
   }
 

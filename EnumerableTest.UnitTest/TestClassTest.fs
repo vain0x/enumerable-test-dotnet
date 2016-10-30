@@ -166,7 +166,7 @@ module TestClassTest =
 
   let ``test unitfyInstantiationErrors`` =
     test {
-      let typ                 = typeof<TestClass>
+      let typ                 = typeof<TestClass1>
       let testMethod          = typ.GetMethod("PassingTestMethod") |> TestClass.testMethod
       let results =
         [|

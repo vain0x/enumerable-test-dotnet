@@ -13,7 +13,7 @@ module TestError =
       "constructor"
     | TestErrorMethod.Method
     | TestErrorMethod.Dispose ->
-      testMethod.Method.Name
+      testMethod.MethodName
 
   /// Gets the name of the method where the exception was thrown.
   let errorMethodName (testMethod: TestMethod) (testError: TestError) =
@@ -21,7 +21,7 @@ module TestError =
     | TestErrorMethod.Constructor ->
       "constructor"
     | TestErrorMethod.Method ->
-      testMethod.Method.Name
+      testMethod.MethodName
     | TestErrorMethod.Dispose ->
       "Dispose"
 
