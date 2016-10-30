@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sdk\Assertion.cs" />
+    <Compile Include="Sdk\MarshalValue.cs" />
     <Compile Include="Sdk\Test\AssertionTest.cs" />
     <Compile Include="Sdk\Test\GroupTest.cs" />
     <Compile Include="Test.cs" />

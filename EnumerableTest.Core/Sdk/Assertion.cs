@@ -96,7 +96,7 @@ namespace EnumerableTest.Sdk
         /// 同値性を判定したい値を取得する。
         /// </para>
         /// </summary>
-        public object Actual { get; }
+        public MarshalValue Actual { get; }
 
         /// <summary>
         /// Gets the value to be compared to.
@@ -104,7 +104,7 @@ namespace EnumerableTest.Sdk
         /// 比較対象の値を取得する。
         /// </para>
         /// </summary>
-        public object Target { get; }
+        public MarshalValue Target { get; }
 
         /// <summary>
         /// Gets a value indicating whether two values should be equal or not.
@@ -129,11 +129,11 @@ namespace EnumerableTest.Sdk
 
         internal EqualAssertion(object actual, object target, bool expected, IEqualityComparer comparer)
         {
-            Actual = actual;
-            Target = target;
+            Actual = MarshalValue.FromObject(actual);
+            Target = MarshalValue.FromObject(target);
             Expected = expected;
             Comparer = comparer;
-            IsPassed = comparer.Equals(Actual, Target) == Expected;
+            IsPassed = comparer.Equals(actual, target) == expected;
         }
     }
 
@@ -150,22 +150,22 @@ namespace EnumerableTest.Sdk
         /// <summary>
         /// Gets the value to be compared to.
         /// </summary>
-        public object Target { get; }
+        public MarshalValue Target { get; }
 
         /// <summary>
         /// Gets the value passed to the function.
         /// </summary>
-        public object Source { get; }
+        public MarshalValue Source { get; }
 
         /// <summary>
         /// Gets the result of the function.
         /// </summary>
-        public object Actual { get; }
+        public MarshalValue Actual { get; }
 
         /// <summary>
-        /// Gets the function.
+        /// Gets a string which represents the function.
         /// </summary>
-        public Expression Func { get; }
+        public string Func { get; }
 
         /// <summary>
         /// Gets the comparer.
@@ -194,13 +194,13 @@ namespace EnumerableTest.Sdk
             bool expected
         )
         {
-            Target = target;
-            Source = source;
-            Actual = actual;
-            Func = func;
+            Target = MarshalValue.FromObject(target);
+            Source = MarshalValue.FromObject(source);
+            Actual = MarshalValue.FromObject(actual);
+            Func = func.ToString();
             Comparer = comparer;
             Expected = expected;
-            IsPassed = comparer.Equals(Actual, Target) == Expected;
+            IsPassed = comparer.Equals(actual, target) == expected;
         }
     }
 
