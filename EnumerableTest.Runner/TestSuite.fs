@@ -44,7 +44,7 @@ module TestClass =
   let tryCreate (typ: Type): option<TestClass> =
     if typ |> isTestClass then
       {
-        Type                    = typ
+        TypeFullName            = typ.FullName
         Create                  = typ |> instantiate
         Methods                 = typ |> testMethods
       } |> Some

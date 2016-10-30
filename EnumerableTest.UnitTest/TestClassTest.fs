@@ -90,7 +90,7 @@ module TestClassTest =
       let typ = typeof<TestClass1>
       match typ |> TestClass.tryCreate with
       | Some testClass ->
-        do! testClass.Type |> assertEquals typ
+        do! testClass.TypeFullName |> assertEquals typ.FullName
         do! testClass.Create () |> assertSatisfies (fun it -> it.GetType() = typ)
       | None ->
         do! fail ""

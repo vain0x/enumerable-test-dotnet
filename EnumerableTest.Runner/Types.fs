@@ -17,7 +17,7 @@ type TestMethod =
 
 type TestClass =
   {
-    Type                        : Type
+    TypeFullName                : string
     Create                      : unit -> TestInstance
     Methods                     : seq<TestMethod>
   }

@@ -78,7 +78,7 @@ type TestPrinter(writer: TextWriter, width: int) =
       if testClassResult |> TestClassResult.isAllPassed |> not then
         let (testClass, testMethodResults) = testClassResult
         do! printSeparatorAsync ()
-        do! printer.WriteLineAsync(sprintf "Type: %s" testClass.Type.FullName)
+        do! printer.WriteLineAsync(sprintf "Type: %s" testClass.TypeFullName)
         use indenting = printer.AddIndent()
         for (testIndex, testMethodResult) in testMethodResults |> Seq.indexed do
           do! testMethodResult |> printTestMethodResultAsync testIndex
