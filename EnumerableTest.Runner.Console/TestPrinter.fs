@@ -13,9 +13,9 @@ type TestPrinter(writer: TextWriter, width: int) =
   let printSeparatorAsync () =
     printer.WriteLineAsync(String.replicate (width - printer.IndentLength) "-")
 
-  let printTestErrorAsync testError =
+  let printTestErrorAsync testMethod testError =
     async {
-      let methodName  = testError |> TestError.errorMethodName
+      let methodName  = testError |> TestError.errorMethodName testMethod
       do! printer.WriteLineAsync(sprintf "RUNTIME ERROR in %s" methodName)
       return! printer.WriteLineAsync(string testError.Error)
     }
@@ -49,17 +49,17 @@ type TestPrinter(writer: TextWriter, width: int) =
   let printTestMethodResultAsync i (testMethodResult: TestMethodResult) =
     async {
       match testMethodResult with
-      | Success test when test.IsPassed -> ()
-      | Success test ->
+      | (_, Success test) when test.IsPassed -> ()
+      | (_, Success test) ->
         do! printer.WriteLineAsync(sprintf "Method: %s" test.Name)
         use indenting = printer.AddIndent()
         for  (i, test) in test.Tests |> Seq.indexed do
           do! printTestAsync i test
-      | Failure testError ->
-        let methodName = testError |> TestError.methodName
+      | (testMethod, Failure testError) ->
+        let methodName = testError |> TestError.methodName testMethod
         do! printer.WriteLineAsync(sprintf "Method: %s" methodName)
         use indenting = printer.AddIndent()
-        return! printTestErrorAsync testError
+        return! printTestErrorAsync testMethod testError
     }
 
   member this.PrintSummaryAsync(count: AssertionCount) =

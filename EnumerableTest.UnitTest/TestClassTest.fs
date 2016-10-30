@@ -172,16 +172,17 @@ module TestClassTest =
         [|
           TestError.OfConstructor(Exception()) |> Failure
           TestError.OfConstructor(Exception()) |> Failure
-          TestError.OfDispose(testMethod, Exception()) |> Failure
+          TestError.OfDispose(Exception()) |> Failure
           Success ()
         |]
+        |> Array.map (fun r -> (testMethod, r))
       do! results |> TestClass.unifyInstantiationErrors
           |> assertSatisfies
             (fun results ->
               let instantiationErrors =
                 results |> Seq.filter
                   (function
-                    | Failure { Method = TestErrorMethod.Constructor } -> true
+                    | (_, Failure { Method = TestErrorMethod.Constructor }) -> true
                     | _ -> false
                   )
               instantiationErrors |> Seq.length = 1

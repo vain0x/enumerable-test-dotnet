@@ -29,8 +29,8 @@ type TestSuite =
 [<RequireQualifiedAccess>]
 type TestErrorMethod =
   | Constructor
-  | Method                      of TestMethod
-  | Dispose                     of TestMethod
+  | Method
+  | Dispose
 
 type TestError =
   {
@@ -47,14 +47,14 @@ with
   static member OfConstructor(error) =
     TestError.Create(TestErrorMethod.Constructor, error)
 
-  static member OfDispose(testCase, error) =
-    TestError.Create(TestErrorMethod.Dispose testCase, error)
+  static member OfDispose(error) =
+    TestError.Create(TestErrorMethod.Dispose, error)
 
-  static member OfMethod(testCase, error) =
-    TestError.Create(TestErrorMethod.Method testCase, error)
+  static member OfMethod(error) =
+    TestError.Create(TestErrorMethod.Method, error)
 
 type TestMethodResult =
-  Result<GroupTest, TestError>
+  TestMethod * Result<GroupTest, TestError>
 
 type TestClassResult =
   TestClass * TestMethodResult []
