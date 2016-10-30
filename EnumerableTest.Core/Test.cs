@@ -15,6 +15,7 @@ namespace EnumerableTest
     /// 単体テストの結果を表す。
     /// </para>
     /// </summary>
+    [Serializable]
     public abstract class Test
     {
         /// <summary>
@@ -39,7 +40,7 @@ namespace EnumerableTest
         /// テスト内のすべての表明を取得する。
         /// </para>
         /// </summary>
-        public abstract IEnumerable<Assertion> Assertions { get; }
+        public abstract Assertion[] Assertions { get; }
 
         internal Test(string name)
         {

@@ -14,6 +14,7 @@ namespace EnumerableTest.Sdk
     /// 単体テストの表明を表す。
     /// </para>
     /// </summary>
+    [Serializable]
     public abstract class Assertion
     {
         /// <summary>
@@ -31,6 +32,7 @@ namespace EnumerableTest.Sdk
     /// 成立する表明を表す。
     /// </para>
     /// </summary>
+    [Serializable]
     public sealed class TrueAssertion
         : Assertion
     {
@@ -52,6 +54,7 @@ namespace EnumerableTest.Sdk
     /// 不成立な表明を表す。
     /// </para>
     /// </summary>
+    [Serializable]
     public sealed class FalseAssertion
         : Assertion
     {
@@ -83,6 +86,7 @@ namespace EnumerableTest.Sdk
     /// 同値性の表明を表す。
     /// </para>
     /// </summary>
+    [Serializable]
     public sealed class EqualAssertion
         : Assertion
     {
@@ -139,6 +143,7 @@ namespace EnumerableTest.Sdk
     /// 関数の結果がある値に等しい (あるいは等しくない) ことの表明を表す。
     /// </para>
     /// </summary>
+    [Serializable]
     public sealed class SelectEqualAssertion
         : Assertion
     {
@@ -205,6 +210,7 @@ namespace EnumerableTest.Sdk
     /// 関数が例外を送出することの表明を表す。
     /// </para>
     /// </summary>
+    [Serializable]
     public sealed class CatchAssertion
         : Assertion
     {
