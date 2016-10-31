@@ -81,12 +81,25 @@ type TestMethodNode(name: string) =
         | None ->
           TestStatus.NotCompleted
       )
+      
+  let isPassed =
+    lastResult.Select
+      (function
+        | Some (Success test) ->
+          (test: GroupTest).IsPassed
+        | Some (Failure _) ->
+          false
+        | None ->
+          true
+      )
 
   member this.Name = name
 
   member this.LastResult = lastResultUntyped
 
   member this.TestStatus = testStatus
+
+  member this.IsPassed = isPassed
 
   member this.Update() =
     lastResult.Value <- None
@@ -101,15 +114,24 @@ type TestClassNode(name: string) =
   let tryFindNode methodName =
     children |> Seq.tryFind (fun ch -> ch.Name = methodName)
 
-  let isPassed = Uptodate.Create(None)
-
   let testStatus = Uptodate.Create(NotCompleted)
+
+  let isPassed =
+    testStatus.Select
+      (function
+        | NotCompleted | Passed ->
+          true
+        | Violated | Error ->
+          false
+      )
 
   member this.Children = children
 
   member this.Name = name
 
   member this.TestStatus = testStatus
+
+  member this.IsPassed = isPassed
 
   member this.CalcTestStatus() =
     let children = children |> Seq.toArray

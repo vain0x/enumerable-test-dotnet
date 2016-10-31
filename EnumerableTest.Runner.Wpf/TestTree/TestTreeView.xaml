@@ -1,9 +1,11 @@
 ﻿<UserControl
     x:Class="EnumerableTest.Runner.Wpf.TestTreeView"
+    x:Name="userControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:core="clr-namespace:EnumerableTest;assembly=EnumerableTest.Core"
     xmlns:sdk="clr-namespace:EnumerableTest.Sdk;assembly=EnumerableTest.Core"
     xmlns:runner="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner"
@@ -37,13 +39,20 @@
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
+
+                <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsPassed.Value}" Value="False">
+                            <Setter Property="IsExpanded" Value="True" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
             </TreeView.Resources>
         </TreeView>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         <ScrollViewer
             Grid.Column="2"
             Content="{Binding ElementName=treeView, Path=SelectedItem}"
-            HorizontalScrollBarVisibility="Auto"
             >
             <ScrollViewer.Resources>
                 <!-- Nodes -->
@@ -95,7 +104,7 @@
                             <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
                             <TextBlock Text="RUNTIME ERROR!" />
                         </StackPanel>
-                        <TextBlock Text="{Binding Error}" />
+                        <Label Content="{Binding Error}" />
                     </StackPanel>
                 </DataTemplate>
                 
@@ -131,13 +140,13 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         
-                        <TextBlock Text="Target" />
+                        <TextBlock Text="Target" Style="{StaticResource LabelTextBlockStyle}" />
                         <Label Grid.Column="1" Content="{Binding Target}" />
 
-                        <TextBlock Grid.Row="1" Text="Actual" />
+                        <TextBlock Grid.Row="1" Text="Actual" Style="{StaticResource LabelTextBlockStyle}" />
                         <Label Grid.Row="1" Grid.Column="1" Content="{Binding Actual}" />
 
-                        <TextBlock Grid.Row="2" Text="Expected" />
+                        <TextBlock Grid.Row="2" Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
                         <Label Grid.Row="2" Grid.Column="1" Content="{Binding Expected}" />
                     </Grid>
                 </DataTemplate>
@@ -156,19 +165,19 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="Target" />
+                        <TextBlock Text="Target" Style="{StaticResource LabelTextBlockStyle}" />
                         <Label Grid.Column="1" Content="{Binding Target}" />
 
-                        <TextBlock Grid.Row="1" Text="Source" />
+                        <TextBlock Grid.Row="1" Text="Source" Style="{StaticResource LabelTextBlockStyle}" />
                         <Label Grid.Row="1" Grid.Column="1" Content="{Binding Source}" />
 
-                        <TextBlock Grid.Row="2" Text="Actual" />
+                        <TextBlock Grid.Row="2" Text="Actual" Style="{StaticResource LabelTextBlockStyle}" />
                         <Label Grid.Row="2" Grid.Column="1" Content="{Binding Actual}" />
 
-                        <TextBlock Grid.Row="3" Text="Func" />
+                        <TextBlock Grid.Row="3" Text="Func" Style="{StaticResource LabelTextBlockStyle}" />
                         <Label Grid.Row="3" Grid.Column="1" Content="{Binding Func}" />
 
-                        <TextBlock Grid.Row="4" Text="Expected" />
+                        <TextBlock Grid.Row="4" Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
                         <Label Grid.Row="4" Grid.Column="1" Content="{Binding Expected}" />
                     </Grid>
                 </DataTemplate>
@@ -183,7 +192,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="Exception" />
+                        <TextBlock Text="Exception" Style="{StaticResource LabelTextBlockStyle}" />
                         <Label Grid.Column="1" Content="{Binding Exception}" />
                     </Grid>
                 </DataTemplate>
@@ -213,7 +222,7 @@
                             >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                                <DataGridTemplateColumn Header="Value">
+                                <DataGridTemplateColumn Header="Value" Width="*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Label Content="{Binding Value}" />
@@ -233,12 +242,18 @@
                                 <TextBlock Text="{Binding Exception.Message}" />
                             </StackPanel>
                         </Expander.Header>
-                        <TextBlock Text="{Binding Exception}" />
+                        <Label Content="{Binding Exception}" />
                     </Expander>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type sdk:MarshalResultValue}">
                     <Label Content="{Binding MarshalValue}" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type system:Exception}">
+                    <Border Style="{StaticResource CornerRadiusBorderStyle}">
+                        <TextBlock TextWrapping="Wrap" Margin="10" Text="{Binding}" />
+                    </Border>
                 </DataTemplate>
             </ScrollViewer.Resources>
         </ScrollViewer>
