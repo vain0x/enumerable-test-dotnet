@@ -1,0 +1,246 @@
+﻿<UserControl
+    x:Class="EnumerableTest.Runner.Wpf.TestTreeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:core="clr-namespace:EnumerableTest;assembly=EnumerableTest.Core"
+    xmlns:sdk="clr-namespace:EnumerableTest.Sdk;assembly=EnumerableTest.Core"
+    xmlns:runner="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner"
+    xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner"
+    xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
+    mc:Ignorable="d" 
+    d:DesignWidth="300"
+    d:DesignHeight="300"
+    >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="80" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <TreeView x:Name="treeView" ItemsSource="{Binding Children}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate
+                    DataType="{x:Type model:TestClassNode}"
+                    ItemsSource="{Binding Children}"
+                    >
+                    <StackPanel Orientation="Horizontal">
+                        <local:TestStatusMark DataContext="{Binding TestStatus.Value}" />
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <HierarchicalDataTemplate DataType="{x:Type model:TestMethodNode}">
+                    <StackPanel Orientation="Horizontal">
+                        <local:TestStatusMark DataContext="{Binding TestStatus.Value}" />
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        <ScrollViewer
+            Grid.Column="2"
+            Content="{Binding ElementName=treeView, Path=SelectedItem}"
+            HorizontalScrollBarVisibility="Auto"
+            >
+            <ScrollViewer.Resources>
+                <!-- Nodes -->
+                <DataTemplate DataType="{x:Type model:TestClassNode}">
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type model:TestMethodNode}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" />
+                        <Separator />
+                        <Label Content="{Binding LastResult.Value}" />
+                    </StackPanel>
+                </DataTemplate>
+
+                <!-- Tests -->
+                <DataTemplate DataType="{x:Type sdk:AssertionTest}">
+                    <Expander>
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <local:TestStatusMark />
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </Expander.Header>
+                        <Expander.Style>
+                            <Style TargetType="Expander">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsPassed}" Value="False">
+                                        <Setter Property="IsExpanded" Value="True" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Expander.Style>
+                        
+                        <Label Content="{Binding Assertion}" />
+                    </Expander>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type sdk:GroupTest}">
+                    <GroupBox Header="{Binding Name}">
+                        <ItemsControl ItemsSource="{Binding Tests}" />
+                    </GroupBox>
+                </DataTemplate>
+
+                <!-- TestError -->
+                <DataTemplate DataType="{x:Type runner:TestError}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                            <TextBlock Text="RUNTIME ERROR!" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding Error}" />
+                    </StackPanel>
+                </DataTemplate>
+                
+                <!-- NotExecutedResult -->
+                <DataTemplate DataType="{x:Type model:NotExecutedResult}">
+                    <StackPanel Orientation="Horizontal">
+                        <local:TestStatusMark DataContext="{x:Static model:TestStatus.NotCompleted}" />
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="This test has not completed yet." />
+                            <TextBlock Text="このテストの実行はまだ完了していません。" />
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+                
+                <!-- Assertions-->
+                <DataTemplate DataType="{x:Type sdk:TrueAssertion}">
+                    <TextBlock Text="Always passed." />
+                </DataTemplate>
+                
+                <DataTemplate DataType="{x:Type sdk:FalseAssertion}">
+                    <TextBlock Text="{Binding Message}" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type sdk:EqualAssertion}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Text="Target" />
+                        <Label Grid.Column="1" Content="{Binding Target}" />
+
+                        <TextBlock Grid.Row="1" Text="Actual" />
+                        <Label Grid.Row="1" Grid.Column="1" Content="{Binding Actual}" />
+
+                        <TextBlock Grid.Row="2" Text="Expected" />
+                        <Label Grid.Row="2" Grid.Column="1" Content="{Binding Expected}" />
+                    </Grid>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type sdk:SelectEqualAssertion}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Target" />
+                        <Label Grid.Column="1" Content="{Binding Target}" />
+
+                        <TextBlock Grid.Row="1" Text="Source" />
+                        <Label Grid.Row="1" Grid.Column="1" Content="{Binding Source}" />
+
+                        <TextBlock Grid.Row="2" Text="Actual" />
+                        <Label Grid.Row="2" Grid.Column="1" Content="{Binding Actual}" />
+
+                        <TextBlock Grid.Row="3" Text="Func" />
+                        <Label Grid.Row="3" Grid.Column="1" Content="{Binding Func}" />
+
+                        <TextBlock Grid.Row="4" Text="Expected" />
+                        <Label Grid.Row="4" Grid.Column="1" Content="{Binding Expected}" />
+                    </Grid>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type sdk:CatchAssertion}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Exception" />
+                        <Label Grid.Column="1" Content="{Binding Exception}" />
+                    </Grid>
+                </DataTemplate>
+
+                <!-- MarshalValue -->
+                <DataTemplate DataType="{x:Type sdk:MarshalValue}">
+                    <Expander>
+                        <Expander.Header>
+                            <TextBlock>
+                                <Run Text="{Binding String, Mode=OneTime}" />
+                                :
+                                <Run Text="{Binding TypeName, Mode=OneTime}" />
+                            </TextBlock>
+                        </Expander.Header>
+                        <Expander.Style>
+                            <Style TargetType="Expander">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Properties.Length}" Value="0">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Expander.Style>
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            ItemsSource="{Binding Properties}"
+                            >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                                <DataGridTemplateColumn Header="Value">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Value}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Expander>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type sdk:MarshalResultException}">
+                    <Expander>
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                                <TextBlock Text="{Binding Exception.Message}" />
+                            </StackPanel>
+                        </Expander.Header>
+                        <TextBlock Text="{Binding Exception}" />
+                    </Expander>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type sdk:MarshalResultValue}">
+                    <Label Content="{Binding MarshalValue}" />
+                </DataTemplate>
+            </ScrollViewer.Resources>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

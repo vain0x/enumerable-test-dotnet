@@ -26,6 +26,16 @@ module TestError =
       "Dispose"
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestMethodResult =
+  /// Tries to get the method name to be executed or "constructor".
+  let methodName (testMethodResult: TestMethodResult) =
+    match testMethodResult with
+    | (_, Success test) ->
+      test.Name
+    | (testMethod, Failure testError) ->
+      testError |> TestError.methodName testMethod
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassResult =
   let allAssertions (testClassResult: TestClassResult) =
     testClassResult

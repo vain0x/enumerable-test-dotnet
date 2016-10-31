@@ -1,8 +1,24 @@
 ﻿namespace EnumerableTest.Runner
 
+open System.Collections.Generic
+
 module Seq =
   let indexed xs =
     xs |> Seq.mapi (fun i x -> (i, x))
+
+  /// Applies f for each element in xs and partition them into two list.
+  /// The first is y's where f x = Some y
+  /// and the other is x's where f x = None.
+  let paritionMap (f: 'x -> option<'y>) (xs: seq<'x>): (IReadOnlyList<'y> * IReadOnlyList<'x>) =
+    let firsts = ResizeArray()
+    let seconds = ResizeArray()
+    for x in xs do
+      match f x with
+      | Some y ->
+        firsts.Add(y)
+      | None ->
+        seconds.Add(x)
+    (firsts :> IReadOnlyList<_>, seconds :> IReadOnlyList<_>)
 
 module Result =
   open Basis.Core

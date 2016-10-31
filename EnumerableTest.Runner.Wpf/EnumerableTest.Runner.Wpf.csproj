@@ -55,6 +55,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TestTree\TestStatusConverter.cs" />
+    <Compile Include="TestTree\TestStatusMark.xaml.cs">
+      <DependentUpon>TestStatusMark.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TestTree\TestTreeView.xaml.cs">
+      <DependentUpon>TestTreeView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -67,6 +74,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TestTree\TestStatusMark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestTree\TestTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -97,7 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
-      <Project>{a728a0cf-4f66-4dd8-9a37-8b58e0f4f545}</Project>
+      <Project>{2ea9e494-90a7-4b41-9e12-a8991a251bd4}</Project>
       <Name>EnumerableTest.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">

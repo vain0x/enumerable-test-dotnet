@@ -7,8 +7,8 @@
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     mc:Ignorable="d"
     Title="MainWindow"
-    Width="525"
-    Height="350"
+    Width="768"
+    Height="432"
     >
-    <Grid />
+    <local:TestTreeView />
 </Window>
