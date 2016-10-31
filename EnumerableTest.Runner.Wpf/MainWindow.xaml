@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     mc:Ignorable="d"
-    Title="MainWindow"
+    Title="EnumerableTest.Runner.Wpf"
     Width="768"
     Height="432"
     >
