@@ -111,6 +111,24 @@ type TestClassNode(name: string) =
 
   member this.TestStatus = testStatus
 
+  member this.CalcTestStatus() =
+    let children = children |> Seq.toArray
+    let rec loop i current =
+      if i = children.Length then
+        current
+      else
+        let loop = loop (i + 1)
+        match (current, children.[i].TestStatus.Value) with
+        | (_, NotCompleted) | (NotCompleted, _) ->
+          NotCompleted
+        | (Error, _) | (_, Error) ->
+          Error |> loop
+        | (Violated, _) | (_, Violated) ->
+          Violated |> loop
+        | _ ->
+          Passed |> loop
+    loop 0 Passed
+
   member this.Update(testMethodResults: array<string * obj>) =
     let (existingNodes, newTestMethods) =
       testMethodResults |> Seq.paritionMap
@@ -129,6 +147,7 @@ type TestClassNode(name: string) =
       children.Add(node)
     for (node, result) in existingNodes do
       node.UpdateResult(result)
+    testStatus.Value <- this.CalcTestStatus()
 
 module Counter =
   let private counter = ref 0
