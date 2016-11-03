@@ -6,17 +6,17 @@
     StartupUri="MainWindow.xaml"
     >
     <Application.Resources>
-        <Style x:Key="DefaultTextBlockStylke" TargetType="TextBlock">
+        <Style x:Key="DefaultTextBlockStyle" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Yu Gothic UI,Meiryo" />
             <Setter Property="FontSize" Value="13" />
         </Style>
         
-        <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStylke}" />
+        <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStyle}" />
 
         <Style
             x:Key="LabelTextBlockStyle"
             TargetType="TextBlock"
-            BasedOn="{StaticResource DefaultTextBlockStylke}"
+            BasedOn="{StaticResource DefaultTextBlockStyle}"
             >
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -73,6 +73,41 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+        
+        <Style x:Key="DefaultDataGridStyle" TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="HorizontalGridLinesBrush" Value="Gray" />
+            <Setter Property="VerticalGridLinesBrush" Value="Gray" />
+            <Setter Property="RowHeaderWidth" Value="0" />
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Background" Value="DimGray" />
+                        <Setter Property="BorderThickness" Value="0,0,1,1" />
+                        <Setter Property="BorderBrush" Value="Gray" />
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="Padding" Value="10,0,10,0" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DataGrid" BasedOn="{StaticResource DefaultDataGridStyle}" />
+
+        <Style
+            x:Key="DataGridCellStyle"
+            TargetType="DataGridCell"
+            BasedOn="{StaticResource DefaultControlStyle}"
+            >
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="10,5,10,5" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
         </Style>
     </Application.Resources>
 </Application>

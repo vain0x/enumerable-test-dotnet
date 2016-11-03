@@ -221,8 +221,18 @@
                             ItemsSource="{Binding Properties}"
                             >
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                                <DataGridTemplateColumn Header="Value" Width="*">
+                                <DataGridTextColumn
+                                    Header="Name"
+                                    Binding="{Binding Name}"
+                                    CellStyle="{StaticResource DataGridCellStyle}"
+                                    IsReadOnly="True"
+                                    />
+                                <DataGridTemplateColumn
+                                    Header="Value"
+                                    Width="*"
+                                    CellStyle="{StaticResource DataGridCellStyle}"
+                                    IsReadOnly="True"
+                                    >
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Label Content="{Binding Value}" />
