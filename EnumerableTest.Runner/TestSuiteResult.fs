@@ -7,18 +7,33 @@ open Basis.Core
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestError =
-  let methodName (testError: TestError) =
+  let methodName (testMethod: TestMethod) (testError: TestError) =
     match testError.Method with
-    | TestErrorMethod.Constructor               -> "constructor"
-    | TestErrorMethod.Method testCase
-    | TestErrorMethod.Dispose testCase          -> testCase.Method.Name
+    | TestErrorMethod.Constructor ->
+      "constructor"
+    | TestErrorMethod.Method
+    | TestErrorMethod.Dispose ->
+      testMethod.MethodName
 
   /// Gets the name of the method where the exception was thrown.
-  let errorMethodName (testError: TestError) =
+  let errorMethodName (testMethod: TestMethod) (testError: TestError) =
     match testError.Method with
-    | TestErrorMethod.Constructor               -> "constructor"
-    | TestErrorMethod.Method testCase           -> testCase.Method.Name
-    | TestErrorMethod.Dispose _                 -> "Dispose"
+    | TestErrorMethod.Constructor ->
+      "constructor"
+    | TestErrorMethod.Method ->
+      testMethod.MethodName
+    | TestErrorMethod.Dispose ->
+      "Dispose"
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestMethodResult =
+  /// Tries to get the method name to be executed or "constructor".
+  let methodName (testMethodResult: TestMethodResult) =
+    match testMethodResult with
+    | (_, Success test) ->
+      test.Name
+    | (testMethod, Failure testError) ->
+      testError |> TestError.methodName testMethod
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassResult =
@@ -27,8 +42,8 @@ module TestClassResult =
     |> snd
     |> Seq.collect
       (function
-        | Success test -> test.Assertions |> Seq.map Success
-        | Failure error -> seq { yield Failure error }
+        | (_, Success test) -> test.Assertions |> Seq.map Success
+        | (_, Failure error) -> seq { yield Failure error }
       )
 
   let isAllPassed testClassResult =

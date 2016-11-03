@@ -79,9 +79,36 @@ namespace EnumerableTest.Sandbox
             yield return Test.Equal(Tuple.Create(new[] { 0 }), Tuple.Create(new[] { 0 }));
         }
 
+        /*
         public IEnumerable<Test> test_SelectEqual()
         {
             yield return Test.Satisfy(new List<int> { 0, 1, 2 }, list => list.Count < 0);
+        }
+        /*/
+        public IEnumerable<Test> New_test()
+        {
+            yield return Test.Equal(1, 0);
+        }
+        //*/
+
+        sealed class MyClass
+        {
+            public int X
+            {
+                get { throw new InvalidOperationException("X always throws."); }
+            }
+
+            public DateTime Now
+            {
+                get { return DateTime.Now; }
+            }
+        }
+
+        public IEnumerable<Test> test_complex_value()
+        {
+            var exception = new ArgumentOutOfRangeException("value");
+            var value = new MyClass();
+            yield return Test.Equal<object>(exception, value);
         }
 
         public void Dispose()

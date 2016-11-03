@@ -9,6 +9,7 @@ namespace EnumerableTest.Sdk
     /// <summary>
     /// Represents a unit test which consists of 0+ tests.
     /// </summary>
+    [Serializable]
     public sealed class GroupTest
         : Test
     {
@@ -18,7 +19,7 @@ namespace EnumerableTest.Sdk
         /// 内部のテストを取得する。
         /// </para>
         /// </summary>
-        public IEnumerable<Test> Tests { get; }
+        public Test[] Tests { get; }
 
         /// <summary>
         /// Gets a value indicating whether the test was passed.
@@ -34,14 +35,14 @@ namespace EnumerableTest.Sdk
         /// テスト内のすべての表明を取得する。
         /// </para>
         /// </summary>
-        public override IEnumerable<Assertion> Assertions { get; }
+        public override Assertion[] Assertions { get; }
 
         internal GroupTest(string name, IEnumerable<Test> tests)
             : base(name)
         {
             Tests = tests.ToArray();
             IsPassed = Tests.All(test => test.IsPassed);
-            Assertions = tests.SelectMany(test => test.Assertions);
+            Assertions = tests.SelectMany(test => test.Assertions).ToArray();
         }
     }
 }

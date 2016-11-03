@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
-      <Project>{a728a0cf-4f66-4dd8-9a37-8b58e0f4f545}</Project>
+      <Project>{2ea9e494-90a7-4b41-9e12-a8991a251bd4}</Project>
       <Name>EnumerableTest.Core</Name>
     </ProjectReference>
   </ItemGroup>

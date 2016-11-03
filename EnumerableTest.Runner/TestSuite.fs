@@ -22,9 +22,9 @@ module TestClass =
     typ.GetConstructor([||]) |> isNull |> not
     && typ |> testMethodInfos |> Seq.isEmpty |> not
 
-  let internal testMethod m =
+  let internal testMethod (m: MethodInfo) =
     {
-      Method                = m
+      MethodName            = m.Name
       Run                   =
         fun this ->
           let tests = m.Invoke(this, [||]) :?> seq<Test>
@@ -44,7 +44,7 @@ module TestClass =
   let tryCreate (typ: Type): option<TestClass> =
     if typ |> isTestClass then
       {
-        Type                    = typ
+        TypeFullName            = typ.FullName
         Create                  = typ |> instantiate
         Methods                 = typ |> testMethods
       } |> Some
@@ -57,7 +57,7 @@ module TestClass =
 
   let internal tryDispose testMethod instance =
     Result.catch (fun () -> instance |> Disposable.dispose)
-    |> Result.mapFailure (fun e -> TestError.OfDispose (testMethod, e))
+    |> Result.mapFailure TestError.OfDispose
 
   let internal tryRunTestMethod (testMethod: TestMethod) testClass =
     testClass |> tryInstantiate
@@ -65,7 +65,7 @@ module TestClass =
       (fun instance ->
         let methodResult =
           Result.catch (fun () -> instance |> testMethod.Run)
-          |> Result.mapFailure (fun e -> TestError.OfMethod (testMethod, e))
+          |> Result.mapFailure TestError.OfMethod
         let disposeResult =
           instance |> tryDispose testMethod
         match (methodResult, disposeResult) with
@@ -78,8 +78,8 @@ module TestClass =
   let internal tryRunTestMethodsAsync (testClass: TestClass) =
     testClass.Methods
     |> Seq.map
-      (fun testCase ->
-        async { return testClass |> tryRunTestMethod testCase }
+      (fun testMethod ->
+        async { return (testMethod, testClass |> tryRunTestMethod testMethod) }
       )
     |> Async.Parallel
 
@@ -89,7 +89,7 @@ module TestClass =
     let (failureList, successList) =
       results |> Array.partition
         (function
-          | Failure ({ TestError.Method = TestErrorMethod.Constructor }) -> true
+          | (_, Failure { TestError.Method = TestErrorMethod.Constructor }) -> true
           | x -> false
         )
     Array.append

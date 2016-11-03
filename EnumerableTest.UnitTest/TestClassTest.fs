@@ -90,7 +90,7 @@ module TestClassTest =
       let typ = typeof<TestClass1>
       match typ |> TestClass.tryCreate with
       | Some testClass ->
-        do! testClass.Type |> assertEquals typ
+        do! testClass.TypeFullName |> assertEquals typ.FullName
         do! testClass.Create () |> assertSatisfies (fun it -> it.GetType() = typ)
       | None ->
         do! fail ""
@@ -166,22 +166,23 @@ module TestClassTest =
 
   let ``test unitfyInstantiationErrors`` =
     test {
-      let typ                 = typeof<TestClass>
+      let typ                 = typeof<TestClass1>
       let testMethod          = typ.GetMethod("PassingTestMethod") |> TestClass.testMethod
       let results =
         [|
           TestError.OfConstructor(Exception()) |> Failure
           TestError.OfConstructor(Exception()) |> Failure
-          TestError.OfDispose(testMethod, Exception()) |> Failure
+          TestError.OfDispose(Exception()) |> Failure
           Success ()
         |]
+        |> Array.map (fun r -> (testMethod, r))
       do! results |> TestClass.unifyInstantiationErrors
           |> assertSatisfies
             (fun results ->
               let instantiationErrors =
                 results |> Seq.filter
                   (function
-                    | Failure { Method = TestErrorMethod.Constructor } -> true
+                    | (_, Failure { Method = TestErrorMethod.Constructor }) -> true
                     | _ -> false
                   )
               instantiationErrors |> Seq.length = 1
