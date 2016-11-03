@@ -115,6 +115,10 @@
       <Project>{2ea9e494-90a7-4b41-9e12-a8991a251bd4}</Project>
       <Name>EnumerableTest.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EnumerableTest.Runner.Wpf.ViewModel\EnumerableTest.Runner.Wpf.ViewModel.fsproj">
+      <Project>{367d4453-0649-48ea-9115-73ec9c8e98ba}</Project>
+      <Name>EnumerableTest.Runner.Wpf.ViewModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
       <Project>{08b6b12c-8032-4641-a8f9-ce3a6a59c97a}</Project>
       <Name>EnumerableTest.Runner</Name>

@@ -44,6 +44,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Utility.fs" />
+    <Compile Include="TestStatus.fs" />
+    <Compile Include="TestClassResult.fs" />
+    <Compile Include="TestMethodNode.fs" />
+    <Compile Include="TestClassNode.fs" />
+    <Compile Include="TestTree.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
+      <Name>EnumerableTest.Core</Name>
+      <Project>{2ea9e494-90a7-4b41-9e12-a8991a251bd4}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
+      <Name>EnumerableTest.Runner</Name>
+      <Project>{08b6b12c-8032-4641-a8f9-ce3a6a59c97a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

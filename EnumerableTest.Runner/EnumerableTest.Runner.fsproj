@@ -51,7 +51,6 @@
     <Compile Include="TestSuite.fs" />
     <Compile Include="TestSuiteResult.fs" />
     <Compile Include="AssertionCounter.fs" />
-    <Compile Include="Wpf.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
