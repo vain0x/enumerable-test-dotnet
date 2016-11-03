@@ -1,4 +1,6 @@
 # EnumerableTest
+[![NuGet version](https://badge.fury.io/nu/EnumerableTest.Core.svg)](https://badge.fury.io/nu/EnumerableTest.Core)
+
 A unit test framework for .NET framework.
 
 ![A screen shot of EnumerableTest.Runner.Wpf](document/image/EnumerableTest.Runner.Wpf.Screenshot.png)
