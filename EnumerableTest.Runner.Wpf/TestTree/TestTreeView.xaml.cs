@@ -29,7 +29,7 @@ namespace EnumerableTest.Runner.Wpf
 
             var args = Environment.GetCommandLineArgs();
 #if DEBUG
-            args = new[] { @"D:\repo\EnumerableTest\EnumerableTest.Sandbox\bin\Debug\EnumerableTest.Sandbox.dll" };
+            args = new[] { @"..\..\..\EnumerableTest.Sandbox\bin\Debug\EnumerableTest.Sandbox.dll" };
 #endif
             foreach (var arg in args)
             {
