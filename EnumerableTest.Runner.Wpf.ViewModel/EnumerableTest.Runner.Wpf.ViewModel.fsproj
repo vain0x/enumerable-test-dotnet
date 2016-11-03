@@ -46,7 +46,6 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Utility.fs" />
     <Compile Include="TestStatus.fs" />
-    <Compile Include="TestClassResult.fs" />
     <Compile Include="TestMethodNode.fs" />
     <Compile Include="TestClassNode.fs" />
     <Compile Include="TestTree.fs" />

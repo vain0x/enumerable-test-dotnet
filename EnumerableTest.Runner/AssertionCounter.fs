@@ -19,24 +19,62 @@ type AssertionCounter() =
       ErrorCount                = 0
     }
 
-  let addAssertion result (count: AssertionCount) =
-    let (violatedCountIncrement, errorCountIncrement) =
-      match result with
-      | Success assertion ->
-        if (assertion: Assertion).IsPassed 
-          then (0, 0)
-          else (1, 0)
-      | Failure _ -> (0, 1)
+  let onePassed =
     {
-      TotalCount                = count.TotalCount + 1
-      ViolatedCount             = count.ViolatedCount + violatedCountIncrement
-      ErrorCount                = count.ErrorCount + errorCountIncrement
+      TotalCount                = 1
+      ViolatedCount             = 0
+      ErrorCount                = 0
     }
 
-  let addTestClassResult testClassResult count =
-    testClassResult
-    |> TestClassResult.allAssertions
-    |> Seq.fold (fun count result -> count |> addAssertion result) count
+  let oneViolated =
+    {
+      TotalCount                = 1
+      ViolatedCount             = 1
+      ErrorCount                = 0
+    }
+
+  let oneError =
+    {
+      TotalCount                = 1
+      ViolatedCount             = 0
+      ErrorCount                = 1
+    }
+
+  let add (l: AssertionCount) (r: AssertionCount) =
+    {
+      TotalCount                = l.TotalCount + r.TotalCount
+      ViolatedCount             = l.ViolatedCount + r.ViolatedCount
+      ErrorCount                = l.ErrorCount + r.ErrorCount
+    }
+
+  let ofAssertion (assertion: Assertion) =
+    if assertion.IsPassed
+      then onePassed
+      else oneViolated
+
+  let ofGroupTest (groupTest: GroupTest) =
+    seq {
+      for assertion in groupTest.Assertions do
+        yield assertion |> ofAssertion
+      if groupTest.ExceptionOrNull |> isNull |> not then
+        yield oneError
+    }
+
+  let addTestClass (testClass: TestClass) count =
+    seq {
+      match testClass.InstantiationError with
+      | Some e ->
+        yield oneError
+      | None ->
+        for testMethod in testClass.Result do
+          yield! testMethod.Result |> ofGroupTest
+          match testMethod.DisposingError with
+          | Some _ ->
+            yield oneError
+          | None ->
+            ()
+    }
+    |> Seq.fold add count
 
   let isAllGreen (count: AssertionCount) =
     count.ViolatedCount = 0 && count.ErrorCount = 0
@@ -49,9 +87,9 @@ type AssertionCounter() =
   member this.IsAllGreen =
     !count |> isAllGreen
 
-  interface IObserver<TestClassResult>  with
-    override this.OnNext(testClassResult) =
-      count := !count |> addTestClassResult testClassResult
+  interface IObserver<TestClass>  with
+    override this.OnNext(testClass) =
+      count := !count |> addTestClass testClass
 
     override this.OnError(_) = ()
 

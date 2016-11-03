@@ -22,6 +22,15 @@ namespace EnumerableTest.Sdk
         public Test[] Tests { get; }
 
         /// <summary>
+        /// Gets the exception thrown while executing the group or null.
+        /// <para lang="ja">
+        /// テストの実行中に例外が送出されたなら、その例外を取得する。
+        /// そうでなければ、null を取得する。
+        /// </para>
+        /// </summary>
+        public Exception ExceptionOrNull { get; }
+
+        /// <summary>
         /// Gets a value indicating whether the test was passed.
         /// <para lang="ja">
         /// テストが成功したかどうかを取得する。
@@ -37,12 +46,13 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override Assertion[] Assertions { get; }
 
-        internal GroupTest(string name, IEnumerable<Test> tests)
+        internal GroupTest(string name, Test[] tests, Exception exceptionOrNull)
             : base(name)
         {
-            Tests = tests.ToArray();
+            Tests = tests;
+            ExceptionOrNull = exceptionOrNull;
             IsPassed = Tests.All(test => test.IsPassed);
-            Assertions = tests.SelectMany(test => test.Assertions).ToArray();
+            Assertions = Tests.SelectMany(test => test.Assertions).ToArray();
         }
     }
 }

@@ -109,5 +109,7 @@
             <Setter Property="Background" Value="White" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
+
+        <Style x:Key="DefaultStackPanelStyle" TargetType="StackPanel" />
     </Application.Resources>
 </Application>

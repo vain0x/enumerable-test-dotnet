@@ -13,30 +13,24 @@ type TestStatus =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestStatus =
   let ofGroupTest (groupTest: GroupTest) =
-    if groupTest.IsPassed
-      then Passed
-      else Violated
+    if groupTest.ExceptionOrNull |> isNull then
+      if groupTest.IsPassed
+        then Passed
+        else Violated
+    else
+      Error
 
   let ofAssertion (assertion: Assertion) =
     if assertion.IsPassed
       then Passed
       else Violated
 
-  let ofTestResult =
-    function
-    | Success (AssertionTest test) ->
-      test.Assertion |> ofAssertion
-    | Success (GroupTest test) ->
-      test |> ofGroupTest
-    | Failure _ ->
+  let ofTestMethod (testMethod: TestMethod) =
+    match testMethod.DisposingError with
+    | Some _ ->
       Error
-
-  let ofTestMethodResult =
-    function
-    | Success groupTest ->
-      groupTest |> ofGroupTest
-    | Failure _ ->
-      Error
+    | None ->
+      testMethod.Result |> ofGroupTest
 
 type NotExecutedResult() =
   static member val Instance =

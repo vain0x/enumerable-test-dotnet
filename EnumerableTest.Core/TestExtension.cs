@@ -23,7 +23,21 @@ namespace EnumerableTest
         /// <returns></returns>
         public static GroupTest ToTestGroup(this IEnumerable<Test> tests, string testName)
         {
-            return new GroupTest(testName, tests);
+            var testList = new List<Test>();
+            var exceptionOrNull = default(Exception);
+            try
+            {
+                foreach (var test in tests)
+                {
+                    testList.Add(test);
+                }
+            }
+            catch (Exception exception)
+            {
+                exceptionOrNull = exception;
+            }
+
+            return new GroupTest(testName, testList.ToArray(), exceptionOrNull);
         }
     }
 }

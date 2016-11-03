@@ -49,7 +49,6 @@
     <Compile Include="AssertionExtension.fs" />
     <Compile Include="TestExtension.fs" />
     <Compile Include="TestSuite.fs" />
-    <Compile Include="TestSuiteResult.fs" />
     <Compile Include="AssertionCounter.fs" />
   </ItemGroup>
   <ItemGroup>

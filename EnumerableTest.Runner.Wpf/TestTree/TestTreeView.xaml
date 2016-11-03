@@ -68,6 +68,32 @@
                     </StackPanel>
                 </DataTemplate>
 
+                <DataTemplate DataType="{x:Type runner:TestMethod}">
+                    <StackPanel>
+                        <Label Content="{Binding Result}" />
+                        <StackPanel>
+                            <StackPanel.Style>
+                                <Style
+                                    TargetType="StackPanel"
+                                    BasedOn="{StaticResource DefaultStackPanelStyle}"
+                                    >
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DisposingError}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Separator />
+                            <StackPanel Orientation="Horizontal">
+                                <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                                <TextBlock Text="RUNTIME ERROR in Dispose" />
+                            </StackPanel>
+                            <Label Content="{Binding DisposingErrorOrNull}" />
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+
                 <!-- Tests -->
                 <DataTemplate DataType="{x:Type sdk:AssertionTest}">
                     <Expander>
@@ -93,21 +119,32 @@
 
                 <DataTemplate DataType="{x:Type sdk:GroupTest}">
                     <GroupBox Header="{Binding Name}">
-                        <ItemsControl ItemsSource="{Binding Tests}" />
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding Tests}" />
+                            <StackPanel>
+                                <StackPanel.Style>
+                                    <Style
+                                        TargetType="StackPanel"
+                                        BasedOn="{StaticResource DefaultStackPanelStyle}"
+                                        >
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ExceptionOrNull}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <Separator />
+                                <StackPanel Orientation="Horizontal">
+                                    <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                                    <TextBlock Text="RUNTIME ERROR" />
+                                </StackPanel>
+                                <Label Content="{Binding ExceptionOrNull}" />
+                            </StackPanel>
+                        </StackPanel>
                     </GroupBox>
                 </DataTemplate>
 
-                <!-- TestError -->
-                <DataTemplate DataType="{x:Type runner:TestError}">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
-                            <TextBlock Text="RUNTIME ERROR!" />
-                        </StackPanel>
-                        <Label Content="{Binding Error}" />
-                    </StackPanel>
-                </DataTemplate>
-                
                 <!-- NotExecutedResult -->
                 <DataTemplate DataType="{x:Type model:NotExecutedResult}">
                     <StackPanel Orientation="Horizontal">

@@ -4,7 +4,34 @@ open System
 open System.Reflection
 open System.Threading
 open EnumerableTest
+open EnumerableTest.Sdk
 open Basis.Core
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestMethod =
+  let internal ofResult name result disposingError =
+    {
+      MethodName                    = name
+      Result                        = result
+      DisposingError                = disposingError
+    }
+
+  let internal create (instance: TestInstance) (m: MethodInfo) =
+    let tests =
+      m.Invoke(instance, [||]) :?> seq<Test>
+    let groupTest =
+      tests.ToTestGroup(m.Name)
+    let disposingError =
+      try
+        instance |> Disposable.dispose
+        None
+      with
+      | e -> Some e
+    ofResult m.Name groupTest disposingError
+
+  let isPassed (testMethod: TestMethod) =
+    testMethod.Result.IsPassed
+    && testMethod.DisposingError |> Option.isNone
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClass =
@@ -22,93 +49,58 @@ module TestClass =
     typ.GetConstructor([||]) |> isNull |> not
     && typ |> testMethodInfos |> Seq.isEmpty |> not
 
-  let internal testMethod (m: MethodInfo) =
-    {
-      MethodName            = m.Name
-      Run                   =
-        fun this ->
-          let tests = m.Invoke(this, [||]) :?> seq<Test>
-          tests.ToTestGroup(m.Name)
-    }
-
-  let internal testMethods (typ: Type) =
-    typ
-    |> testMethodInfos
-    |> Seq.map testMethod
-
   let internal instantiate (typ: Type): unit -> TestInstance =
     let defaultConstructor =
       typ.GetConstructor([||])
     fun () -> defaultConstructor.Invoke([||])
 
-  let tryCreate (typ: Type): option<TestClass> =
-    if typ |> isTestClass then
+  let create (typ: Type): TestClass =
+    let methodInfos = typ |> testMethodInfos
+    let instantiate = typ |> instantiate
+    let (result, instantiationError) =
+      try
+        let result =
+          methodInfos
+          |> Seq.map (fun m -> m |> TestMethod.create (instantiate ()))
+          |> Seq.toArray
+        (result, None)
+      with
+      | e ->
+        ([||], Some e)
+    let testClass =
       {
-        TypeFullName            = typ.FullName
-        Create                  = typ |> instantiate
-        Methods                 = typ |> testMethods
-      } |> Some
-    else
-      None
+        TypeFullName                    = (typ: Type).FullName
+        InstantiationError              = instantiationError
+        Result                          = result
+      }
+    testClass
 
-  let internal tryInstantiate (testClass: TestClass) =
-    Result.catch testClass.Create
-    |> Result.mapFailure TestError.OfConstructor
+  let testMethods (testClass: TestClass): array<TestMethod> =
+    match testClass.InstantiationError with
+    | Some e ->
+      let name = "default constructor"
+      let result = new GroupTest(name, [||], e)
+      [| TestMethod.ofResult name result None |]
+    | None ->
+      testClass.Result
 
-  let internal tryDispose testMethod instance =
-    Result.catch (fun () -> instance |> Disposable.dispose)
-    |> Result.mapFailure TestError.OfDispose
+  let assertions (testClass: TestClass) =
+    testClass.Result
+    |> Seq.collect (fun testMethod -> testMethod.Result.Assertions)
 
-  let internal tryRunTestMethod (testMethod: TestMethod) testClass =
-    testClass |> tryInstantiate
-    |> Result.bind
-      (fun instance ->
-        let methodResult =
-          Result.catch (fun () -> instance |> testMethod.Run)
-          |> Result.mapFailure TestError.OfMethod
-        let disposeResult =
-          instance |> tryDispose testMethod
-        match (methodResult, disposeResult) with
-        | Success _, Failure error ->
-          Failure error
-        | _ ->
-          methodResult
-      )
-
-  let internal tryRunTestMethodsAsync (testClass: TestClass) =
-    testClass.Methods
-    |> Seq.map
-      (fun testMethod ->
-        async { return (testMethod, testClass |> tryRunTestMethod testMethod) }
-      )
-    |> Async.Parallel
-
-  /// We report up to one instantiation error
-  /// because we don't want to see the same error for each test method.
-  let internal unifyInstantiationErrors results =
-    let (failureList, successList) =
-      results |> Array.partition
-        (function
-          | (_, Failure { TestError.Method = TestErrorMethod.Constructor }) -> true
-          | x -> false
-        )
-    Array.append
-      (failureList |> Seq.tryHead |> Option.toArray)
-      successList
-
-  let runAsync testClass: Async<TestClassResult> =
-    async {
-      let! results = testClass |> tryRunTestMethodsAsync
-      let results = results |> unifyInstantiationErrors
-      return (testClass, results)
-    }
+  let isPassed (testClass: TestClass) =
+    testClass.InstantiationError.IsNone
+    && testClass.Result |> Seq.forall TestMethod.isPassed
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuite =
-  let ofAssembly (assembly: Assembly): TestSuite =
-    assembly.GetTypes() |> Seq.choose TestClass.tryCreate
+  let ofAssemblyLazy (assembly: Assembly): seq<unit -> TestClass> =
+    assembly.GetTypes()
+    |> Seq.filter (fun typ -> typ |> TestClass.isTestClass)
+    |> Seq.map (fun typ () -> typ |> TestClass.create)
 
-  let runAsync (testSuite: TestSuite) =
-    testSuite
-    |> Seq.map TestClass.runAsync
-    |> Observable.ofParallel
+  let ofAssembly (assembly: Assembly): TestSuite =
+    assembly
+    |> ofAssemblyLazy
+    |> Seq.map (fun f -> f())
+    |> Seq.toArray
