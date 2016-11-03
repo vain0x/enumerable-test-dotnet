@@ -204,6 +204,7 @@ module AppDomain =
 
 module Model =
   let loadAssembly (assemblyName: AssemblyName) =
+    MarshalValue.Recursion <- 2
     let assembly = Assembly.Load(assemblyName)
     let testSuite = TestSuite.ofAssembly assembly
     let results = ResizeArray()

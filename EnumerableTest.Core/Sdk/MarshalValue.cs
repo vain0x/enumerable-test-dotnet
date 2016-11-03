@@ -179,13 +179,18 @@ namespace EnumerableTest.Sdk
         }
 
         /// <summary>
+        /// Gets or sets the number of recursion.
+        /// </summary>
+        public static int Recursion { get; set; }
+
+        /// <summary>
         /// Creates an instance which reprensents an object.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         public static MarshalValue FromObject(object obj)
         {
-            return FromObject(obj, 2);
+            return FromObject(obj, Recursion);
         }
     }
 }
