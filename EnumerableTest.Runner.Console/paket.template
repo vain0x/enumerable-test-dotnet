@@ -1,0 +1,10 @@
+type file
+id EnumerableTest.Runner.Console
+projectUrl https://github.com/vain0/EnumerableTest
+licenseUrl http://opensource.org/licenses/MIT
+authors vain0
+include-referenced-projects true
+files
+    bin/Release ==> tools
+description
+    A console application to run unit tests.
