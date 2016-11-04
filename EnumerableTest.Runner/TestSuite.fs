@@ -104,3 +104,6 @@ module TestSuite =
     |> ofAssemblyLazy
     |> Seq.map (fun f -> f())
     |> Seq.toArray
+
+  let empty: TestSuite =
+    Array.empty

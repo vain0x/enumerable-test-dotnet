@@ -3,7 +3,16 @@
 open System
 open System.IO
 open System.Reflection
+open Basis.Core
 open EnumerableTest.Runner
+
+module Assembly =
+  let tryLoadFile (file: FileInfo) =
+    try
+      let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
+      Assembly.Load(assemblyName) |> Some
+    with
+    | _ -> None
 
 module Program =
   [<EntryPoint>]
@@ -13,7 +22,7 @@ module Program =
       FileSystemInfo.getTestAssemblies thisFile
     let results =
       assemblyFiles
-      |> Seq.map (fun file -> Assembly.LoadFile(file.FullName))
+      |> Seq.choose Assembly.tryLoadFile
       |> Seq.collect TestSuite.ofAssemblyLazy
       |> Seq.map Async.run
       |> Observable.ofParallel
