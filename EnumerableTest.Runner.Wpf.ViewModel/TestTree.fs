@@ -11,9 +11,12 @@ open EnumerableTest.Sdk
 module Model =
   let loadAssembly (assemblyName: AssemblyName) =
     MarshalValue.Recursion <- 2
-    let assembly = Assembly.Load(assemblyName)
-    let testSuite = TestSuite.ofAssembly assembly
-    testSuite
+    try
+      let assembly = Assembly.Load(assemblyName)
+      let testSuite = TestSuite.ofAssembly assembly
+      testSuite
+    with
+    | _ -> TestSuite.empty
 
 type TestTree() =
   let children = ObservableCollection<TestClassNode>()
