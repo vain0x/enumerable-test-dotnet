@@ -49,22 +49,18 @@ type TestClassNode(name: string) =
     loop 0 Passed
 
   member this.Update(testClass: TestClass) =
-    let (existingNodes, newTestMethods) =
-      testClass |> TestClass.testMethods
-      |> Seq.paritionMap
-        (fun testMethod ->
-          match tryFindNode testMethod.MethodName with
-          | Some node -> (node, testMethod) |> Some
-          | None -> None
-        )
-    let removedNodes =
-      children |> Seq.except (existingNodes |> Seq.map fst) |> Seq.toArray
-    for removedNode in removedNodes do
+    let difference =
+      ReadOnlyList.symmetricDifferenceBy
+        (fun node -> (node: TestMethodNode).Name)
+        (fun testMethod -> (testMethod: TestMethod).MethodName)
+        (children |> Seq.toArray)
+        (testClass |> TestClass.testMethods)
+    for removedNode in difference.Left do
       children.Remove(removedNode) |> ignore<bool>
-    for testMethod in newTestMethods do
+    for testMethod in difference.Right do
       let node = TestMethodNode(testMethod.MethodName)
       node.Update(testMethod)
       children.Add(node)
-    for (node, testMethod) in existingNodes do
+    for (_, node, testMethod) in difference.Intersect do
       node.Update(testMethod)
     testStatus.Value <- this.CalcTestStatus()

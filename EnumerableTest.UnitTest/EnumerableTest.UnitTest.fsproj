@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Utility.fs" />
+    <Compile Include="UtilityTest.fs" />
     <Compile Include="TestTest.fs" />
     <Compile Include="TestClassTest.fs" />
   </ItemGroup>
@@ -57,6 +58,11 @@
     <ProjectReference Include="..\EnumerableTest.Runner.Console\EnumerableTest.Runner.Console.fsproj">
       <Name>EnumerableTest.Runner.Console</Name>
       <Project>{5c6bb045-a91b-4a8f-94ee-c14b3f6b585f}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EnumerableTest.Runner.Wpf.ViewModel\EnumerableTest.Runner.Wpf.ViewModel.fsproj">
+      <Name>EnumerableTest.Runner.Wpf.ViewModel</Name>
+      <Project>{367d4453-0649-48ea-9115-73ec9c8e98ba}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
