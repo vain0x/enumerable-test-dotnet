@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.Reflection;
 
 namespace EnumerableTest.Runner.Wpf
 {
@@ -23,17 +24,22 @@ namespace EnumerableTest.Runner.Wpf
     {
         readonly TestTree testTree = new TestTree();
 
+        IEnumerable<FileInfo> AssemblyFiles
+        {
+            get
+            {
+                var thisFile = new FileInfo(Assembly.GetExecutingAssembly().Location);
+                return FileSystemInfo.getTestAssemblies(thisFile);
+            }
+        }
+
         public TestTreeView()
         {
             InitializeComponent();
 
-            var args = Environment.GetCommandLineArgs();
-#if DEBUG
-            args = new[] { @"..\..\..\EnumerableTest.Sandbox\bin\Debug\EnumerableTest.Sandbox.dll" };
-#endif
-            foreach (var arg in args)
+            foreach (var assemblyFile in AssemblyFiles)
             {
-                testTree.LoadFile(new FileInfo(arg));
+                testTree.LoadFile(assemblyFile);
             }
 
             DataContext = testTree;

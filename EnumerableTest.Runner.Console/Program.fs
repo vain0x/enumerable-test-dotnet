@@ -8,12 +8,12 @@ open EnumerableTest.Runner
 module Program =
   [<EntryPoint>]
   let main argv =
-    let files =
-      argv |> Seq.map (fun arg -> FileInfo(arg))
-    let assemblies =
-      files |> Seq.map (fun file -> Assembly.LoadFile(file.FullName))
+    let thisFile = FileInfo(Assembly.GetExecutingAssembly().Location)
+    let assemblyFiles =
+      FileSystemInfo.getTestAssemblies thisFile
     let results =
-      assemblies
+      assemblyFiles
+      |> Seq.map (fun file -> Assembly.LoadFile(file.FullName))
       |> Seq.collect TestSuite.ofAssemblyLazy
       |> Seq.map Async.run
       |> Observable.ofParallel
