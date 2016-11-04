@@ -12,52 +12,19 @@ type TestInstance =
 type TestMethod =
   {
     MethodName                  : string
-    Run                         : TestInstance -> GroupTest
+    Result                      : GroupTest
+    DisposingError              : option<Exception>
   }
+with
+  member this.DisposingErrorOrNull =
+    this.DisposingError |> Option.getOr null
 
 type TestClass =
   {
     TypeFullName                : string
-    Create                      : unit -> TestInstance
-    Methods                     : seq<TestMethod>
+    InstantiationError          : option<Exception>
+    Result                      : array<TestMethod>
   }
 
 type TestSuite =
-  seq<TestClass>
-
-/// Denotes where an exception was thrown.
-[<RequireQualifiedAccess>]
-type TestErrorMethod =
-  | Constructor
-  | Method
-  | Dispose
-
-type TestError =
-  {
-    Method                      : TestErrorMethod
-    Error                       : Exception
-  }
-with
-  static member Create(errorMethod, error) =
-    {
-      Method                    = errorMethod
-      Error                     = error
-    }
-
-  static member OfConstructor(error) =
-    TestError.Create(TestErrorMethod.Constructor, error)
-
-  static member OfDispose(error) =
-    TestError.Create(TestErrorMethod.Dispose, error)
-
-  static member OfMethod(error) =
-    TestError.Create(TestErrorMethod.Method, error)
-
-type TestMethodResult =
-  TestMethod * Result<GroupTest, TestError>
-
-type TestClassResult =
-  TestClass * TestMethodResult []
-
-type TestSuiteResult =
-  seq<TestClassResult>
+  array<TestClass>

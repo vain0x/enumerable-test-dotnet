@@ -12,10 +12,11 @@ module Program =
       argv |> Seq.map (fun arg -> FileInfo(arg))
     let assemblies =
       files |> Seq.map (fun file -> Assembly.LoadFile(file.FullName))
-    let testSuite =
-      assemblies |> Seq.collect TestSuite.ofAssembly
     let results =
-      testSuite |> TestSuite.runAsync
+      assemblies
+      |> Seq.collect TestSuite.ofAssemblyLazy
+      |> Seq.map Async.run
+      |> Observable.ofParallel
     let printer = TestPrinter(Console.Out, Console.BufferWidth - 1)
     let counter = AssertionCounter()
     results.Subscribe(printer) |> ignore<IDisposable>

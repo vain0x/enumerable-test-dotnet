@@ -13,17 +13,7 @@ module Model =
     MarshalValue.Recursion <- 2
     let assembly = Assembly.Load(assemblyName)
     let testSuite = TestSuite.ofAssembly assembly
-    let results = ResizeArray()
-    let execution =
-      testSuite |> TestSuite.runAsync
-    execution |> Observable.subscribe
-      (fun testClassResult ->
-        results.Add(testClassResult |> TestClassResult.toSerializable)
-      )
-      |> ignore<IDisposable>
-    execution.Connect()
-    execution |> Observable.wait
-    results :> seq<_>
+    testSuite
 
 type TestTree() =
   let children = ObservableCollection<TestClassNode>()
@@ -43,14 +33,14 @@ type TestTree() =
     watcher.EnableRaisingEvents <- true
     disposables.Add(watcher)
 
-  let updateResult result =
-    for (testClassFullName, testMethodResults) in result do
-      match tryFindChild testClassFullName with
+  let updateResult (testSuite: TestSuite) =
+    for testClass in testSuite do
+      match tryFindChild testClass.TypeFullName with
       | Some node ->
-        node.Update(testMethodResults)
+        node.Update(testClass)
       | None ->
-        let node = TestClassNode(testClassFullName)
-        node.Update(testMethodResults)
+        let node = TestClassNode(testClass.TypeFullName)
+        node.Update(testClass)
         children.Add(node)
 
   member this.LoadAssemblyInNewDomain(assemblyName: AssemblyName) =
@@ -58,9 +48,9 @@ type TestTree() =
       sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
     use runnerDomain =
       AppDomain.create domainName
-    let result =
+    let testSuite =
       runnerDomain.Value |> AppDomain.run (fun () -> Model.loadAssembly assemblyName)
-    context.Send ((fun _ -> updateResult result), ())
+    context.Send ((fun _ -> updateResult testSuite), ())
 
   member this.LoadFile(file: FileInfo) =
     let assemblyName = AssemblyName.GetAssemblyName(file.FullName)

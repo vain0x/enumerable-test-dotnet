@@ -6,21 +6,22 @@ open EnumerableTest.Sdk
 open EnumerableTest.Runner
 
 type TestMethodNode(name: string) =
-  let lastResult = Uptodate.Create(None)
+  let lastResult = Uptodate.Create((None: option<TestMethod>))
 
   let lastResultUntyped =
     lastResult.Select
       (function
-        | Some (Success test) -> test :> obj
-        | Some (Failure testError) -> testError :> obj
-        | None -> NotExecutedResult.Instance :> obj
+        | Some testMethod ->
+          testMethod :> obj
+        | None ->
+          NotExecutedResult.Instance :> obj
       )
 
   let testStatus =
     lastResult.Select
       (function
-        | Some testMethodResult ->
-          TestStatus.ofTestMethodResult testMethodResult
+        | Some testMethod ->
+          TestStatus.ofTestMethod testMethod
         | None ->
           TestStatus.NotCompleted
       )
@@ -28,10 +29,8 @@ type TestMethodNode(name: string) =
   let isPassed =
     lastResult.Select
       (function
-        | Some (Success test) ->
-          (test: GroupTest).IsPassed
-        | Some (Failure _) ->
-          false
+        | Some testMethod ->
+          testMethod |> TestMethod.isPassed
         | None ->
           true
       )
@@ -44,8 +43,6 @@ type TestMethodNode(name: string) =
 
   member this.IsPassed = isPassed
 
-  member this.Update() =
-    lastResult.Value <- None
+  member this.Update(testMethod: TestMethod) =
+    lastResult.Value <- Some testMethod
 
-  member this.UpdateResult(result: obj) =
-    lastResult.Value <- result |> Result.ofObj<GroupTest, TestError>

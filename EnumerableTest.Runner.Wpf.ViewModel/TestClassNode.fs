@@ -48,22 +48,23 @@ type TestClassNode(name: string) =
           Passed |> loop
     loop 0 Passed
 
-  member this.Update(testMethodResults: array<string * obj>) =
+  member this.Update(testClass: TestClass) =
     let (existingNodes, newTestMethods) =
-      testMethodResults |> Seq.paritionMap
-        (fun (methodName, result) ->
-          match tryFindNode methodName with
-          | Some node -> (node, result) |> Some
+      testClass |> TestClass.testMethods
+      |> Seq.paritionMap
+        (fun testMethod ->
+          match tryFindNode testMethod.MethodName with
+          | Some node -> (node, testMethod) |> Some
           | None -> None
         )
     let removedNodes =
       children |> Seq.except (existingNodes |> Seq.map fst) |> Seq.toArray
     for removedNode in removedNodes do
       children.Remove(removedNode) |> ignore<bool>
-    for (methodName, result) in newTestMethods do
-      let node = TestMethodNode(methodName)
-      node.UpdateResult(result)
+    for testMethod in newTestMethods do
+      let node = TestMethodNode(testMethod.MethodName)
+      node.Update(testMethod)
       children.Add(node)
-    for (node, result) in existingNodes do
-      node.UpdateResult(result)
+    for (node, testMethod) in existingNodes do
+      node.Update(testMethod)
     testStatus.Value <- this.CalcTestStatus()
