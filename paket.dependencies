@@ -1,1 +1,6 @@
 source https://www.nuget.org/api/v2
+nuget Basis.Core
+nuget DotNetKit.Async
+nuget DotNetKit.Core
+nuget Persimmon
+nuget Persimmon.Console

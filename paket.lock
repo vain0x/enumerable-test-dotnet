@@ -1,1 +1,8 @@
-
+NUGET
+  remote: https://www.nuget.org/api/v2
+    Basis.Core (1.1.3)
+    DotNetKit.Async (0.5)
+      DotNetKit.Core (>= 0.5)
+    DotNetKit.Core (0.5)
+    Persimmon (1.2)
+    Persimmon.Console (1.2)
