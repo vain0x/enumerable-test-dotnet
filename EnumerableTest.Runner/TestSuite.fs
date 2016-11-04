@@ -1,6 +1,7 @@
 ﻿namespace EnumerableTest.Runner
 
 open System
+open System.Diagnostics
 open System.Reflection
 open System.Threading
 open EnumerableTest
@@ -9,14 +10,16 @@ open Basis.Core
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestMethod =
-  let internal ofResult name result disposingError =
+  let internal ofResult name result disposingError duration =
     {
       MethodName                    = name
       Result                        = result
       DisposingError                = disposingError
+      Duration                      = duration
     }
 
   let internal create (instance: TestInstance) (m: MethodInfo) =
+    let stopwatch = Stopwatch.StartNew()
     let tests =
       m.Invoke(instance, [||]) :?> seq<Test>
     let groupTest =
@@ -27,7 +30,7 @@ module TestMethod =
         None
       with
       | e -> Some e
-    ofResult m.Name groupTest disposingError
+    ofResult m.Name groupTest disposingError stopwatch.Elapsed
 
   let isPassed (testMethod: TestMethod) =
     testMethod.Result.IsPassed
@@ -80,7 +83,7 @@ module TestClass =
     | Some e ->
       let name = "default constructor"
       let result = new GroupTest(name, [||], e)
-      [| TestMethod.ofResult name result None |]
+      [| TestMethod.ofResult name result None TimeSpan.Zero |]
     | None ->
       testClass.Result
 
