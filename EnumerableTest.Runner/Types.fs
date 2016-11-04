@@ -14,6 +14,7 @@ type TestMethod =
     MethodName                  : string
     Result                      : GroupTest
     DisposingError              : option<Exception>
+    Duration                    : TimeSpan
   }
 with
   member this.DisposingErrorOrNull =

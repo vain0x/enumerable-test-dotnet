@@ -91,6 +91,10 @@
                             </StackPanel>
                             <Label Content="{Binding DisposingErrorOrNull}" />
                         </StackPanel>
+                        <Separator />
+                        <TextBlock>
+                            Duration: <Run Text="{Binding Duration, Mode=OneTime}" />
+                        </TextBlock>
                     </StackPanel>
                 </DataTemplate>
 
