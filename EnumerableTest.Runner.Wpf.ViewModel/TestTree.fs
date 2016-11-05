@@ -5,6 +5,8 @@ open System.Collections.ObjectModel
 open System.IO
 open System.Reflection
 open System.Threading
+open DotNetKit.Observing
+open DotNetKit.Threading.Experimental
 open EnumerableTest.Runner
 open EnumerableTest.Sdk
 
@@ -36,7 +38,14 @@ type TestTree() =
   let watchAssemblyFile (load: unit -> unit) (file: FileInfo) =
     let watcher = new FileSystemWatcher(file.DirectoryName, file.Name)
     watcher.NotifyFilter <- NotifyFilters.LastWrite
-    watcher.Changed.Add(fun _ -> load ())
+    watcher.Changed
+      .Throttle(
+        TimeSpan.FromMilliseconds(100.0),
+        (fun _ -> ()),
+        (fun _ _ -> ()),
+        Scheduler.WorkerThread
+      )
+      .Add(load)
     watcher.EnableRaisingEvents <- true
     disposables.Add(watcher)
 
