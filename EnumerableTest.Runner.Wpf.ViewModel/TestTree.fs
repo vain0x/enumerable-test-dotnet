@@ -79,6 +79,8 @@ type TestTree() =
       sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
     let runnerDomain =
       AppDomain.create domainName
+    let dispose =
+      (runnerDomain :> IDisposable).Dispose
     let result =
       runnerDomain.Value
       |> AppDomain.runObservable (Model.loadAssembly assemblyName)
@@ -93,11 +95,11 @@ type TestTree() =
                 (fun () -> updateResult assemblyName.Name testClass)
             override this.OnError(_) = ()
             override this.OnCompleted() =
-              (runnerDomain :> IDisposable).Dispose()
+              dispose ()
         } |> ignore<IDisposable>
       connectable.Connect()
     | (None, _) ->
-      (runnerDomain :> IDisposable).Dispose()
+      dispose ()
 
   member this.LoadFile(file: FileInfo) =
     let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
