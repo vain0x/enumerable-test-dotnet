@@ -8,7 +8,6 @@ open EnumerableTest.Sdk
 open Basis.Core
 
 type TestPrinter(writer: TextWriter, width: int) =
-  let gate = obj()
   let printer = StructuralTextWriter(writer)
 
   let printSeparatorAsync () =
@@ -87,10 +86,7 @@ type TestPrinter(writer: TextWriter, width: int) =
 
   interface IObserver<TestClass> with
     override this.OnNext(testClass) =
-      lock gate
-        (fun () ->
-          this.PrintAsync(testClass) |> Async.RunSynchronously
-        )
+      this.PrintAsync(testClass) |> Async.RunSynchronously
 
     override this.OnError(_) = ()
 
