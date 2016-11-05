@@ -74,6 +74,15 @@ type TestTree() =
     |> Seq.tryFind (fun node -> node.Name = testClass.TypeFullName)
     |> Option.iter (fun node -> node.Update(testClass))
 
+  let testClassObserver onCompleted (assemblyName: AssemblyName) =
+    { new IObserver<_> with
+        override this.OnNext(testClass) =
+          context |> SynchronizationContext.send
+            (fun () -> updateResult assemblyName.Name testClass)
+        override this.OnError(_) = ()
+        override this.OnCompleted() = onCompleted ()
+    }
+
   let loadAssembly (assemblyName: AssemblyName) =
     let domainName =
       sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
@@ -88,15 +97,7 @@ type TestTree() =
     | (Some schema, connectable) ->
       context |> SynchronizationContext.send
         (fun () -> updateSchema assemblyName.Name schema)
-      connectable.Subscribe
-        { new IObserver<_> with
-            override this.OnNext(testClass) =
-              context |> SynchronizationContext.send
-                (fun () -> updateResult assemblyName.Name testClass)
-            override this.OnError(_) = ()
-            override this.OnCompleted() =
-              dispose ()
-        } |> ignore<IDisposable>
+      connectable.Subscribe(testClassObserver dispose assemblyName) |> ignore<IDisposable>
       connectable.Connect()
     | (None, _) ->
       dispose ()
