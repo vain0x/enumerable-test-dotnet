@@ -112,12 +112,14 @@ module TestSuite =
       types
       |> Seq.map
         (fun typ ->
-          let methodNames =
-            typ
-            |> TestClass.testMethodInfos
-            |> Seq.map (fun m -> m.Name)
-            |> Seq.toArray
-          (typ.FullName, methodNames)
+          {
+            TypeFullName                = typ.FullName
+            Methods                     = 
+              typ
+              |> TestClass.testMethodInfos
+              |> Seq.map (fun m -> { TestMethodSchema.MethodName = m.Name })
+              |> Seq.toArray
+          }
         )
       |> Seq.toArray
     let connectable =

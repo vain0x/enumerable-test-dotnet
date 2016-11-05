@@ -57,7 +57,7 @@ type TestTree() =
     let difference =
       ReadOnlyList.symmetricDifferenceBy
         (fun node -> (node: TestClassNode).Name)
-        fst
+        (fun testClassSchema -> (testClassSchema: TestClassSchema).TypeFullName)
         nodes
         schema
     for removedNode in difference.Left do
@@ -65,7 +65,7 @@ type TestTree() =
     for (_, updatedNode, testClassSchema) in difference.Intersect do
       updatedNode.UpdateSchema(testClassSchema)
     for testClassSchema in difference.Right do
-      let node = TestClassNode(assemblyShortName, testClassSchema |> fst)
+      let node = TestClassNode(assemblyShortName, testClassSchema.TypeFullName)
       node.UpdateSchema(testClassSchema)
       children.Add(node)
 

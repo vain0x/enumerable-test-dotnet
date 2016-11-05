@@ -57,15 +57,15 @@ type TestClassNode(assemblyShortName: string, name: string) =
     let difference =
       ReadOnlyList.symmetricDifferenceBy
         (fun node -> (node: TestMethodNode).Name)
-        id
+        (fun testMethodSchema -> (testMethodSchema: TestMethodSchema).MethodName)
         (children |> Seq.toArray)
-        (testClassSchema |> snd)
+        testClassSchema.Methods
     for removedNode in difference.Left do
       children.Remove(removedNode) |> ignore<bool>
     for (_, node, _) in difference.Intersect do
       node.UpdateSchema()
-    for methodName in difference.Right do
-      children.Add(TestMethodNode(methodName))
+    for testMethodSchema in difference.Right do
+      children.Add(TestMethodNode(testMethodSchema.MethodName))
     this.UpdateTestStatus()
 
   member this.Update(testClass: TestClass) =
