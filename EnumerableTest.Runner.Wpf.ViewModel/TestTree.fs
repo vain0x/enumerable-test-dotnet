@@ -36,15 +36,23 @@ type TestTree() =
     watcher.EnableRaisingEvents <- true
     disposables.Add(watcher)
 
-  let updateResult (testSuite: TestSuite) =
-    for testClass in testSuite do
-      match tryFindChild testClass.TypeFullName with
-      | Some node ->
-        node.Update(testClass)
-      | None ->
-        let node = TestClassNode(testClass.TypeFullName)
-        node.Update(testClass)
-        children.Add(node)
+  let updateResult assemblyShortName (testSuite: TestSuite) =
+    let oldNodes =
+      children |> Seq.filter (fun node -> node.AssemblyShortName = assemblyShortName)
+    let difference =
+      ReadOnlyList.symmetricDifferenceBy
+        (fun node -> (node: TestClassNode).Name)
+        (fun testClass -> (testClass: TestClass).TypeFullName)
+        (oldNodes |> Seq.toArray)
+        testSuite
+    for removedNode in difference.Left do
+      children.Remove(removedNode) |> ignore<bool>
+    for (_, updatedNode, testClass) in difference.Intersect do
+      updatedNode.Update(testClass)
+    for testClass in difference.Right do
+      let node = TestClassNode(assemblyShortName, testClass.TypeFullName)
+      node.Update(testClass)
+      children.Add(node)
 
   member this.LoadAssemblyInNewDomain(assemblyName: AssemblyName) =
     let domainName =
@@ -53,7 +61,7 @@ type TestTree() =
       AppDomain.create domainName
     let testSuite =
       runnerDomain.Value |> AppDomain.run (fun () -> Model.loadAssembly assemblyName)
-    context.Send ((fun _ -> updateResult testSuite), ())
+    context.Send ((fun _ -> updateResult assemblyName.Name testSuite), ())
 
   member this.LoadFile(file: FileInfo) =
     let assemblyName = AssemblyName.GetAssemblyName(file.FullName)

@@ -4,7 +4,7 @@ open System.Collections.ObjectModel
 open DotNetKit.Observing
 open EnumerableTest.Runner
 
-type TestClassNode(name: string) =
+type TestClassNode(assemblyShortName: string, name: string) =
   let children =
     ObservableCollection<TestMethodNode>([||])
 
@@ -23,6 +23,8 @@ type TestClassNode(name: string) =
       )
 
   member this.Children = children
+
+  member this.AssemblyShortName = assemblyShortName
 
   member this.Name = name
 
