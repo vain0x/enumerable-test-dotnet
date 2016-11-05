@@ -50,6 +50,24 @@ type TestClassNode(assemblyShortName: string, name: string) =
           Passed |> loop
     loop 0 Passed
 
+  member this.UpdateTestStatus() =
+    testStatus.Value <- this.CalcTestStatus()
+
+  member this.UpdateSchema(testClassSchema: TestClassSchema) =
+    let difference =
+      ReadOnlyList.symmetricDifferenceBy
+        (fun node -> (node: TestMethodNode).Name)
+        id
+        (children |> Seq.toArray)
+        (testClassSchema |> snd)
+    for removedNode in difference.Left do
+      children.Remove(removedNode) |> ignore<bool>
+    for (_, node, _) in difference.Intersect do
+      node.UpdateSchema()
+    for methodName in difference.Right do
+      children.Add(TestMethodNode(methodName))
+    this.UpdateTestStatus()
+
   member this.Update(testClass: TestClass) =
     let difference =
       ReadOnlyList.symmetricDifferenceBy
@@ -65,4 +83,4 @@ type TestClassNode(assemblyShortName: string, name: string) =
       children.Add(node)
     for (_, node, testMethod) in difference.Intersect do
       node.Update(testMethod)
-    testStatus.Value <- this.CalcTestStatus()
+    this.UpdateTestStatus()

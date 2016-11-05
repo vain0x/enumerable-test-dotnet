@@ -97,16 +97,34 @@ module TestClass =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuite =
-  let ofAssemblyLazy (assembly: Assembly): seq<unit -> TestClass> =
+  let ofAssemblyLazy (assembly: Assembly) =
     assembly.GetTypes()
     |> Seq.filter (fun typ -> typ |> TestClass.isTestClass)
-    |> Seq.map (fun typ () -> typ |> TestClass.create)
+    |> Seq.map (fun typ -> (typ, fun () -> typ |> TestClass.create))
 
-  let ofAssembly (assembly: Assembly): TestSuite =
-    assembly
-    |> ofAssemblyLazy
-    |> Seq.map (fun f -> f())
-    |> Seq.toArray
+  let ofAssemblyAsObservable (assembly: Assembly) =
+    let (types, fs) = 
+      assembly
+      |> ofAssemblyLazy
+      |> Seq.toArray
+      |> Array.unzip
+    let (schema: TestSuiteSchema) =
+      types
+      |> Seq.map
+        (fun typ ->
+          let methodNames =
+            typ
+            |> TestClass.testMethodInfos
+            |> Seq.map (fun m -> m.Name)
+            |> Seq.toArray
+          (typ.FullName, methodNames)
+        )
+      |> Seq.toArray
+    let connectable =
+      fs
+      |> Seq.map Async.run
+      |> Observable.ofParallel
+    (schema, connectable)
 
   let empty: TestSuite =
     Array.empty

@@ -46,6 +46,8 @@ module ReadOnlyList =
 
 module AppDomain =
   open System
+  open System.Threading
+  open EnumerableTest.Runner
 
   type DisposableAppDomain(appDomain: AppDomain) =
     member this.Value = appDomain
@@ -70,3 +72,53 @@ module AppDomain =
         result.Value <- f () |> Some
       )
     result.Value |> Option.get
+
+  let runObservable (f: IObserver<'y> -> 'x) (this: AppDomain) =
+    let gate = obj()
+    let notifications = MarshalByRefValue([||])
+    let isCompleted = MarshalByRefValue(false)
+    let mutable subscribers = [||]
+    let mutable index = 0
+    let mutable timer = None
+    let observer =
+      { new IObserver<_> with
+          override this.OnNext(x) =
+            lock gate
+              (fun () -> notifications.Value <- Array.append notifications.Value [| x |])
+          override this.OnError(_) = ()
+          override this.OnCompleted() =
+            lock gate (fun () -> isCompleted.Value <- true)
+      }
+    let notify _ =
+      lock gate
+        (fun () ->
+          while index < notifications.Value.Length do
+            for observer in subscribers do
+              (observer :> IObserver<_>).OnNext(notifications.Value.[index])
+            index <- index + 1
+          if isCompleted.Value && index = notifications.Value.Length then
+            for observer in subscribers do
+              (observer :> IObserver<_>).OnCompleted()
+            match timer with
+            | Some timer -> (timer :> IDisposable).Dispose()
+            | None -> ()
+        )
+    let result =
+      this |> run (fun () -> f observer)
+    let connectable =
+      { new Observable.IConnectableObservable<'y> with
+          override this.Subscribe(observer) =
+            subscribers <- Array.append subscribers [| observer |]
+            { new IDisposable with
+                override this.Dispose() = ()
+            }
+          override this.Connect() =
+            timer <- new Timer(notify, (), TimeSpan.Zero, TimeSpan.FromMilliseconds(17.0)) |> Some
+      }
+    (result, connectable)
+
+module SynchronizationContext =
+  open System.Threading
+
+  let send f (this: SynchronizationContext) =
+    this.Send((fun _ -> f ()), ())
