@@ -60,13 +60,8 @@ module AppDomain =
     let appDomain = AppDomain.CreateDomain(name, null, AppDomain.CurrentDomain.SetupInformation)
     new DisposableAppDomain(appDomain)
 
-  type private MarshalByRefValue<'x>(value: 'x) =
-    inherit MarshalByRefObject()
-
-    member val Value = value with get, set
-
   let run (f: unit -> 'x) (this: AppDomain) =
-    let result = MarshalByRefValue(None)
+    let result = MarshalByRefObject.ofValue None
     this.DoCallBack
       (fun () ->
         result.Value <- f () |> Some
@@ -75,8 +70,8 @@ module AppDomain =
 
   let runObservable (f: IObserver<'y> -> 'x) (this: AppDomain) =
     let gate = obj()
-    let notifications = MarshalByRefValue([||])
-    let isCompleted = MarshalByRefValue(false)
+    let notifications = MarshalByRefObject.ofValue [||]
+    let isCompleted = MarshalByRefObject.ofValue false
     let mutable subscribers = [||]
     let mutable index = 0
     let mutable timer = None

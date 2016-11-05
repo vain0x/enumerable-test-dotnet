@@ -192,3 +192,14 @@ module FileSystemInfo =
         |> Seq.map FileInfo
       yield! findTestAssemblies thisFile
     }
+
+module MarshalByRefObject =
+  open System
+
+  type MarshalByRefValue<'x>(value: 'x) =
+    inherit MarshalByRefObject()
+
+    member val Value = value with get, set
+
+  let ofValue value =
+    MarshalByRefValue(value)
