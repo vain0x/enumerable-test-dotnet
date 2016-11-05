@@ -74,7 +74,7 @@ type TestTree() =
     |> Seq.tryFind (fun node -> node.Name = testClass.TypeFullName)
     |> Option.iter (fun node -> node.Update(testClass))
 
-  member this.LoadAssemblyInNewDomain(assemblyName: AssemblyName) =
+  let loadAssembly (assemblyName: AssemblyName) =
     let domainName =
       sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
     let runnerDomain =
@@ -101,7 +101,7 @@ type TestTree() =
 
   member this.LoadFile(file: FileInfo) =
     let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
-    let load () = this.LoadAssemblyInNewDomain(assemblyName)
+    let load () = loadAssembly assemblyName
     watchAssemblyFile load file
     load ()
 
