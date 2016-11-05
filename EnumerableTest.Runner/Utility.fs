@@ -76,6 +76,7 @@ module Observable =
   /// Creates a connectable observable
   /// which executes async tasks when connected and notifies each result.
   let ofParallel asyncs =
+    let gate = obj()
     let subject = Subject.Create()
     let computation =
       async {
@@ -84,7 +85,7 @@ module Observable =
             (fun a ->
               async {
                 let! x = a
-                (subject :> IObserver<_>).OnNext(x)
+                lock gate (fun () -> (subject :> IObserver<_>).OnNext(x))
               }
             )
           |> Async.Parallel
