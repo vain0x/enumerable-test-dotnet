@@ -17,16 +17,13 @@ type AssertionCounter() =
     }
     |> Seq.fold AssertionCount.add count
 
-  let isAllGreen (count: AssertionCount) =
-    count.ViolatedCount = 0 && count.ErrorCount = 0
-
   let count = ref AssertionCount.zero
   
   member this.Current =
     !count
 
   member this.IsAllGreen =
-    !count |> isAllGreen
+    !count |> AssertionCount.isAllGreen
 
   interface IObserver<TestClass>  with
     override this.OnNext(testClass) =

@@ -67,3 +67,6 @@ module AssertionCount =
       | Some _ -> oneError
       | None -> zero
       )
+
+  let isAllGreen (count: AssertionCount) =
+    count.ViolatedCount = 0 && count.ErrorCount = 0
