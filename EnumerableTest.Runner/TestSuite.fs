@@ -30,6 +30,13 @@ module TestClassType =
     fun () -> defaultConstructor.Invoke([||])
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestMethodSchema =
+  let ofMethodInfo (m: MethodInfo): TestMethodSchema =
+    {
+      MethodName                    = m.Name
+    }
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestMethod =
   let internal ofResult name result disposingError duration =
     {
@@ -119,7 +126,7 @@ module TestSuite =
             Methods                     = 
               typ
               |> TestClassType.testMethodInfos
-              |> Seq.map (fun m -> { TestMethodSchema.MethodName = m.Name })
+              |> Seq.map TestMethodSchema.ofMethodInfo
               |> Seq.toArray
           }
         )
