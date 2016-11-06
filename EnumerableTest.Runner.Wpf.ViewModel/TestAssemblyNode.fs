@@ -29,6 +29,21 @@ type TestAssemblyNode(file: FileInfo) =
 
   let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
 
+  let currentDomain = Uptodate.Create(None)
+
+  let cancel () =
+    match currentDomain.Value with
+    | Some domain ->
+      ((domain: AppDomain.DisposableAppDomain) :> IDisposable).Dispose()
+      context |> SynchronizationContext.send
+        (fun () -> currentDomain.Value <- None)
+    | None -> ()
+
+  let cancelCommand =
+    let command = currentDomain.Select(Option.isSome).ToObservableCommand()
+    command.Subscribe(cancel) |> ignore<IDisposable>
+    command
+
   let children = ObservableCollection<_>()
 
   let updateSchema (schema: TestSuiteSchema) =
@@ -65,9 +80,11 @@ type TestAssemblyNode(file: FileInfo) =
     let domainName =
       sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
     let runnerDomain =
-      AppDomain.create domainName
-    let dispose =
-      (runnerDomain :> IDisposable).Dispose
+      cancel ()
+      let domain = AppDomain.create domainName
+      context |> SynchronizationContext.send
+        (fun () -> currentDomain.Value <- Some domain)
+      domain
     let result =
       runnerDomain.Value
       |> AppDomain.runObservable (Model.loadAssembly assemblyName)
@@ -75,10 +92,10 @@ type TestAssemblyNode(file: FileInfo) =
     | (Some schema, connectable) ->
       context |> SynchronizationContext.send
         (fun () -> updateSchema schema)
-      connectable.Subscribe(testClassObserver dispose) |> ignore<IDisposable>
+      connectable.Subscribe(testClassObserver cancel) |> ignore<IDisposable>
       connectable.Connect()
     | (None, _) ->
-      dispose ()
+      cancel ()
 
   let subscription =
     file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load
@@ -90,7 +107,11 @@ type TestAssemblyNode(file: FileInfo) =
   member this.Children =
     children
 
+  member this.CancelCommand =
+    cancelCommand
+
   member this.Dispose() =
+    cancel ()
     subscription.Dispose()
 
   interface IDisposable with

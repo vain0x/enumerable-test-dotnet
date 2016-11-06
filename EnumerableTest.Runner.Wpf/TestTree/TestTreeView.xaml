@@ -27,7 +27,22 @@
                     DataType="{x:Type model:TestAssemblyNode}"
                     ItemsSource="{Binding Children}"
                     >
-                    <TextBlock Text="{Binding Name}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Name}" />
+                        <Button
+                            Grid.Column="1"
+                            Content="■"
+                            Foreground="Red"
+                            FontSize="8"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Right"
+                            Command="{Binding CancelCommand}"
+                            />
+                    </Grid>
                 </HierarchicalDataTemplate>
                 
                 <HierarchicalDataTemplate
