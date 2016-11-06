@@ -8,10 +8,16 @@ using System.Threading.Tasks;
 
 namespace EnumerableTest.Sdk
 {
+    /// <summary>
+    /// Represents a value returned by a property.
+    /// </summary>
     [Serializable]
     public sealed class MarshalResultValue
         : MarshalResult
     {
+        /// <summary>
+        /// Gets the value.
+        /// </summary>
         public MarshalValue MarshalValue { get; }
 
         internal MarshalResultValue(MarshalValue value)
@@ -20,10 +26,16 @@ namespace EnumerableTest.Sdk
         }
     }
 
+    /// <summary>
+    /// Represents an exception thrown by a property.
+    /// </summary>
     [Serializable]
     public sealed class MarshalResultException
         : MarshalResult
     {
+        /// <summary>
+        /// Gets the exception.
+        /// </summary>
         public Exception Exception { get; }
 
         internal MarshalResultException(Exception exception)
