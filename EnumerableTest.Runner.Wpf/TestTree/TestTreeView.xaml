@@ -49,10 +49,7 @@
 
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsExpanded}" Value="True">
-                            <Setter Property="IsExpanded" Value="True" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsPassed.Value}" Value="False">
+                        <DataTrigger Binding="{Binding (model:INodeViewModel.IsExpanded).Value}" Value="True">
                             <Setter Property="IsExpanded" Value="True" />
                         </DataTrigger>
                     </Style.Triggers>

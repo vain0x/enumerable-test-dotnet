@@ -25,15 +25,6 @@ type TestMethodNode(name: string) =
         | None ->
           TestStatus.NotCompleted
       )
-      
-  let isPassed =
-    lastResult.Select
-      (function
-        | Some testMethod ->
-          testMethod |> TestMethod.isPassed
-        | None ->
-          true
-      )
 
   member this.Name = name
 
@@ -41,10 +32,12 @@ type TestMethodNode(name: string) =
 
   member this.TestStatus = testStatus
 
-  member this.IsPassed = isPassed
-
   member this.UpdateSchema() =
     lastResult.Value <- None
 
   member this.Update(testMethod: TestMethod) =
     lastResult.Value <- Some testMethod
+
+  interface INodeViewModel with
+    override this.IsExpanded =
+      Uptodate.False

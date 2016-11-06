@@ -5,6 +5,7 @@ open System.Collections.ObjectModel
 open System.IO
 open System.Reflection
 open System.Threading
+open DotNetKit.Observing
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
 
@@ -89,12 +90,13 @@ type TestAssemblyNode(file: FileInfo) =
   member this.Children =
     children
 
-  member this.IsExpanded =
-    true
-
   member this.Dispose() =
     subscription.Dispose()
 
   interface IDisposable with
     override this.Dispose() =
       this.Dispose()
+
+  interface INodeViewModel with
+    override this.IsExpanded =
+      Uptodate.True

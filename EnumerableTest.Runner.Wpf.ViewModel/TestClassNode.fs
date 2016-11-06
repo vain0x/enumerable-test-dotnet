@@ -22,6 +22,9 @@ type TestClassNode(assemblyShortName: string, name: string) =
           false
       )
 
+  let isExpanded =
+    isPassed.Select(not)
+
   member this.Children = children
 
   member this.AssemblyShortName = assemblyShortName
@@ -29,8 +32,6 @@ type TestClassNode(assemblyShortName: string, name: string) =
   member this.Name = name
 
   member this.TestStatus = testStatus
-
-  member this.IsPassed = isPassed
 
   member this.CalcTestStatus() =
     children
@@ -65,3 +66,6 @@ type TestClassNode(assemblyShortName: string, name: string) =
       node.Update(testMethod)
       children.Insert(0, node)
     this.UpdateTestStatus()
+
+  interface INodeViewModel with
+    override this.IsExpanded = isExpanded
