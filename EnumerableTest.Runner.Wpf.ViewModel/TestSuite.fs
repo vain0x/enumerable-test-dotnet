@@ -2,65 +2,55 @@
 
 open System
 open System.Reflection
+open System.Threading.Tasks
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
+open DotNetKit.Observing
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestClass =
-  let create (typ: Type): TestClass =
-    let methodInfos = typ |> TestClassType.testMethodInfos
-    let instantiate = typ |> TestClassType.instantiate
-    let (result, instantiationError) =
-      try
-        let result =
-          methodInfos
-          |> Seq.map (fun m -> m |> TestMethod.create (instantiate ()))
-          |> Seq.toArray
-        (result, None)
-      with
-      | e ->
-        ([||], Some e)
-    let testClass =
-      {
-        TypeFullName                    = (typ: Type).FullName
-        InstantiationError              = instantiationError
-        Result                          = result
-      }
-    testClass
-
-  let testMethods (testClass: TestClass): array<TestMethod> =
-    match testClass.InstantiationError with
-    | Some e ->
-      let name = "default constructor"
-      let result = new GroupTest(name, [||], e)
-      [| TestMethod.ofResult name result None TimeSpan.Zero |]
-    | None ->
-      testClass.Result
-
-  let assertions (testClass: TestClass) =
-    testClass.Result
-    |> Seq.collect (fun testMethod -> testMethod.Result.Assertions)
-
-  let isPassed (testClass: TestClass) =
-    testClass.InstantiationError.IsNone
-    && testClass.Result |> Seq.forall TestMethod.isPassed
+module TestMethodResult =
+  let create typ testMethod =
+    {
+      TypeFullName              = (typ: Type).FullName
+      Method                    = testMethod
+    }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuite =
+  let executeType (typ: Type) =
+    let methodInfos = typ |> TestClassType.testMethodInfos
+    let instantiate = typ |> TestClassType.instantiate
+    try
+      methodInfos
+      |> Seq.map
+        (fun m->
+          let instance = instantiate ()
+          async {
+            let testMethod = m |> TestMethod.create instance
+            return TestMethodResult.create typ testMethod
+          }
+        )
+      |> Seq.toArray
+    with
+    | e ->
+      let result = TestMethodResult.create typ (TestMethod.ofInstantiationError e)
+      [| async { return result } |]
+
   let ofAssemblyAsObservable (assembly: Assembly) =
-    let (types, asyncs) =
+    let (types, asyncSeqSeq) =
       assembly.GetTypes()
       |> Seq.filter (fun typ -> typ |> TestClassType.isTestClass)
-      |> Seq.map (fun typ -> (typ, async { return typ |> TestClass.create }))
+      |> Seq.map (fun typ -> (typ, typ |> executeType))
       |> Seq.toArray
       |> Array.unzip
     let (schema: TestSuiteSchema) =
       types
       |> Array.map TestClassSchema.ofType
-    let connectable =
-      asyncs
-      |> Observable.ofParallel
-    (schema, connectable)
+    let observable =
+      asyncSeqSeq
+      |> Seq.collect id
+      |> Observable.startParallel
+    (schema, observable)
 
   let empty: TestSuite =
-    Array.empty
+    DotNetKit.Observing.Observable.Empty()

@@ -13,6 +13,22 @@
         
         <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStyle}" />
 
+        <Style x:Key="RoundBorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="BorderBrush" Value="DimGray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+        </Style>
+
+        <Style x:Key="PanelBorderStyle" TargetType="Border" BasedOn="{StaticResource RoundBorderStyle}">
+            <Setter Property="BorderBrush" Value="DimGray" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="LightGray" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
         <Style
             x:Key="LabelTextBlockStyle"
             TargetType="TextBlock"
@@ -46,34 +62,35 @@
 
         <Style TargetType="Label" BasedOn="{StaticResource DefaultLabelStyle}" />
 
-        <Style x:Key="CornerRadiusBorderStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="DimGray" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="10" />
-        </Style>
-
-        <Style TargetType="GroupBox" BasedOn="{StaticResource DefaultControlStyle}">
+        <Style
+            x:Key="DefaultGroupBoxStyle"
+            TargetType="GroupBox"
+            BasedOn="{StaticResource DefaultControlStyle}"
+            >
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="GroupBox">
                         <Grid>
-                            <Border Style="{StaticResource CornerRadiusBorderStyle}" Background="White">
-                                <Border.Effect>
-                                    <DropShadowEffect Color="LightGray" />
-                                </Border.Effect>
+                            <Border Style="{StaticResource PanelBorderStyle}" Margin="0,10,0,0" />
+                            <Border
+                                Margin="10,0,0,0"
+                                Padding="20,0,20,0"
+                                Background="White"
+                                BorderThickness="1"
+                                BorderBrush="DimGray"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                >
+                                <ContentPresenter ContentSource="Header" VerticalAlignment="Center" />
                             </Border>
-                            <StackPanel>
-                                <Label
-                                    Content="{TemplateBinding Header}"
-                                    TextElement.FontWeight="Bold"
-                                    />
-                                <ContentPresenter Margin="10,5,10,5" />
-                            </StackPanel>
+                            <ContentPresenter Margin="10,30,10,10" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style TargetType="GroupBox" BasedOn="{StaticResource DefaultGroupBoxStyle}" />
         
         <Style x:Key="DefaultDataGridStyle" TargetType="DataGrid">
             <Setter Property="AutoGenerateColumns" Value="False" />

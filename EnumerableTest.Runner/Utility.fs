@@ -98,6 +98,26 @@ module Observable =
           (subject :> IObservable<_>).Subscribe(observer)
     }
 
+  let startParallel computations =
+    let gate = obj()
+    let subject = Subject.Create()
+    let computations = computations |> Seq.toArray
+    let connect () =
+      let mutable count = 0
+      for computation in computations do
+        async {
+          let! x = computation
+          lock gate (fun () -> (subject :> IObserver<_>).OnNext(x))
+          if Interlocked.Increment(&count) = computations.Length then
+            (subject :> IObserver<_>).OnCompleted()
+        } |> Async.Start
+    { new IConnectableObservable<_> with
+        override this.Connect() =
+          connect ()
+        override this.Subscribe(observer) =
+          (subject :> IObservable<_>).Subscribe(observer)
+    }
+
 module String =
   open Basis.Core
 

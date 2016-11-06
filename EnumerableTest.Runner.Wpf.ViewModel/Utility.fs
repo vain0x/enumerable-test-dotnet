@@ -74,7 +74,7 @@ module AppDomain =
     let isCompleted = MarshalByRefObject.ofValue false
     let mutable subscribers = [||]
     let mutable index = 0
-    let mutable timer = None
+    let mutable timerOrNone = None
     let observer =
       { new IObserver<_> with
           override this.OnNext(x) =
@@ -92,10 +92,12 @@ module AppDomain =
               (observer :> IObserver<_>).OnNext(notifications.Value.[index])
             index <- index + 1
           if isCompleted.Value && index = notifications.Value.Length then
-            for observer in subscribers do
-              (observer :> IObserver<_>).OnCompleted()
-            match timer with
-            | Some timer -> (timer :> IDisposable).Dispose()
+            match timerOrNone with
+            | Some timer ->
+              (timer :> IDisposable).Dispose()
+              timerOrNone <- None
+              for observer in subscribers do
+                (observer :> IObserver<_>).OnCompleted()
             | None -> ()
         )
     let result =
@@ -108,7 +110,9 @@ module AppDomain =
                 override this.Dispose() = ()
             }
           override this.Connect() =
-            timer <- new Timer(notify, (), TimeSpan.Zero, TimeSpan.FromMilliseconds(17.0)) |> Some
+            timerOrNone <-
+              new Timer(notify, (), TimeSpan.Zero, TimeSpan.FromMilliseconds(17.0))
+              |> Some
       }
     (result, connectable)
 

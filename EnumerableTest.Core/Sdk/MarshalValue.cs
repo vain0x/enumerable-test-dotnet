@@ -199,10 +199,11 @@ namespace EnumerableTest.Sdk
         /// Creates an instance which reprensents an object.
         /// </summary>
         /// <param name="obj"></param>
+        /// <param name="shallow"></param>
         /// <returns></returns>
-        public static MarshalValue FromObject(object obj)
+        public static MarshalValue FromObject(object obj, bool shallow)
         {
-            return FromObject(obj, Recursion);
+            return FromObject(obj, shallow ? 0 : Recursion);
         }
     }
 }

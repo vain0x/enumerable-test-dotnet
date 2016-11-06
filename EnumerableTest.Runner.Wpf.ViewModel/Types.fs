@@ -1,14 +1,17 @@
 ﻿namespace EnumerableTest.Runner.Wpf
 
 open System
+open DotNetKit.Observing
 open EnumerableTest.Runner
 
-type TestClass =
+type TestMethodResult =
   {
     TypeFullName                : string
-    InstantiationError          : option<Exception>
-    Result                      : array<TestMethod>
+    Method                      : TestMethod
   }
 
 type TestSuite =
-  array<TestClass>
+  IObservable<TestMethodResult>
+
+type INodeViewModel =
+  abstract member IsExpanded: IReadOnlyUptodate<bool>
