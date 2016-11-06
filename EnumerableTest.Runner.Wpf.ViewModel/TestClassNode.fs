@@ -56,19 +56,12 @@ type TestClassNode(assemblyShortName: string, name: string) =
       children.Add(TestMethodNode(testMethodSchema.MethodName))
     this.UpdateTestStatus()
 
-  member this.Update(testClass: TestClass) =
-    let difference =
-      ReadOnlyList.symmetricDifferenceBy
-        (fun node -> (node: TestMethodNode).Name)
-        (fun testMethod -> (testMethod: TestMethod).MethodName)
-        (children |> Seq.toArray)
-        (testClass |> TestClass.testMethods)
-    for removedNode in difference.Left do
-      children.Remove(removedNode) |> ignore<bool>
-    for testMethod in difference.Right do
+  member this.Update(testMethod: TestMethod) =
+    match children |> Seq.tryFind (fun node -> node.Name = testMethod.MethodName) with
+    | Some node ->
+      node.Update(testMethod)
+    | None ->
       let node = TestMethodNode(testMethod.MethodName)
       node.Update(testMethod)
-      children.Add(node)
-    for (_, node, testMethod) in difference.Intersect do
-      node.Update(testMethod)
+      children.Insert(0, node)
     this.UpdateTestStatus()

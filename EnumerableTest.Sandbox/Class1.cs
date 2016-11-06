@@ -89,6 +89,12 @@ namespace EnumerableTest.Sandbox
         {
             yield return Test.Equal(1, 0);
         }
+
+        public IEnumerable<Test> never()
+        {
+            yield return Test.Equal(0, 0);
+            //while (true) continue;
+        }
         //*/
 
         sealed class MyClass

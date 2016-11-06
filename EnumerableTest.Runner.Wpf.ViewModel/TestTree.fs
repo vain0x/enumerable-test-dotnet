@@ -60,10 +60,10 @@ type TestTree() =
       node.UpdateSchema(testClassSchema)
       children.Add(node)
 
-  let updateResult assemblyShortName (testClass: TestClass) =
+  let updateResult assemblyShortName (testMethodResult: TestMethodResult) =
     children
-    |> Seq.tryFind (fun node -> node.Name = testClass.TypeFullName)
-    |> Option.iter (fun node -> node.Update(testClass))
+    |> Seq.tryFind (fun node -> node.Name = testMethodResult.TypeFullName)
+    |> Option.iter (fun node -> node.Update(testMethodResult.Method))
 
   let testClassObserver onCompleted (assemblyName: AssemblyName) =
     { new IObserver<_> with

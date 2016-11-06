@@ -3,12 +3,11 @@
 open System
 open EnumerableTest.Runner
 
-type TestClass =
+type TestMethodResult =
   {
     TypeFullName                : string
-    InstantiationError          : option<Exception>
-    Result                      : array<TestMethod>
+    Method                      : TestMethod
   }
 
 type TestSuite =
-  array<TestClass>
+  IObservable<TestMethodResult>
