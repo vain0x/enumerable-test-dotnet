@@ -39,12 +39,12 @@ module TestStatus =
       else
         let loop = loop (i + 1)
         match (current, statuses.[i]) with
-        | (_, NotCompleted) | (NotCompleted, _) ->
-          NotCompleted
         | (Error, _) | (_, Error) ->
-          Error |> loop
+          Error
         | (Violated, _) | (_, Violated) ->
           Violated |> loop
+        | (_, NotCompleted) | (NotCompleted, _) ->
+          NotCompleted |> loop
         | _ ->
           Passed |> loop
     loop 0 Passed
