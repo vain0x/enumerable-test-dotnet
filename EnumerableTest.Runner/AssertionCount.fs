@@ -58,3 +58,12 @@ module AssertionCount =
       if groupTest.ExceptionOrNull |> isNull |> not then
         yield oneError
     }
+    |> Seq.fold add zero
+
+  let ofTestMethod (testMethod: TestMethod) =
+    testMethod.Result |> ofGroupTest
+    |> add
+      (match testMethod.DisposingError with
+      | Some _ -> oneError
+      | None -> zero
+      )

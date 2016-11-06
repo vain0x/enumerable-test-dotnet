@@ -13,12 +13,7 @@ type AssertionCounter() =
         yield AssertionCount.oneError
       | None ->
         for testMethod in testClass.Result do
-          yield! testMethod.Result |> AssertionCount.ofGroupTest
-          match testMethod.DisposingError with
-          | Some _ ->
-            yield AssertionCount.oneError
-          | None ->
-            ()
+          yield AssertionCount.ofTestMethod testMethod
     }
     |> Seq.fold AssertionCount.add count
 
