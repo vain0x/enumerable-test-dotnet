@@ -10,7 +10,7 @@ open Basis.Core
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassType =
-  let internal testMethodInfos (typ: Type) =
+  let testMethodInfos (typ: Type) =
     typ.GetMethods(BindingFlags.Instance ||| BindingFlags.Public ||| BindingFlags.NonPublic)
     |> Seq.filter
       (fun m ->
@@ -20,11 +20,11 @@ module TestClassType =
         && m.ReturnType = typeof<seq<Test>>
       )
 
-  let internal isTestClass (typ: Type) =
+  let isTestClass (typ: Type) =
     typ.GetConstructor([||]) |> isNull |> not
     && typ |> testMethodInfos |> Seq.isEmpty |> not
 
-  let internal instantiate (typ: Type): unit -> TestInstance =
+  let instantiate (typ: Type): unit -> TestInstance =
     let defaultConstructor =
       typ.GetConstructor([||])
     fun () -> defaultConstructor.Invoke([||])
@@ -50,7 +50,7 @@ module TestClassSchema =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestMethod =
-  let internal ofResult name result disposingError duration =
+  let ofResult name result disposingError duration =
     {
       MethodName                    = name
       Result                        = result
@@ -58,7 +58,7 @@ module TestMethod =
       Duration                      = duration
     }
 
-  let internal create (instance: TestInstance) (m: MethodInfo) =
+  let create (instance: TestInstance) (m: MethodInfo) =
     let stopwatch = Stopwatch.StartNew()
     let tests =
       m.Invoke(instance, [||]) :?> seq<Test>
