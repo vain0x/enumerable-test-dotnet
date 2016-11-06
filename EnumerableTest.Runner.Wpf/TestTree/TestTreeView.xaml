@@ -328,7 +328,7 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type system:Exception}">
-                    <Border Style="{StaticResource CornerRadiusBorderStyle}">
+                    <Border Style="{StaticResource RoundBorderStyle}">
                         <TextBlock TextWrapping="Wrap" Margin="10" Text="{Binding}" />
                     </Border>
                 </DataTemplate>
