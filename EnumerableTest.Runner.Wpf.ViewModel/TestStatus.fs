@@ -32,6 +32,23 @@ module TestStatus =
     | None ->
       testMethod.Result |> ofGroupTest
 
+  let ofArray (statuses: array<TestStatus>) =
+    let rec loop i current =
+      if i = statuses.Length then
+        current
+      else
+        let loop = loop (i + 1)
+        match (current, statuses.[i]) with
+        | (_, NotCompleted) | (NotCompleted, _) ->
+          NotCompleted
+        | (Error, _) | (_, Error) ->
+          Error |> loop
+        | (Violated, _) | (_, Violated) ->
+          Violated |> loop
+        | _ ->
+          Passed |> loop
+    loop 0 Passed
+
 type NotExecutedResult() =
   static member val Instance =
     new NotExecutedResult()

@@ -82,5 +82,5 @@ module TestClassTest =
           typ.GetMethod("ViolatingTestMethod")
           typ.GetMethod("ThrowingTestMethod")
         ]
-      do! typ |> TestClass.testMethodInfos |> assertSeqEquals expected
+      do! typ |> TestClassType.testMethodInfos |> assertSeqEquals expected
     }

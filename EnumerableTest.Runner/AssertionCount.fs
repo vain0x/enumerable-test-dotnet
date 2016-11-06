@@ -1,7 +1,5 @@
 ﻿namespace EnumerableTest.Runner
 
-open System
-open Basis.Core
 open EnumerableTest.Sdk
 
 type AssertionCount =
@@ -11,7 +9,8 @@ type AssertionCount =
     ErrorCount                  : int
   }
 
-type AssertionCounter() =
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module AssertionCount =
   let zero =
     {
       TotalCount                = 0
@@ -59,38 +58,15 @@ type AssertionCounter() =
       if groupTest.ExceptionOrNull |> isNull |> not then
         yield oneError
     }
+    |> Seq.fold add zero
 
-  let addTestClass (testClass: TestClass) count =
-    seq {
-      match testClass.InstantiationError with
-      | Some e ->
-        yield oneError
-      | None ->
-        for testMethod in testClass.Result do
-          yield! testMethod.Result |> ofGroupTest
-          match testMethod.DisposingError with
-          | Some _ ->
-            yield oneError
-          | None ->
-            ()
-    }
-    |> Seq.fold add count
+  let ofTestMethod (testMethod: TestMethod) =
+    testMethod.Result |> ofGroupTest
+    |> add
+      (match testMethod.DisposingError with
+      | Some _ -> oneError
+      | None -> zero
+      )
 
   let isAllGreen (count: AssertionCount) =
     count.ViolatedCount = 0 && count.ErrorCount = 0
-
-  let count = ref zero
-  
-  member this.Current =
-    !count
-
-  member this.IsAllGreen =
-    !count |> isAllGreen
-
-  interface IObserver<TestClass>  with
-    override this.OnNext(testClass) =
-      count := !count |> addTestClass testClass
-
-    override this.OnError(_) = ()
-
-    override this.OnCompleted() = ()

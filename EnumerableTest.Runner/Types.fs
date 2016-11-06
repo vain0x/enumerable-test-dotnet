@@ -9,6 +9,20 @@ open EnumerableTest.Sdk
 type TestInstance =
   obj
 
+type TestMethodSchema =
+  {
+    MethodName                  : string
+  }
+
+type TestClassSchema =
+  {
+    TypeFullName                : string
+    Methods                     : array<TestMethodSchema>
+  }
+
+type TestSuiteSchema =
+  array<TestClassSchema>
+
 type TestMethod =
   {
     MethodName                  : string
@@ -19,19 +33,3 @@ type TestMethod =
 with
   member this.DisposingErrorOrNull =
     this.DisposingError |> Option.getOr null
-
-type TestClass =
-  {
-    TypeFullName                : string
-    InstantiationError          : option<Exception>
-    Result                      : array<TestMethod>
-  }
-
-type TestSuite =
-  array<TestClass>
-  
-type TestClassSchema =
-  string * array<string>
-
-type TestSuiteSchema =
-  array<TestClassSchema>

@@ -36,18 +36,9 @@ type TestTree() =
     SynchronizationContext.Current
 
   let watchAssemblyFile (load: unit -> unit) (file: FileInfo) =
-    let watcher = new FileSystemWatcher(file.DirectoryName, file.Name)
-    watcher.NotifyFilter <- NotifyFilters.LastWrite
-    watcher.Changed
-      .Throttle(
-        TimeSpan.FromMilliseconds(100.0),
-        (fun _ -> ()),
-        (fun _ _ -> ()),
-        Scheduler.WorkerThread
-      )
-      .Add(load)
-    watcher.EnableRaisingEvents <- true
-    disposables.Add(watcher)
+    let subscription =
+      file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load
+    disposables.Add(subscription)
 
   let updateSchema assemblyShortName (schema: TestSuiteSchema) =
     let nodes =
@@ -57,7 +48,7 @@ type TestTree() =
     let difference =
       ReadOnlyList.symmetricDifferenceBy
         (fun node -> (node: TestClassNode).Name)
-        fst
+        (fun testClassSchema -> (testClassSchema: TestClassSchema).TypeFullName)
         nodes
         schema
     for removedNode in difference.Left do
@@ -65,7 +56,7 @@ type TestTree() =
     for (_, updatedNode, testClassSchema) in difference.Intersect do
       updatedNode.UpdateSchema(testClassSchema)
     for testClassSchema in difference.Right do
-      let node = TestClassNode(assemblyShortName, testClassSchema |> fst)
+      let node = TestClassNode(assemblyShortName, testClassSchema.TypeFullName)
       node.UpdateSchema(testClassSchema)
       children.Add(node)
 
@@ -74,11 +65,22 @@ type TestTree() =
     |> Seq.tryFind (fun node -> node.Name = testClass.TypeFullName)
     |> Option.iter (fun node -> node.Update(testClass))
 
-  member this.LoadAssemblyInNewDomain(assemblyName: AssemblyName) =
+  let testClassObserver onCompleted (assemblyName: AssemblyName) =
+    { new IObserver<_> with
+        override this.OnNext(testClass) =
+          context |> SynchronizationContext.send
+            (fun () -> updateResult assemblyName.Name testClass)
+        override this.OnError(_) = ()
+        override this.OnCompleted() = onCompleted ()
+    }
+
+  let loadAssembly (assemblyName: AssemblyName) =
     let domainName =
       sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
     let runnerDomain =
       AppDomain.create domainName
+    let dispose =
+      (runnerDomain :> IDisposable).Dispose
     let result =
       runnerDomain.Value
       |> AppDomain.runObservable (Model.loadAssembly assemblyName)
@@ -86,22 +88,14 @@ type TestTree() =
     | (Some schema, connectable) ->
       context |> SynchronizationContext.send
         (fun () -> updateSchema assemblyName.Name schema)
-      connectable.Subscribe
-        { new IObserver<_> with
-            override this.OnNext(testClass) =
-              context |> SynchronizationContext.send
-                (fun () -> updateResult assemblyName.Name testClass)
-            override this.OnError(_) = ()
-            override this.OnCompleted() =
-              (runnerDomain :> IDisposable).Dispose()
-        } |> ignore<IDisposable>
+      connectable.Subscribe(testClassObserver dispose assemblyName) |> ignore<IDisposable>
       connectable.Connect()
     | (None, _) ->
-      (runnerDomain :> IDisposable).Dispose()
+      dispose ()
 
   member this.LoadFile(file: FileInfo) =
     let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
-    let load () = this.LoadAssemblyInNewDomain(assemblyName)
+    let load () = loadAssembly assemblyName
     watchAssemblyFile load file
     load ()
 

@@ -23,8 +23,7 @@ module Program =
     let results =
       assemblyFiles
       |> Seq.choose Assembly.tryLoadFile
-      |> Seq.collect TestSuite.ofAssemblyLazy
-      |> Seq.map (fun (_, f) -> Async.run f)
+      |> Seq.collect TestSuite.ofAssemblyAsync
       |> Observable.ofParallel
     let printer = TestPrinter(Console.Out, Console.BufferWidth - 1)
     let counter = AssertionCounter()

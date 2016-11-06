@@ -33,22 +33,10 @@ type TestClassNode(assemblyShortName: string, name: string) =
   member this.IsPassed = isPassed
 
   member this.CalcTestStatus() =
-    let children = children |> Seq.toArray
-    let rec loop i current =
-      if i = children.Length then
-        current
-      else
-        let loop = loop (i + 1)
-        match (current, children.[i].TestStatus.Value) with
-        | (_, NotCompleted) | (NotCompleted, _) ->
-          NotCompleted
-        | (Error, _) | (_, Error) ->
-          Error |> loop
-        | (Violated, _) | (_, Violated) ->
-          Violated |> loop
-        | _ ->
-          Passed |> loop
-    loop 0 Passed
+    children
+    |> Seq.toArray
+    |> Array.map (fun ch -> ch.TestStatus.Value)
+    |> TestStatus.ofArray
 
   member this.UpdateTestStatus() =
     testStatus.Value <- this.CalcTestStatus()
@@ -57,15 +45,15 @@ type TestClassNode(assemblyShortName: string, name: string) =
     let difference =
       ReadOnlyList.symmetricDifferenceBy
         (fun node -> (node: TestMethodNode).Name)
-        id
+        (fun testMethodSchema -> (testMethodSchema: TestMethodSchema).MethodName)
         (children |> Seq.toArray)
-        (testClassSchema |> snd)
+        testClassSchema.Methods
     for removedNode in difference.Left do
       children.Remove(removedNode) |> ignore<bool>
     for (_, node, _) in difference.Intersect do
       node.UpdateSchema()
-    for methodName in difference.Right do
-      children.Add(TestMethodNode(methodName))
+    for testMethodSchema in difference.Right do
+      children.Add(TestMethodNode(testMethodSchema.MethodName))
     this.UpdateTestStatus()
 
   member this.Update(testClass: TestClass) =
