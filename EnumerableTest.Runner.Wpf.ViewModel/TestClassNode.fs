@@ -33,22 +33,10 @@ type TestClassNode(assemblyShortName: string, name: string) =
   member this.IsPassed = isPassed
 
   member this.CalcTestStatus() =
-    let children = children |> Seq.toArray
-    let rec loop i current =
-      if i = children.Length then
-        current
-      else
-        let loop = loop (i + 1)
-        match (current, children.[i].TestStatus.Value) with
-        | (_, NotCompleted) | (NotCompleted, _) ->
-          NotCompleted
-        | (Error, _) | (_, Error) ->
-          Error |> loop
-        | (Violated, _) | (_, Violated) ->
-          Violated |> loop
-        | _ ->
-          Passed |> loop
-    loop 0 Passed
+    children
+    |> Seq.toArray
+    |> Array.map (fun ch -> ch.TestStatus.Value)
+    |> TestStatus.ofArray
 
   member this.UpdateTestStatus() =
     testStatus.Value <- this.CalcTestStatus()
