@@ -129,11 +129,11 @@ namespace EnumerableTest.Sdk
 
         internal EqualAssertion(object actual, object target, bool expected, IEqualityComparer comparer)
         {
-            Actual = MarshalValue.FromObject(actual);
-            Target = MarshalValue.FromObject(target);
+            IsPassed = comparer.Equals(actual, target) == expected;
+            Actual = MarshalValue.FromObject(actual, IsPassed);
+            Target = MarshalValue.FromObject(target, IsPassed);
             Expected = expected;
             Comparer = comparer;
-            IsPassed = comparer.Equals(actual, target) == expected;
         }
     }
 
@@ -194,13 +194,13 @@ namespace EnumerableTest.Sdk
             bool expected
         )
         {
-            Target = MarshalValue.FromObject(target);
-            Source = MarshalValue.FromObject(source);
-            Actual = MarshalValue.FromObject(actual);
+            IsPassed = comparer.Equals(actual, target) == expected;
+            Target = MarshalValue.FromObject(target, IsPassed);
+            Source = MarshalValue.FromObject(source, IsPassed);
+            Actual = MarshalValue.FromObject(actual, IsPassed);
             Func = func.ToString();
             Comparer = comparer;
             Expected = expected;
-            IsPassed = comparer.Equals(actual, target) == expected;
         }
     }
 
