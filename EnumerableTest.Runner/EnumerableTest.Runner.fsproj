@@ -48,7 +48,7 @@
     <Compile Include="Types.fs" />
     <Compile Include="AssertionExtension.fs" />
     <Compile Include="TestExtension.fs" />
-    <Compile Include="TestSuite.fs" />
+    <Compile Include="TestMethod.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
