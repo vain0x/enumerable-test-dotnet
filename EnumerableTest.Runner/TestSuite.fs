@@ -9,6 +9,27 @@ open EnumerableTest.Sdk
 open Basis.Core
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestClassType =
+  let internal testMethodInfos (typ: Type) =
+    typ.GetMethods(BindingFlags.Instance ||| BindingFlags.Public ||| BindingFlags.NonPublic)
+    |> Seq.filter
+      (fun m ->
+        not m.IsSpecialName
+        && not m.IsGenericMethodDefinition
+        && (m.GetParameters() |> Array.isEmpty)
+        && m.ReturnType = typeof<seq<Test>>
+      )
+
+  let internal isTestClass (typ: Type) =
+    typ.GetConstructor([||]) |> isNull |> not
+    && typ |> testMethodInfos |> Seq.isEmpty |> not
+
+  let internal instantiate (typ: Type): unit -> TestInstance =
+    let defaultConstructor =
+      typ.GetConstructor([||])
+    fun () -> defaultConstructor.Invoke([||])
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestMethod =
   let internal ofResult name result disposingError duration =
     {
@@ -38,28 +59,9 @@ module TestMethod =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClass =
-  let internal testMethodInfos (typ: Type) =
-    typ.GetMethods(BindingFlags.Instance ||| BindingFlags.Public ||| BindingFlags.NonPublic)
-    |> Seq.filter
-      (fun m ->
-        not m.IsSpecialName
-        && not m.IsGenericMethodDefinition
-        && (m.GetParameters() |> Array.isEmpty)
-        && m.ReturnType = typeof<seq<Test>>
-      )
-
-  let internal isTestClass (typ: Type) =
-    typ.GetConstructor([||]) |> isNull |> not
-    && typ |> testMethodInfos |> Seq.isEmpty |> not
-
-  let internal instantiate (typ: Type): unit -> TestInstance =
-    let defaultConstructor =
-      typ.GetConstructor([||])
-    fun () -> defaultConstructor.Invoke([||])
-
   let create (typ: Type): TestClass =
-    let methodInfos = typ |> testMethodInfos
-    let instantiate = typ |> instantiate
+    let methodInfos = typ |> TestClassType.testMethodInfos
+    let instantiate = typ |> TestClassType.instantiate
     let (result, instantiationError) =
       try
         let result =
@@ -99,7 +101,7 @@ module TestClass =
 module TestSuite =
   let ofAssemblyLazy (assembly: Assembly) =
     assembly.GetTypes()
-    |> Seq.filter (fun typ -> typ |> TestClass.isTestClass)
+    |> Seq.filter (fun typ -> typ |> TestClassType.isTestClass)
     |> Seq.map (fun typ -> (typ, fun () -> typ |> TestClass.create))
 
   let ofAssemblyAsObservable (assembly: Assembly) =
@@ -116,7 +118,7 @@ module TestSuite =
             TypeFullName                = typ.FullName
             Methods                     = 
               typ
-              |> TestClass.testMethodInfos
+              |> TestClassType.testMethodInfos
               |> Seq.map (fun m -> { TestMethodSchema.MethodName = m.Name })
               |> Seq.toArray
           }
