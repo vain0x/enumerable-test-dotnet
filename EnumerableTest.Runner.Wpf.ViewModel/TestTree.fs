@@ -10,101 +10,18 @@ open DotNetKit.Threading.Experimental
 open EnumerableTest.Runner
 open EnumerableTest.Sdk
 
-module Model =
-  let loadAssembly (assemblyName: AssemblyName) observer =
-    MarshalValue.Recursion <- 2
-    try
-      let assembly = Assembly.Load(assemblyName)
-      let (schema, connectable) =
-        TestSuite.ofAssemblyAsObservable assembly
-      connectable.Subscribe(observer) |> ignore<IDisposable>
-      connectable.Connect()
-      schema |> Some
-    with
-    | _ ->
-      None
-
 type TestTree() =
-  let children = ObservableCollection<TestClassNode>()
-
-  let tryFindChild testClassFullName =
-    children |> Seq.tryFind (fun ch -> ch.Name = testClassFullName)
-
-  let disposables = ResizeArray<IDisposable>()
-
-  let context =
-    SynchronizationContext.Current
-
-  let watchAssemblyFile (load: unit -> unit) (file: FileInfo) =
-    let subscription =
-      file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load
-    disposables.Add(subscription)
-
-  let updateSchema assemblyShortName (schema: TestSuiteSchema) =
-    let nodes =
-      children
-      |> Seq.filter (fun node -> node.AssemblyShortName = assemblyShortName)
-      |> Seq.toArray
-    let difference =
-      ReadOnlyList.symmetricDifferenceBy
-        (fun node -> (node: TestClassNode).Name)
-        (fun testClassSchema -> (testClassSchema: TestClassSchema).TypeFullName)
-        nodes
-        schema
-    for removedNode in difference.Left do
-      children.Remove(removedNode) |> ignore<bool>
-    for (_, updatedNode, testClassSchema) in difference.Intersect do
-      updatedNode.UpdateSchema(testClassSchema)
-    for testClassSchema in difference.Right do
-      let node = TestClassNode(assemblyShortName, testClassSchema.TypeFullName)
-      node.UpdateSchema(testClassSchema)
-      children.Add(node)
-
-  let updateResult assemblyShortName (testMethodResult: TestMethodResult) =
-    children
-    |> Seq.tryFind (fun node -> node.Name = testMethodResult.TypeFullName)
-    |> Option.iter (fun node -> node.Update(testMethodResult.Method))
-
-  let testClassObserver onCompleted (assemblyName: AssemblyName) =
-    { new IObserver<_> with
-        override this.OnNext(testClass) =
-          context |> SynchronizationContext.send
-            (fun () -> updateResult assemblyName.Name testClass)
-        override this.OnError(_) = ()
-        override this.OnCompleted() = onCompleted ()
-    }
-
-  let loadAssembly (assemblyName: AssemblyName) =
-    let domainName =
-      sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
-    let runnerDomain =
-      AppDomain.create domainName
-    let dispose =
-      (runnerDomain :> IDisposable).Dispose
-    let result =
-      runnerDomain.Value
-      |> AppDomain.runObservable (Model.loadAssembly assemblyName)
-    match result with
-    | (Some schema, connectable) ->
-      context |> SynchronizationContext.send
-        (fun () -> updateSchema assemblyName.Name schema)
-      connectable.Subscribe(testClassObserver dispose assemblyName) |> ignore<IDisposable>
-      connectable.Connect()
-    | (None, _) ->
-      dispose ()
+  let children = ObservableCollection<TestAssemblyNode>()
 
   member this.LoadFile(file: FileInfo) =
-    let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
-    let load () = loadAssembly assemblyName
-    watchAssemblyFile load file
-    load ()
+    children.Add(new TestAssemblyNode(file))
 
   member this.Children =
     children
 
   member this.Dispose() =
-    for disposable in disposables do
-      disposable.Dispose()
+    for node in children do
+      node.Dispose()
 
   interface IDisposable with
     override this.Dispose() =

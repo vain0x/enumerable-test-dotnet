@@ -50,6 +50,7 @@
     <Compile Include="TestSuite.fs" />
     <Compile Include="TestMethodNode.fs" />
     <Compile Include="TestClassNode.fs" />
+    <Compile Include="TestAssemblyNode.fs" />
     <Compile Include="TestTree.fs" />
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,13 @@
         <TreeView x:Name="treeView" ItemsSource="{Binding Children}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate
+                    DataType="{x:Type model:TestAssemblyNode}"
+                    ItemsSource="{Binding Children}"
+                    >
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+                
+                <HierarchicalDataTemplate
                     DataType="{x:Type model:TestClassNode}"
                     ItemsSource="{Binding Children}"
                     >
@@ -42,6 +49,9 @@
 
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                            <Setter Property="IsExpanded" Value="True" />
+                        </DataTrigger>
                         <DataTrigger Binding="{Binding IsPassed.Value}" Value="False">
                             <Setter Property="IsExpanded" Value="True" />
                         </DataTrigger>
@@ -56,6 +66,10 @@
             >
             <ScrollViewer.Resources>
                 <!-- Nodes -->
+                <DataTemplate DataType="{x:Type model:TestAssemblyNode}">
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+                
                 <DataTemplate DataType="{x:Type model:TestClassNode}">
                     <TextBlock Text="{Binding Name}" />
                 </DataTemplate>
