@@ -5,82 +5,27 @@ open Basis.Core
 open EnumerableTest.Runner
 open EnumerableTest.Sdk
 
-type AssertionCount =
-  {
-    TotalCount                  : int
-    ViolatedCount               : int
-    ErrorCount                  : int
-  }
-
 type AssertionCounter() =
-  let zero =
-    {
-      TotalCount                = 0
-      ViolatedCount             = 0
-      ErrorCount                = 0
-    }
-
-  let onePassed =
-    {
-      TotalCount                = 1
-      ViolatedCount             = 0
-      ErrorCount                = 0
-    }
-
-  let oneViolated =
-    {
-      TotalCount                = 1
-      ViolatedCount             = 1
-      ErrorCount                = 0
-    }
-
-  let oneError =
-    {
-      TotalCount                = 1
-      ViolatedCount             = 0
-      ErrorCount                = 1
-    }
-
-  let add (l: AssertionCount) (r: AssertionCount) =
-    {
-      TotalCount                = l.TotalCount + r.TotalCount
-      ViolatedCount             = l.ViolatedCount + r.ViolatedCount
-      ErrorCount                = l.ErrorCount + r.ErrorCount
-    }
-
-  let ofAssertion (assertion: Assertion) =
-    if assertion.IsPassed
-      then onePassed
-      else oneViolated
-
-  let ofGroupTest (groupTest: GroupTest) =
-    seq {
-      for assertion in groupTest.Assertions do
-        yield assertion |> ofAssertion
-      if groupTest.ExceptionOrNull |> isNull |> not then
-        yield oneError
-    }
-
   let addTestClass (testClass: TestClass) count =
     seq {
       match testClass.InstantiationError with
       | Some e ->
-        yield oneError
+        yield AssertionCount.oneError
       | None ->
         for testMethod in testClass.Result do
-          yield! testMethod.Result |> ofGroupTest
+          yield! testMethod.Result |> AssertionCount.ofGroupTest
           match testMethod.DisposingError with
           | Some _ ->
-            yield oneError
+            yield AssertionCount.oneError
           | None ->
             ()
     }
-    |> Seq.fold add count
+    |> Seq.fold AssertionCount.add count
 
   let isAllGreen (count: AssertionCount) =
     count.ViolatedCount = 0 && count.ErrorCount = 0
 
-  let count = ref zero
+  let count = ref AssertionCount.zero
   
   member this.Current =
     !count
