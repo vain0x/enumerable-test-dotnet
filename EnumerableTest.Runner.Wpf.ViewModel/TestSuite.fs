@@ -31,9 +31,7 @@ module TestClass =
   let testMethods (testClass: TestClass): array<TestMethod> =
     match testClass.InstantiationError with
     | Some e ->
-      let name = "default constructor"
-      let result = new GroupTest(name, [||], e)
-      [| TestMethod.ofResult name result None TimeSpan.Zero |]
+      [| TestMethod.ofInstantiationError e |]
     | None ->
       testClass.Result
 

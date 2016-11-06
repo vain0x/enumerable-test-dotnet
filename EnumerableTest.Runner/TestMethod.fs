@@ -58,6 +58,11 @@ module TestMethod =
       Duration                      = duration
     }
 
+  let ofInstantiationError (e: exn) =
+    let name = "default constructor"
+    let result = new GroupTest(name, [||], e)
+    ofResult name result None TimeSpan.Zero
+
   let create (instance: TestInstance) (m: MethodInfo) =
     let stopwatch = Stopwatch.StartNew()
     let tests =
