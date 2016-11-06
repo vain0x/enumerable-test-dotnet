@@ -4,7 +4,7 @@ open System.Collections.ObjectModel
 open DotNetKit.Observing
 open EnumerableTest.Runner
 
-type TestClassNode(name: string) =
+type TestClassNode(assemblyShortName: string, name: string) =
   let children =
     ObservableCollection<TestMethodNode>([||])
 
@@ -23,6 +23,8 @@ type TestClassNode(name: string) =
       )
 
   member this.Children = children
+
+  member this.AssemblyShortName = assemblyShortName
 
   member this.Name = name
 
@@ -48,23 +50,37 @@ type TestClassNode(name: string) =
           Passed |> loop
     loop 0 Passed
 
-  member this.Update(testClass: TestClass) =
-    let (existingNodes, newTestMethods) =
-      testClass |> TestClass.testMethods
-      |> Seq.paritionMap
-        (fun testMethod ->
-          match tryFindNode testMethod.MethodName with
-          | Some node -> (node, testMethod) |> Some
-          | None -> None
-        )
-    let removedNodes =
-      children |> Seq.except (existingNodes |> Seq.map fst) |> Seq.toArray
-    for removedNode in removedNodes do
+  member this.UpdateTestStatus() =
+    testStatus.Value <- this.CalcTestStatus()
+
+  member this.UpdateSchema(testClassSchema: TestClassSchema) =
+    let difference =
+      ReadOnlyList.symmetricDifferenceBy
+        (fun node -> (node: TestMethodNode).Name)
+        id
+        (children |> Seq.toArray)
+        (testClassSchema |> snd)
+    for removedNode in difference.Left do
       children.Remove(removedNode) |> ignore<bool>
-    for testMethod in newTestMethods do
+    for (_, node, _) in difference.Intersect do
+      node.UpdateSchema()
+    for methodName in difference.Right do
+      children.Add(TestMethodNode(methodName))
+    this.UpdateTestStatus()
+
+  member this.Update(testClass: TestClass) =
+    let difference =
+      ReadOnlyList.symmetricDifferenceBy
+        (fun node -> (node: TestMethodNode).Name)
+        (fun testMethod -> (testMethod: TestMethod).MethodName)
+        (children |> Seq.toArray)
+        (testClass |> TestClass.testMethods)
+    for removedNode in difference.Left do
+      children.Remove(removedNode) |> ignore<bool>
+    for testMethod in difference.Right do
       let node = TestMethodNode(testMethod.MethodName)
       node.Update(testMethod)
       children.Add(node)
-    for (node, testMethod) in existingNodes do
+    for (_, node, testMethod) in difference.Intersect do
       node.Update(testMethod)
-    testStatus.Value <- this.CalcTestStatus()
+    this.UpdateTestStatus()

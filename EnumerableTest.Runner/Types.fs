@@ -29,3 +29,9 @@ type TestClass =
 
 type TestSuite =
   array<TestClass>
+  
+type TestClassSchema =
+  string * array<string>
+
+type TestSuiteSchema =
+  array<TestClassSchema>

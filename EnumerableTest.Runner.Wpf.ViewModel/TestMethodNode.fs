@@ -43,6 +43,8 @@ type TestMethodNode(name: string) =
 
   member this.IsPassed = isPassed
 
+  member this.UpdateSchema() =
+    lastResult.Value <- None
+
   member this.Update(testMethod: TestMethod) =
     lastResult.Value <- Some testMethod
-
