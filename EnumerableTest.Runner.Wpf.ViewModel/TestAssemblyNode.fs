@@ -11,7 +11,7 @@ open EnumerableTest.Runner
 
 module Model =
   let loadAssembly (assemblyName: AssemblyName) observer =
-    MarshalValue.Recursion <- 2
+    MarshalValue.Recursion <- 3
     try
       let assembly = Assembly.Load(assemblyName)
       let (schema, connectable) =
