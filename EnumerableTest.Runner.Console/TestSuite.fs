@@ -47,7 +47,7 @@ module TestClass =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuite =
-  let ofAssemblyLazy (assembly: Assembly) =
+  let ofAssemblyAsync (assembly: Assembly) =
     assembly.GetTypes()
     |> Seq.filter (fun typ -> typ |> TestClassType.isTestClass)
-    |> Seq.map (fun typ -> (typ, fun () -> typ |> TestClass.create))
+    |> Seq.map (fun typ -> async { return typ |> TestClass.create })
