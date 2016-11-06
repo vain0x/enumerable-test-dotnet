@@ -117,3 +117,24 @@ module SynchronizationContext =
 
   let send f (this: SynchronizationContext) =
     this.Send((fun _ -> f ()), ())
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module FileInfo =
+  open System
+  open System.IO
+  open DotNetKit.Observing
+  open DotNetKit.Threading.Experimental
+
+  let subscribeChanged threshold onChanged (file: FileInfo) =
+    let watcher = new FileSystemWatcher(file.DirectoryName, file.Name)
+    watcher.NotifyFilter <- NotifyFilters.LastWrite
+    watcher.Changed
+      .Throttle(
+        threshold,
+        (fun _ -> ()),
+        (fun _ _ -> ()),
+        Scheduler.WorkerThread
+      )
+      .Add(onChanged)
+    watcher.EnableRaisingEvents <- true
+    watcher :> IDisposable

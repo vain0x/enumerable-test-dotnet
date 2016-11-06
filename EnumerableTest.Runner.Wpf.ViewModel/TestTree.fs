@@ -36,18 +36,9 @@ type TestTree() =
     SynchronizationContext.Current
 
   let watchAssemblyFile (load: unit -> unit) (file: FileInfo) =
-    let watcher = new FileSystemWatcher(file.DirectoryName, file.Name)
-    watcher.NotifyFilter <- NotifyFilters.LastWrite
-    watcher.Changed
-      .Throttle(
-        TimeSpan.FromMilliseconds(100.0),
-        (fun _ -> ()),
-        (fun _ _ -> ()),
-        Scheduler.WorkerThread
-      )
-      .Add(load)
-    watcher.EnableRaisingEvents <- true
-    disposables.Add(watcher)
+    let subscription =
+      file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load
+    disposables.Add(subscription)
 
   let updateSchema assemblyShortName (schema: TestSuiteSchema) =
     let nodes =
