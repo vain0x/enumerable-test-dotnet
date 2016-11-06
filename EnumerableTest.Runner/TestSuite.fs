@@ -37,6 +37,18 @@ module TestMethodSchema =
     }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestClassSchema =
+  let ofType (typ: Type): TestClassSchema =
+    {
+      TypeFullName                = typ.FullName
+      Methods                     = 
+        typ
+        |> TestClassType.testMethodInfos
+        |> Seq.map TestMethodSchema.ofMethodInfo
+        |> Seq.toArray
+    }
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestMethod =
   let internal ofResult name result disposingError duration =
     {
@@ -119,18 +131,7 @@ module TestSuite =
       |> Array.unzip
     let (schema: TestSuiteSchema) =
       types
-      |> Seq.map
-        (fun typ ->
-          {
-            TypeFullName                = typ.FullName
-            Methods                     = 
-              typ
-              |> TestClassType.testMethodInfos
-              |> Seq.map TestMethodSchema.ofMethodInfo
-              |> Seq.toArray
-          }
-        )
-      |> Seq.toArray
+      |> Array.map TestClassSchema.ofType
     let connectable =
       fs
       |> Seq.map Async.run
