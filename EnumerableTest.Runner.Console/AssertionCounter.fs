@@ -1,7 +1,8 @@
-﻿namespace EnumerableTest.Runner
+﻿namespace EnumerableTest.Runner.Console
 
 open System
 open Basis.Core
+open EnumerableTest.Runner
 open EnumerableTest.Sdk
 
 type AssertionCount =
