@@ -231,6 +231,7 @@ module ReadOnlyUptodateCollection =
   open System.Collections.Specialized
   open DotNetKit.Disposing
   open DotNetKit.Observing
+  open EnumerableTest.Runner
 
   let ofUptodate (uptodate: IReadOnlyUptodate<'x>) =
     let subscribe (observer: IObserver<UptodateCollectionNotification<_>>) =
@@ -319,14 +320,14 @@ module ReadOnlyUptodateCollection =
   let collect f this =
     this |> map f |> flatten
 
-  let sumBy unit mul div (this: ReadOnlyUptodateCollection<_>) =
-    let accumulation = Uptodate.Create(unit)
+  let sumBy (groupSig: GroupSig<_>) (this: ReadOnlyUptodateCollection<_>) =
+    let accumulation = Uptodate.Create(groupSig.Unit)
     let subscription =
       this |> Observable.subscribe
         (fun n ->
           accumulation.Value <-
             if n.IsAdded
-              then mul accumulation.Value n.Value
-              else div accumulation.Value n.Value
+              then groupSig.Multiply(accumulation.Value, n.Value)
+              else groupSig.Divide(accumulation.Value, n.Value)
         )
     accumulation

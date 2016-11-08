@@ -28,6 +28,13 @@ module TestStatistic =
       Duration                  = l.Duration - r.Duration
     }
 
+  let groupSig =
+    { new GroupSig<_>() with
+        override this.Unit = zero
+        override this.Multiply(l, r) = add l r
+        override this.Divide(l, r) = subtract l r
+    }
+
   let ofTestMethod testMethod =
     {
       AssertionCount            = testMethod |> AssertionCount.ofTestMethod

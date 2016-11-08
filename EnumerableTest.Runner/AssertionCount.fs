@@ -53,6 +53,13 @@ module AssertionCount =
       ErrorCount                = l.ErrorCount - r.ErrorCount
     }
 
+  let groupSig =
+    { new GroupSig<_>() with
+        override this.Unit = zero
+        override this.Multiply(l, r) = add l r
+        override this.Divide(l, r) = subtract l r
+    }
+
   let ofAssertion (assertion: Assertion) =
     if assertion.IsPassed
       then onePassed

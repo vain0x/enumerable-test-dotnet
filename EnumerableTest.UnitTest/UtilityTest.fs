@@ -2,6 +2,7 @@
 
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
+open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 
 module ReadOnlyListTest =
@@ -173,8 +174,14 @@ module ReadOnlyUptodateCollectionTest =
 
   let ``test sumBy`` =
     test {
+      let additive =
+        { new GroupSig<int>() with
+            override this.Unit = 0
+            override this.Multiply(l, r) = l + r
+            override this.Divide(l, r) = l - r
+        }
       let source = UptodateCollection.create ()
-      let sum = source |> ReadOnlyUptodateCollection.sumBy 0 (+) (-)
+      let sum = source |> ReadOnlyUptodateCollection.sumBy additive
       let notifications = sum.CollectNotifications()
       source.Add(1)
       source.Add(2)

@@ -102,8 +102,7 @@ type TestAssemblyNode(file: FileInfo) =
     |> ReadOnlyUptodateCollection.ofObservableCollection
     |> ReadOnlyUptodateCollection.collect
       (fun node -> (node: TestClassNode).TestStatistic |> ReadOnlyUptodateCollection.ofUptodate)
-    |> ReadOnlyUptodateCollection.sumBy
-      TestStatistic.zero TestStatistic.add TestStatistic.subtract
+    |> ReadOnlyUptodateCollection.sumBy TestStatistic.groupSig
 
   let subscription =
     file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load

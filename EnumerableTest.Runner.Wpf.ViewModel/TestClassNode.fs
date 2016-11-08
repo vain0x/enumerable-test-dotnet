@@ -32,8 +32,7 @@ type TestClassNode(assemblyShortName: string, name: string) =
     children
     |> ReadOnlyUptodateCollection.ofObservableCollection
     |> ReadOnlyUptodateCollection.collect (fun ch -> ch.TestStatistic)
-    |> ReadOnlyUptodateCollection.sumBy
-      TestStatistic.zero TestStatistic.add TestStatistic.subtract
+    |> ReadOnlyUptodateCollection.sumBy TestStatistic.groupSig
 
   member this.Children = children
 

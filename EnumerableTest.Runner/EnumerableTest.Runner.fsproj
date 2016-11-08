@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Utility.fs" />
+    <Compile Include="GroupSig.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="AssertionExtension.fs" />
     <Compile Include="TestExtension.fs" />
