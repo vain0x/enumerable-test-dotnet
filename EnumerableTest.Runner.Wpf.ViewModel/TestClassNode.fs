@@ -9,8 +9,6 @@ type TestClassNode(assemblyShortName: string, name: string) =
   let children =
     ObservableCollection<TestMethodNode>([||])
 
-  let childrenAsUptodateCollection =  children
-
   let tryFindNode methodName =
     children |> Seq.tryFind (fun ch -> ch.Name = methodName)
 
