@@ -50,6 +50,7 @@
     <Compile Include="TestExtension.fs" />
     <Compile Include="TestMethod.fs" />
     <Compile Include="AssertionCount.fs" />
+    <Compile Include="TestStatistic.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">

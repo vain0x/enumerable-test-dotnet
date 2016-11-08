@@ -46,6 +46,13 @@ module AssertionCount =
       ErrorCount                = l.ErrorCount + r.ErrorCount
     }
 
+  let subtract (l: AssertionCount) (r: AssertionCount) =
+    {
+      TotalCount                = l.TotalCount - r.TotalCount
+      ViolatedCount             = l.ViolatedCount - r.ViolatedCount
+      ErrorCount                = l.ErrorCount - r.ErrorCount
+    }
+
   let ofAssertion (assertion: Assertion) =
     if assertion.IsPassed
       then onePassed
