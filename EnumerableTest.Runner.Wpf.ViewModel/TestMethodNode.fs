@@ -26,11 +26,23 @@ type TestMethodNode(name: string) =
           TestStatus.NotCompleted
       )
 
+  let testStatistic =
+    lastResult.Select
+      (function
+        | Some testMethod ->
+          TestStatistic.ofTestMethod testMethod
+        | None ->
+          TestStatistic.zero
+      )
+    |> ReadOnlyUptodateCollection.ofUptodate
+
   member this.Name = name
 
   member this.LastResult = lastResultUntyped
 
   member this.TestStatus = testStatus
+
+  member this.TestStatistic = testStatistic
 
   member this.UpdateSchema() =
     lastResult.Value <- None

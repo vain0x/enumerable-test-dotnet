@@ -1,5 +1,6 @@
 ﻿namespace EnumerableTest.Runner.Wpf
 
+open System
 open System.Collections.ObjectModel
 open DotNetKit.Observing
 open EnumerableTest.Runner
@@ -7,6 +8,8 @@ open EnumerableTest.Runner
 type TestClassNode(assemblyShortName: string, name: string) =
   let children =
     ObservableCollection<TestMethodNode>([||])
+
+  let childrenAsUptodateCollection =  children
 
   let tryFindNode methodName =
     children |> Seq.tryFind (fun ch -> ch.Name = methodName)
@@ -25,6 +28,13 @@ type TestClassNode(assemblyShortName: string, name: string) =
   let isExpanded =
     isPassed.Select(not)
 
+  let testStatistic =
+    children
+    |> ReadOnlyUptodateCollection.ofObservableCollection
+    |> ReadOnlyUptodateCollection.collect (fun ch -> ch.TestStatistic)
+    |> ReadOnlyUptodateCollection.sumBy
+      TestStatistic.zero TestStatistic.add TestStatistic.subtract
+
   member this.Children = children
 
   member this.AssemblyShortName = assemblyShortName
@@ -32,6 +42,8 @@ type TestClassNode(assemblyShortName: string, name: string) =
   member this.Name = name
 
   member this.TestStatus = testStatus
+
+  member this.TestStatistic = testStatistic
 
   member this.CalcTestStatus() =
     children
