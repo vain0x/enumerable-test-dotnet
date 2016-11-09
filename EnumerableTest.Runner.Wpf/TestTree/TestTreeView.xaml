@@ -79,11 +79,19 @@
             <ScrollViewer.Resources>
                 <!-- Nodes -->
                 <DataTemplate DataType="{x:Type model:TestAssemblyNode}">
-                    <TextBlock Text="{Binding Name}" />
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" />
+                        <Separator />
+                        <Label Content="{Binding TestStatistic.Value}" />
+                    </StackPanel>
                 </DataTemplate>
                 
                 <DataTemplate DataType="{x:Type model:TestClassNode}">
-                    <TextBlock Text="{Binding Name}" />
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" />
+                        <Separator />
+                        <Label Content="{Binding TestStatistic.Value}" />
+                    </StackPanel>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type model:TestMethodNode}">
@@ -183,6 +191,21 @@
                             <TextBlock Text="This test has not completed yet." />
                             <TextBlock Text="このテストの実行はまだ完了していません。" />
                         </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+                
+                <!-- TestStatistic -->
+                <DataTemplate DataType="{x:Type runner:TestStatistic}">
+                    <StackPanel>
+                        <TextBlock>
+                            Total: <Run Text="{Binding AssertionCount.TotalCount, Mode=OneWay}" />
+                            / Violated: <Run Text="{Binding AssertionCount.ViolatedCount, Mode=OneWay}" />
+                            / Error: <Run Text="{Binding AssertionCount.ErrorCount, Mode=OneWay}" />
+                            / NotCompleted: <Run Text="{Binding NotCompletedTestCount, Mode=OneWay}" />
+                        </TextBlock>
+                        <TextBlock>
+                            Total duration: <Run Text="{Binding Duration, Mode=OneWay}" />
+                        </TextBlock>
                     </StackPanel>
                 </DataTemplate>
                 

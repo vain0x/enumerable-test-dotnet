@@ -97,6 +97,13 @@ type TestAssemblyNode(file: FileInfo) =
     | (None, _) ->
       cancel ()
 
+  let testStatistic =
+    children
+    |> ReadOnlyUptodateCollection.ofObservableCollection
+    |> ReadOnlyUptodateCollection.collect
+      (fun node -> (node: TestClassNode).TestStatistic |> ReadOnlyUptodateCollection.ofUptodate)
+    |> ReadOnlyUptodateCollection.sumBy TestStatistic.groupSig
+
   let subscription =
     file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load
 
@@ -109,6 +116,9 @@ type TestAssemblyNode(file: FileInfo) =
 
   member this.CancelCommand =
     cancelCommand
+
+  member this.TestStatistic =
+    testStatistic
 
   member this.Dispose() =
     cancel ()

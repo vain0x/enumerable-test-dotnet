@@ -20,22 +20,10 @@ namespace EnumerableTest.Runner.Wpf
                 return status;
             }
 
-            var groupTest = value as GroupTest;
-            if (groupTest != null)
-            {
-                return TestStatusModule.ofGroupTest(groupTest);
-            }
-
             var assertionTest = value as AssertionTest;
             if (assertionTest != null)
             {
                 return TestStatusModule.ofAssertion(assertionTest.Assertion);
-            }
-
-            var assertion = value as Assertion;
-            if (assertion != null)
-            {
-                return TestStatusModule.ofAssertion(assertion);
             }
 
             return TestStatus.NotCompleted;
