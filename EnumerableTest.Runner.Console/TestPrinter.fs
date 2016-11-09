@@ -49,6 +49,7 @@ type TestPrinter(writer: TextWriter, width: int) =
   let printTestMethodAsync i (testMethod: TestMethod) =
     async {
       if testMethod |> TestMethod.isPassed |> not then
+        do! printSeparatorAsync ()
         do! printer.WriteLineAsync(sprintf "Method: %s" testMethod.MethodName)
         use indenting = printer.AddIndent()
         for (i, test) in testMethod.Result.Tests |> Seq.indexed do
