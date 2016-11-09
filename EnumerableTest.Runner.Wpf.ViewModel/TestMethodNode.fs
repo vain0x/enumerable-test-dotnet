@@ -1,5 +1,6 @@
 ﻿namespace EnumerableTest.Runner.Wpf
 
+open System
 open Basis.Core
 open DotNetKit.Observing
 open EnumerableTest.Sdk
@@ -17,15 +18,6 @@ type TestMethodNode(name: string) =
           NotExecutedResult.Instance :> obj
       )
 
-  let testStatus =
-    lastResult.Select
-      (function
-        | Some testMethod ->
-          TestStatus.ofTestMethod testMethod
-        | None ->
-          TestStatus.NotCompleted
-      )
-
   let testStatistic =
     lastResult.Select
       (function
@@ -34,7 +26,9 @@ type TestMethodNode(name: string) =
         | None ->
           TestStatistic.notCompleted
       )
-    |> ReadOnlyUptodateCollection.ofUptodate
+
+  let testStatus =
+    testStatistic.Select(Func<_, _>(TestStatus.ofTestStatistic))
 
   member this.Name = name
 
