@@ -10,8 +10,14 @@ open Basis.Core
 type TestPrinter(writer: TextWriter, width: int) =
   let printer = StructuralTextWriter(writer)
 
-  let printSeparatorAsync () =
-    printer.WriteLineAsync(String.replicate (width - printer.IndentLength) "-")
+  let printSeparatorAsync c =
+    printer.WriteLineAsync(String.replicate (width - printer.IndentLength) c)
+    
+  let printHardSeparatorAsync () =
+    printSeparatorAsync "="
+
+  let printSoftSeparatorAsync () =
+    printSeparatorAsync "-"
 
   let printExceptionAsync source (e: exn) =
     async {
@@ -49,6 +55,7 @@ type TestPrinter(writer: TextWriter, width: int) =
   let printTestMethodAsync i (testMethod: TestMethod) =
     async {
       if testMethod |> TestMethod.isPassed |> not then
+        do! printSoftSeparatorAsync ()
         do! printer.WriteLineAsync(sprintf "Method: %s" testMethod.MethodName)
         use indenting = printer.AddIndent()
         for (i, test) in testMethod.Result.Tests |> Seq.indexed do
@@ -61,7 +68,7 @@ type TestPrinter(writer: TextWriter, width: int) =
 
   member this.PrintSummaryAsync(count: AssertionCount) =
     async {
-      do! printSeparatorAsync ()
+      do! printHardSeparatorAsync ()
       let message =
         sprintf "Total: %d, Violated: %d, Error: %d"
           count.TotalCount
@@ -73,7 +80,7 @@ type TestPrinter(writer: TextWriter, width: int) =
   member this.PrintAsync(testClass: TestClass) =
     async {
       if testClass |> TestClass.isPassed |> not then
-        do! printSeparatorAsync ()
+        do! printHardSeparatorAsync ()
         do! printer.WriteLineAsync(sprintf "Type: %s" testClass.TypeFullName)
         use indenting = printer.AddIndent()
         match testClass.InstantiationError with
