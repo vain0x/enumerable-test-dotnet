@@ -25,10 +25,10 @@
                             <Setter Property="Fill" Value="DimGray" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.Passed}">
-                            <Setter Property="Fill" Value="Navy" />
+                            <Setter Property="Fill" Value="MediumBlue" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.Violated}">
-                            <Setter Property="Fill" Value="DarkViolet" />
+                            <Setter Property="Fill" Value="Goldenrod" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.Error}">
                             <Setter Property="Fill" Value="Red" />
@@ -43,6 +43,7 @@
             Foreground="White"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            FontFamily="Meiryo"
             >
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">

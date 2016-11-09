@@ -24,6 +24,28 @@
         <TreeView x:Name="treeView" ItemsSource="{Binding Children}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate
+                    DataType="{x:Type model:TestAssemblyNode}"
+                    ItemsSource="{Binding Children}"
+                    >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Name}" />
+                        <Button
+                            Grid.Column="1"
+                            Content="■"
+                            Foreground="Red"
+                            FontSize="8"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Right"
+                            Command="{Binding CancelCommand}"
+                            />
+                    </Grid>
+                </HierarchicalDataTemplate>
+                
+                <HierarchicalDataTemplate
                     DataType="{x:Type model:TestClassNode}"
                     ItemsSource="{Binding Children}"
                     >
@@ -42,7 +64,7 @@
 
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsPassed.Value}" Value="False">
+                        <DataTrigger Binding="{Binding (model:INodeViewModel.IsExpanded).Value}" Value="True">
                             <Setter Property="IsExpanded" Value="True" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -56,8 +78,20 @@
             >
             <ScrollViewer.Resources>
                 <!-- Nodes -->
+                <DataTemplate DataType="{x:Type model:TestAssemblyNode}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" />
+                        <Separator />
+                        <Label Content="{Binding TestStatistic.Value}" />
+                    </StackPanel>
+                </DataTemplate>
+                
                 <DataTemplate DataType="{x:Type model:TestClassNode}">
-                    <TextBlock Text="{Binding Name}" />
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" />
+                        <Separator />
+                        <Label Content="{Binding TestStatistic.Value}" />
+                    </StackPanel>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type model:TestMethodNode}">
@@ -65,6 +99,36 @@
                         <TextBlock Text="{Binding Name}" />
                         <Separator />
                         <Label Content="{Binding LastResult.Value}" />
+                    </StackPanel>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type runner:TestMethod}">
+                    <StackPanel>
+                        <Label Content="{Binding Result}" />
+                        <StackPanel>
+                            <StackPanel.Style>
+                                <Style
+                                    TargetType="StackPanel"
+                                    BasedOn="{StaticResource DefaultStackPanelStyle}"
+                                    >
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DisposingError}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Separator />
+                            <StackPanel Orientation="Horizontal">
+                                <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                                <TextBlock Text="RUNTIME ERROR in Dispose" />
+                            </StackPanel>
+                            <Label Content="{Binding DisposingErrorOrNull}" />
+                        </StackPanel>
+                        <Separator />
+                        <TextBlock>
+                            Duration: <Run Text="{Binding Duration, Mode=OneTime}" />
+                        </TextBlock>
                     </StackPanel>
                 </DataTemplate>
 
@@ -93,21 +157,32 @@
 
                 <DataTemplate DataType="{x:Type sdk:GroupTest}">
                     <GroupBox Header="{Binding Name}">
-                        <ItemsControl ItemsSource="{Binding Tests}" />
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding Tests}" />
+                            <StackPanel>
+                                <StackPanel.Style>
+                                    <Style
+                                        TargetType="StackPanel"
+                                        BasedOn="{StaticResource DefaultStackPanelStyle}"
+                                        >
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ExceptionOrNull}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <Separator />
+                                <StackPanel Orientation="Horizontal">
+                                    <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                                    <TextBlock Text="RUNTIME ERROR" />
+                                </StackPanel>
+                                <Label Content="{Binding ExceptionOrNull}" />
+                            </StackPanel>
+                        </StackPanel>
                     </GroupBox>
                 </DataTemplate>
 
-                <!-- TestError -->
-                <DataTemplate DataType="{x:Type runner:TestError}">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
-                            <TextBlock Text="RUNTIME ERROR!" />
-                        </StackPanel>
-                        <Label Content="{Binding Error}" />
-                    </StackPanel>
-                </DataTemplate>
-                
                 <!-- NotExecutedResult -->
                 <DataTemplate DataType="{x:Type model:NotExecutedResult}">
                     <StackPanel Orientation="Horizontal">
@@ -116,6 +191,21 @@
                             <TextBlock Text="This test has not completed yet." />
                             <TextBlock Text="このテストの実行はまだ完了していません。" />
                         </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+                
+                <!-- TestStatistic -->
+                <DataTemplate DataType="{x:Type runner:TestStatistic}">
+                    <StackPanel>
+                        <TextBlock>
+                            Total: <Run Text="{Binding AssertionCount.TotalCount, Mode=OneWay}" />
+                            / Violated: <Run Text="{Binding AssertionCount.ViolatedCount, Mode=OneWay}" />
+                            / Error: <Run Text="{Binding AssertionCount.ErrorCount, Mode=OneWay}" />
+                            / NotCompleted: <Run Text="{Binding NotCompletedTestCount, Mode=OneWay}" />
+                        </TextBlock>
+                        <TextBlock>
+                            Total duration: <Run Text="{Binding Duration, Mode=OneWay}" />
+                        </TextBlock>
                     </StackPanel>
                 </DataTemplate>
                 
@@ -261,7 +351,7 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type system:Exception}">
-                    <Border Style="{StaticResource CornerRadiusBorderStyle}">
+                    <Border Style="{StaticResource RoundBorderStyle}">
                         <TextBlock TextWrapping="Wrap" Margin="10" Text="{Binding}" />
                     </Border>
                 </DataTemplate>

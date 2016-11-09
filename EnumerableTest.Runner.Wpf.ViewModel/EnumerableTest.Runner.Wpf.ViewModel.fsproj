@@ -45,10 +45,12 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Utility.fs" />
+    <Compile Include="Types.fs" />
     <Compile Include="TestStatus.fs" />
-    <Compile Include="TestClassResult.fs" />
+    <Compile Include="TestSuite.fs" />
     <Compile Include="TestMethodNode.fs" />
     <Compile Include="TestClassNode.fs" />
+    <Compile Include="TestAssemblyNode.fs" />
     <Compile Include="TestTree.fs" />
   </ItemGroup>
   <ItemGroup>

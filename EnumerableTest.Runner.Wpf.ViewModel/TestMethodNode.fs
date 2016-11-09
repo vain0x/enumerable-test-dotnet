@@ -1,40 +1,34 @@
 ﻿namespace EnumerableTest.Runner.Wpf
 
+open System
 open Basis.Core
 open DotNetKit.Observing
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
 
 type TestMethodNode(name: string) =
-  let lastResult = Uptodate.Create(None)
+  let lastResult = Uptodate.Create((None: option<TestMethod>))
 
   let lastResultUntyped =
     lastResult.Select
       (function
-        | Some (Success test) -> test :> obj
-        | Some (Failure testError) -> testError :> obj
-        | None -> NotExecutedResult.Instance :> obj
+        | Some testMethod ->
+          testMethod :> obj
+        | None ->
+          NotExecutedResult.Instance :> obj
+      )
+
+  let testStatistic =
+    lastResult.Select
+      (function
+        | Some testMethod ->
+          TestStatistic.ofTestMethod testMethod
+        | None ->
+          TestStatistic.notCompleted
       )
 
   let testStatus =
-    lastResult.Select
-      (function
-        | Some testMethodResult ->
-          TestStatus.ofTestMethodResult testMethodResult
-        | None ->
-          TestStatus.NotCompleted
-      )
-      
-  let isPassed =
-    lastResult.Select
-      (function
-        | Some (Success test) ->
-          (test: GroupTest).IsPassed
-        | Some (Failure _) ->
-          false
-        | None ->
-          true
-      )
+    testStatistic.Select(Func<_, _>(TestStatus.ofTestStatistic))
 
   member this.Name = name
 
@@ -42,10 +36,14 @@ type TestMethodNode(name: string) =
 
   member this.TestStatus = testStatus
 
-  member this.IsPassed = isPassed
+  member this.TestStatistic = testStatistic
 
-  member this.Update() =
+  member this.UpdateSchema() =
     lastResult.Value <- None
 
-  member this.UpdateResult(result: obj) =
-    lastResult.Value <- result |> Result.ofObj<GroupTest, TestError>
+  member this.Update(testMethod: TestMethod) =
+    lastResult.Value <- Some testMethod
+
+  interface INodeViewModel with
+    override this.IsExpanded =
+      Uptodate.False

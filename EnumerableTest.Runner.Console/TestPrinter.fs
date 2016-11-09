@@ -10,14 +10,20 @@ open Basis.Core
 type TestPrinter(writer: TextWriter, width: int) =
   let printer = StructuralTextWriter(writer)
 
-  let printSeparatorAsync () =
-    printer.WriteLineAsync(String.replicate (width - printer.IndentLength) "-")
+  let printSeparatorAsync c =
+    printer.WriteLineAsync(String.replicate (width - printer.IndentLength) c)
+    
+  let printHardSeparatorAsync () =
+    printSeparatorAsync "="
 
-  let printTestErrorAsync testMethod testError =
+  let printSoftSeparatorAsync () =
+    printSeparatorAsync "-"
+
+  let printExceptionAsync source (e: exn) =
     async {
-      let methodName  = testError |> TestError.errorMethodName testMethod
-      do! printer.WriteLineAsync(sprintf "RUNTIME ERROR in %s" methodName)
-      return! printer.WriteLineAsync(string testError.Error)
+      do! printer.WriteLineAsync(sprintf "RUNTIME ERROR in %s" source)
+      use indenting = printer.AddIndent()
+      do! printer.WriteLineAsync(string e)
     }
 
   let printAssertionAsync i testName (result: Assertion) =
@@ -46,25 +52,23 @@ type TestPrinter(writer: TextWriter, width: int) =
           do! printTestAsync i test
     }
 
-  let printTestMethodResultAsync i (testMethodResult: TestMethodResult) =
+  let printTestMethodAsync i (testMethod: TestMethod) =
     async {
-      match testMethodResult with
-      | (_, Success test) when test.IsPassed -> ()
-      | (_, Success test) ->
-        do! printer.WriteLineAsync(sprintf "Method: %s" test.Name)
+      if testMethod |> TestMethod.isPassed |> not then
+        do! printSoftSeparatorAsync ()
+        do! printer.WriteLineAsync(sprintf "Method: %s" testMethod.MethodName)
         use indenting = printer.AddIndent()
-        for  (i, test) in test.Tests |> Seq.indexed do
+        for (i, test) in testMethod.Result.Tests |> Seq.indexed do
           do! printTestAsync i test
-      | (testMethod, Failure testError) ->
-        let methodName = testError |> TestError.methodName testMethod
-        do! printer.WriteLineAsync(sprintf "Method: %s" methodName)
-        use indenting = printer.AddIndent()
-        return! printTestErrorAsync testMethod testError
+        match testMethod.DisposingError with
+        | Some e ->
+          do! printExceptionAsync "Dispose" e
+        | None -> ()
     }
 
   member this.PrintSummaryAsync(count: AssertionCount) =
     async {
-      do! printSeparatorAsync ()
+      do! printHardSeparatorAsync ()
       let message =
         sprintf "Total: %d, Violated: %d, Error: %d"
           count.TotalCount
@@ -73,20 +77,23 @@ type TestPrinter(writer: TextWriter, width: int) =
       return! printer.WriteLineAsync(message)
     }
 
-  member this.PrintAsync(testClassResult: TestClassResult) =
+  member this.PrintAsync(testClass: TestClass) =
     async {
-      if testClassResult |> TestClassResult.isAllPassed |> not then
-        let (testClass, testMethodResults) = testClassResult
-        do! printSeparatorAsync ()
+      if testClass |> TestClass.isPassed |> not then
+        do! printHardSeparatorAsync ()
         do! printer.WriteLineAsync(sprintf "Type: %s" testClass.TypeFullName)
         use indenting = printer.AddIndent()
-        for (testIndex, testMethodResult) in testMethodResults |> Seq.indexed do
-          do! testMethodResult |> printTestMethodResultAsync testIndex
+        match testClass.InstantiationError with
+        | Some e ->
+          do! printExceptionAsync "constructor" e
+        | None ->
+          for (i, testMethod) in testClass.Result |> Seq.indexed do
+            do! testMethod |> printTestMethodAsync i
     }
 
-  interface IObserver<TestClassResult> with
-    override this.OnNext(testClassResult) =
-      this.PrintAsync(testClassResult) |> Async.RunSynchronously
+  interface IObserver<TestClass> with
+    override this.OnNext(testClass) =
+      this.PrintAsync(testClass) |> Async.RunSynchronously
 
     override this.OnError(_) = ()
 

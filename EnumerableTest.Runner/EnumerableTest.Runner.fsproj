@@ -45,12 +45,13 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Utility.fs" />
+    <Compile Include="GroupSig.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="AssertionExtension.fs" />
     <Compile Include="TestExtension.fs" />
-    <Compile Include="TestSuite.fs" />
-    <Compile Include="TestSuiteResult.fs" />
-    <Compile Include="AssertionCounter.fs" />
+    <Compile Include="TestMethod.fs" />
+    <Compile Include="AssertionCount.fs" />
+    <Compile Include="TestStatistic.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">

@@ -76,6 +76,7 @@ module Observable =
   /// Creates a connectable observable
   /// which executes async tasks when connected and notifies each result.
   let ofParallel asyncs =
+    let gate = obj()
     let subject = Subject.Create()
     let computation =
       async {
@@ -84,7 +85,7 @@ module Observable =
             (fun a ->
               async {
                 let! x = a
-                (subject :> IObserver<_>).OnNext(x)
+                lock gate (fun () -> (subject :> IObserver<_>).OnNext(x))
               }
             )
           |> Async.Parallel
@@ -93,6 +94,26 @@ module Observable =
     { new IConnectableObservable<_> with
         override this.Connect() =
           Async.Start(computation)
+        override this.Subscribe(observer) =
+          (subject :> IObservable<_>).Subscribe(observer)
+    }
+
+  let startParallel computations =
+    let gate = obj()
+    let subject = Subject.Create()
+    let computations = computations |> Seq.toArray
+    let connect () =
+      let mutable count = 0
+      for computation in computations do
+        async {
+          let! x = computation
+          lock gate (fun () -> (subject :> IObserver<_>).OnNext(x))
+          if Interlocked.Increment(&count) = computations.Length then
+            (subject :> IObserver<_>).OnCompleted()
+        } |> Async.Start
+    { new IConnectableObservable<_> with
+        override this.Connect() =
+          connect ()
         override this.Subscribe(observer) =
           (subject :> IObservable<_>).Subscribe(observer)
     }
@@ -141,3 +162,64 @@ module Disposable =
         override this.Dispose() =
           x |> dispose
     }
+
+module FileSystemInfo =
+  open System
+  open System.IO
+
+  let sandboxFile =
+    new FileInfo(@"..\..\..\EnumerableTest.Sandbox\bin\Debug\EnumerableTest.Sandbox.dll")
+
+  /// Enumerates ancestors in descending order.
+  let ancestors =
+    let rec loop (directory: DirectoryInfo) =
+      seq {
+        yield directory
+        match directory.Parent with
+        | null -> ()
+        | parent ->
+          yield! loop parent
+      }
+    fun fs ->
+      match (fs: FileSystemInfo) with
+      | :? DirectoryInfo as directory ->
+        loop directory
+      | :? FileInfo as file ->
+        loop file.Directory
+      | _ ->
+        Seq.empty
+
+  let findTestAssemblies (thisFile: FileInfo) =
+    seq {
+      for packagesDirectory in thisFile |> ancestors |> Seq.filter (fun d -> d.Name = "packages") do
+      for solutionDirectory in packagesDirectory.Parent |> Option.ofObj |> Option.toArray do
+      for suffix in ["Test"; "UnitTest"; "Tests"; "UnitTests"] do
+      for projectDirectory in solutionDirectory.GetDirectories(sprintf "*%s" suffix) do
+      for binDirectory in projectDirectory.GetDirectories("bin") do
+      for debugDirectory in binDirectory.GetDirectories("Debug") do
+      for extension in [".dll"; ".exe"] do
+      yield! debugDirectory.GetFiles(sprintf "*%s%s" suffix extension)
+    }
+
+  let getTestAssemblies (thisFile: FileInfo) =
+    seq {
+#if DEBUG
+      yield sandboxFile
+#endif
+      yield!
+        Environment.GetCommandLineArgs()
+        |> Seq.filter (fun path -> path.EndsWith(".vshost.exe") |> not)
+        |> Seq.map FileInfo
+      yield! findTestAssemblies thisFile
+    }
+
+module MarshalByRefObject =
+  open System
+
+  type MarshalByRefValue<'x>(value: 'x) =
+    inherit MarshalByRefObject()
+
+    member val Value = value with get, set
+
+  let ofValue value =
+    MarshalByRefValue(value)
