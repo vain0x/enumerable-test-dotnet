@@ -201,6 +201,7 @@
                             Total: <Run Text="{Binding AssertionCount.TotalCount, Mode=OneWay}" />
                             / Violated: <Run Text="{Binding AssertionCount.ViolatedCount, Mode=OneWay}" />
                             / Error: <Run Text="{Binding AssertionCount.ErrorCount, Mode=OneWay}" />
+                            / NotCompleted: <Run Text="{Binding NotCompletedTestCount, Mode=OneWay}" />
                         </TextBlock>
                         <TextBlock>
                             Total duration: <Run Text="{Binding Duration, Mode=OneWay}" />

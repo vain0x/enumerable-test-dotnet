@@ -32,7 +32,7 @@ type TestMethodNode(name: string) =
         | Some testMethod ->
           TestStatistic.ofTestMethod testMethod
         | None ->
-          TestStatistic.zero
+          TestStatistic.notCompleted
       )
     |> ReadOnlyUptodateCollection.ofUptodate
 
