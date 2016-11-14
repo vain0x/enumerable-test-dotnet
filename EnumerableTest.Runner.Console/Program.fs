@@ -3,6 +3,7 @@
 open System
 open System.IO
 open System.Reflection
+open Argu
 open Basis.Core
 open EnumerableTest.Runner
 
@@ -15,17 +16,17 @@ module Assembly =
     | _ -> None
 
 module Program =
-  [<EntryPoint>]
-  let main argv =
-    let thisFile = FileInfo(Assembly.GetExecutingAssembly().Location)
-    let assemblyFiles =
-      FileSystemInfo.getTestAssemblies thisFile
+  let run isVerbose (assemblyFiles: seq<FileInfo>) =
+    if isVerbose then
+      printfn "assemblies:"
+      for file in assemblyFiles do
+        printfn "  - %s" file.FullName
     let results =
       assemblyFiles
       |> Seq.choose Assembly.tryLoadFile
       |> Seq.collect TestSuite.ofAssemblyAsync
       |> Observable.ofParallel
-    let printer = TestPrinter(Console.Out, Console.BufferWidth - 1)
+    let printer = TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
     let counter = AssertionCounter()
     results.Subscribe(printer) |> ignore<IDisposable>
     results.Subscribe(counter) |> ignore<IDisposable>
@@ -37,3 +38,11 @@ module Program =
         then 0
         else -1
     exitCode
+
+  [<EntryPoint>]
+  let main _ =
+    let thisFile = FileInfo(Assembly.GetExecutingAssembly().Location)
+    let assemblyFiles =
+      FileSystemInfo.getTestAssemblies thisFile
+      |> Seq.append AppArgument.files
+    run AppArgument.isVerbose assemblyFiles

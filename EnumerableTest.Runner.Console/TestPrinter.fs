@@ -7,7 +7,7 @@ open EnumerableTest.Runner
 open EnumerableTest.Sdk
 open Basis.Core
 
-type TestPrinter(writer: TextWriter, width: int) =
+type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
   let printer = StructuralTextWriter(writer)
 
   let printSeparatorAsync c =
@@ -54,7 +54,7 @@ type TestPrinter(writer: TextWriter, width: int) =
 
   let printTestMethodAsync i (testMethod: TestMethod) =
     async {
-      if testMethod |> TestMethod.isPassed |> not then
+      if isVerbose || testMethod |> TestMethod.isPassed |> not then
         do! printSoftSeparatorAsync ()
         do! printer.WriteLineAsync(sprintf "Method: %s" testMethod.MethodName)
         use indenting = printer.AddIndent()
@@ -79,7 +79,7 @@ type TestPrinter(writer: TextWriter, width: int) =
 
   member this.PrintAsync(testClass: TestClass) =
     async {
-      if testClass |> TestClass.isPassed |> not then
+      if isVerbose || testClass |> TestClass.isPassed |> not then
         do! printHardSeparatorAsync ()
         do! printer.WriteLineAsync(sprintf "Type: %s" testClass.TypeFullName)
         use indenting = printer.AddIndent()
