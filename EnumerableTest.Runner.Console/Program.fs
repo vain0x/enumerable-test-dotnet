@@ -16,13 +16,17 @@ module Assembly =
     | _ -> None
 
 module Program =
-  let run (assemblyFiles: seq<FileInfo>) =
+  let run isVerbose (assemblyFiles: seq<FileInfo>) =
+    if isVerbose then
+      printfn "assemblies:"
+      for file in assemblyFiles do
+        printfn "  - %s" file.FullName
     let results =
       assemblyFiles
       |> Seq.choose Assembly.tryLoadFile
       |> Seq.collect TestSuite.ofAssemblyAsync
       |> Observable.ofParallel
-    let printer = TestPrinter(Console.Out, Console.BufferWidth - 1)
+    let printer = TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
     let counter = AssertionCounter()
     results.Subscribe(printer) |> ignore<IDisposable>
     results.Subscribe(counter) |> ignore<IDisposable>
@@ -41,4 +45,4 @@ module Program =
     let assemblyFiles =
       FileSystemInfo.getTestAssemblies thisFile
       |> Seq.append AppArgument.files
-    run assemblyFiles
+    run AppArgument.isVerbose assemblyFiles
