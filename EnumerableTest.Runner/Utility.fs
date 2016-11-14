@@ -193,7 +193,7 @@ module FileSystemInfo =
     seq {
       for packagesDirectory in thisFile |> ancestors |> Seq.filter (fun d -> d.Name = "packages") do
       for solutionDirectory in packagesDirectory.Parent |> Option.ofObj |> Option.toArray do
-      for suffix in ["Test"; "UnitTest"; "Tests"; "UnitTests"] do
+      for suffix in ["UnitTest"; "Tests"; "UnitTests"] do
       for projectDirectory in solutionDirectory.GetDirectories(sprintf "*%s" suffix) do
       for binDirectory in projectDirectory.GetDirectories("bin") do
       for debugDirectory in binDirectory.GetDirectories("Debug") do
