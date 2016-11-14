@@ -3,6 +3,7 @@
 open System
 open System.IO
 open System.Reflection
+open Argu
 open Basis.Core
 open EnumerableTest.Runner
 
@@ -15,11 +16,7 @@ module Assembly =
     | _ -> None
 
 module Program =
-  [<EntryPoint>]
-  let main argv =
-    let thisFile = FileInfo(Assembly.GetExecutingAssembly().Location)
-    let assemblyFiles =
-      FileSystemInfo.getTestAssemblies thisFile
+  let run (assemblyFiles: seq<FileInfo>) =
     let results =
       assemblyFiles
       |> Seq.choose Assembly.tryLoadFile
@@ -37,3 +34,11 @@ module Program =
         then 0
         else -1
     exitCode
+
+  [<EntryPoint>]
+  let main _ =
+    let thisFile = FileInfo(Assembly.GetExecutingAssembly().Location)
+    let assemblyFiles =
+      FileSystemInfo.getTestAssemblies thisFile
+      |> Seq.append AppArgument.files
+    run assemblyFiles

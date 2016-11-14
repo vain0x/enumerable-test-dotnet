@@ -206,10 +206,6 @@ module FileSystemInfo =
 #if DEBUG
       yield sandboxFile
 #endif
-      yield!
-        Environment.GetCommandLineArgs()
-        |> Seq.filter (fun path -> path.EndsWith(".vshost.exe") |> not)
-        |> Seq.map FileInfo
       yield! findTestAssemblies thisFile
     }
 

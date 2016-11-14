@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 using System.Reflection;
+using Argu;
 
 namespace EnumerableTest.Runner.Wpf
 {
@@ -29,7 +30,7 @@ namespace EnumerableTest.Runner.Wpf
             get
             {
                 var thisFile = new FileInfo(Assembly.GetExecutingAssembly().Location);
-                return FileSystemInfo.getTestAssemblies(thisFile);
+                return FileSystemInfo.getTestAssemblies(thisFile).Concat(AppArgumentModule.files);
             }
         }
 
