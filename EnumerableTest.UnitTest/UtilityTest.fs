@@ -62,13 +62,13 @@ module ReadOnlyListTest =
 
 module ReadOnlyUptodateCollectionTest =
   open System.Collections.ObjectModel
-  open DotNetKit.Observing
+  open Reactive.Bindings
 
   let ``test ofUptodate`` =
     test {
-      let uptodate = Uptodate.Create(0)
+      let uptodate = ReactiveProperty.create 0
       use collection = ReadOnlyUptodateCollection.ofUptodate uptodate
-      use notifications = collection.CollectNotifications()
+      use notifications = collection |> Observable.collectNotifications
       do! notifications |> Seq.toList |> assertEquals [UptodateCollectionNotification.ofAdded 0]
       uptodate.Value <- 1
       do!
@@ -84,7 +84,7 @@ module ReadOnlyUptodateCollectionTest =
     let seed values =
       let source = ObservableCollection(values :> seq<_>)
       let collection = ReadOnlyUptodateCollection.ofObservableCollection source
-      let notifications = collection.CollectNotifications()
+      let notifications = collection |> Observable.collectNotifications
       (source, collection, notifications)
 
     let ``it notifies additions`` =
@@ -130,7 +130,7 @@ module ReadOnlyUptodateCollectionTest =
             count |> incr
             i + 1
           )
-      let notifications = mapped.CollectNotifications()
+      let notifications = mapped |> Observable.collectNotifications
       (source, mapped, notifications, count)
 
     let ``it notifies mapped values`` =
@@ -154,7 +154,7 @@ module ReadOnlyUptodateCollectionTest =
     test {
       let source = UptodateCollection.create ()
       let flattened = source |> ReadOnlyUptodateCollection.flatten
-      let notifications = flattened.CollectNotifications()
+      let notifications = flattened |> Observable.collectNotifications
       let subsource1 = UptodateCollection.create ()
       let subsource2 = UptodateCollection.create ()
       source.Add(subsource1)
@@ -182,7 +182,7 @@ module ReadOnlyUptodateCollectionTest =
         }
       let source = UptodateCollection.create ()
       let sum = source |> ReadOnlyUptodateCollection.sumBy additive
-      let notifications = sum.CollectNotifications()
+      let notifications = sum |> Observable.collectNotifications
       source.Add(1)
       source.Add(2)
       source.Add(3)

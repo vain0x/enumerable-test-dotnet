@@ -126,22 +126,72 @@ module SynchronizationContext =
 module FileInfo =
   open System
   open System.IO
-  open DotNetKit.Observing
-  open DotNetKit.Threading.Experimental
+  open System.Reactive.Linq
 
-  let subscribeChanged threshold onChanged (file: FileInfo) =
+  let subscribeChanged (threshold: TimeSpan) onChanged (file: FileInfo) =
     let watcher = new FileSystemWatcher(file.DirectoryName, file.Name)
     watcher.NotifyFilter <- NotifyFilters.LastWrite
     watcher.Changed
-      .Throttle(
-        threshold,
-        (fun _ -> ()),
-        (fun _ _ -> ()),
-        Scheduler.WorkerThread
-      )
+      .Select(ignore)
+      .Throttle(threshold)
       .Add(onChanged)
     watcher.EnableRaisingEvents <- true
     watcher :> IDisposable
+
+module Observable =
+  open System
+  open System.Collections
+  open System.Collections.Generic
+  open System.Reactive.Linq
+
+  type NotificationCollection<'x>(source: IObservable<'x>) =
+    let notifications = ResizeArray()
+    let mutable result = (None: option<option<exn>>)
+    let subscription =
+      source.Subscribe
+        ( notifications.Add
+        , fun error ->
+            result <- Some (Some error)
+        , fun () ->
+            result <- Some None
+        )
+
+    member this.Result = result
+
+    member this.Count = notifications.Count
+
+    interface IEnumerable<'x> with
+      override this.GetEnumerator() =
+        notifications.GetEnumerator() :> IEnumerator<_>
+
+      override this.GetEnumerator() =
+        notifications.GetEnumerator() :> IEnumerator
+
+    interface IDisposable with
+      override this.Dispose() =
+        subscription.Dispose()
+
+  let collectNotifications (this: IObservable<_>) =
+    new NotificationCollection<_>(this)
+
+module ReactiveProperty =
+  open System.Reactive.Linq
+  open Reactive.Bindings
+
+  let create x =
+    new ReactiveProperty<_>(initialValue = x)
+
+  let map (f: 'x -> 'y) (this: ReactiveProperty<'x>) =
+    this.Select(f).ToReactiveProperty()
+
+  let asReadOnly this =
+    this :> IReadOnlyReactiveProperty<_>
+
+module ReactiveCommand =
+  open Reactive.Bindings
+
+  let create (canExecute: IReadOnlyReactiveProperty<_>) =
+    new ReactiveCommand<_>(canExecuteSource = canExecute)
 
 open System
 open System.Collections
@@ -198,10 +248,10 @@ type UptodateCollection<'x>() =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module UptodateCollection =
   open System.Collections.ObjectModel
-  open DotNetKit.Observing
+  open System.Reactive.Subjects
 
   let create () =
-    let subject = Subject.Create()
+    let subject = new Subject<_>()
     let collection = Collection()
     { new UptodateCollection<'x>() with
         override this.Count = collection.Count
@@ -229,16 +279,17 @@ module UptodateCollection =
 module ReadOnlyUptodateCollection =
   open System.Collections.ObjectModel
   open System.Collections.Specialized
-  open DotNetKit.Disposing
-  open DotNetKit.Observing
+  open System.Reactive.Linq
   open EnumerableTest.Runner
+  open Reactive.Bindings
+  open Reactive.Bindings.Extensions
 
-  let ofUptodate (uptodate: IReadOnlyUptodate<'x>) =
+  let ofUptodate (uptodate: ReactiveProperty<'x>) =
     let subscribe (observer: IObserver<UptodateCollectionNotification<_>>) =
-      uptodate.Windowed(2) |> Observable.subscribe
+      uptodate.Pairwise() |> Observable.subscribe
         (fun window ->
-          observer.OnNext(UptodateCollectionNotification.ofRemoved window.[0])
-          observer.OnNext(UptodateCollectionNotification.ofAdded window.[1])
+          observer.OnNext(UptodateCollectionNotification.ofRemoved window.OldItem)
+          observer.OnNext(UptodateCollectionNotification.ofAdded window.NewItem)
         )
     { new ReadOnlyUptodateCollection<'x>() with
         override this.Count = 1
@@ -321,7 +372,7 @@ module ReadOnlyUptodateCollection =
     this |> map f |> flatten
 
   let sumBy (groupSig: GroupSig<_>) (this: ReadOnlyUptodateCollection<_>) =
-    let accumulation = Uptodate.Create(groupSig.Unit)
+    let accumulation = new ReactiveProperty<_>(initialValue = groupSig.Unit)
     let subscription =
       this |> Observable.subscribe
         (fun n ->

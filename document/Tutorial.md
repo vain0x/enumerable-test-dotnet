@@ -4,9 +4,9 @@ Before installing EnumerableTest, we recommend to add a project for unit testing
 
 **EnumerableTest** をインストールする前に、単体テスト専用のプロジェクトを作成することをおすすめします。
 
-Open your project (solution) with Visual Studio and select the File menu > Create New > Project and add a class library project named "X.Test" (where X is your project name) to your solution. Note that you need to choose "Add to solution" (rather than "Create new solution") in a combobox.
+Open your project (solution) with Visual Studio and select the File menu > Create New > Project and add a class library project named "X.UnitTest" (where X is your project name) to your solution. Note that you need to choose "Add to solution" (rather than "Create new solution") in a combobox.
 
-Visual Studio でソリューションを開き、「ファイル」メニュー→「新規作成」→「プロジェクト」を選択し、クラスライブラリーを作成します。名前は「X.Test」(X はプロジェクトの名前)としておくのが通例のようです。ダイアログにあるコンボボックスのうち、「新しいソリューションを作成」と表示されているところを、「ソリューションに追加」に変更しておく必要があります。
+Visual Studio でソリューションを開き、「ファイル」メニュー→「新規作成」→「プロジェクト」を選択し、クラスライブラリーを作成します。名前は「X.UnitTest」(X はプロジェクトの名前)としておくのが通例のようです。ダイアログにあるコンボボックスのうち、「新しいソリューションを作成」と表示されているところを、「ソリューションに追加」に変更しておく必要があります。
 
 ## 2. Install (インストール)
 To install **EnumerableTest** to your projects, it's easy to use NuGet the package manager. See [how to find and install a package with NuGet](https://docs.nuget.org/ndocs/tools/package-manager-ui#finding-and-installing-a-package). You should find and install "EnumerableTest.Core" and "EnumerableTest.Runner.Wpf" to the Test project created above.
@@ -17,7 +17,7 @@ Then open a "test explorer" which shows results of unit tests. Build your soluti
 
 次に、単体テストの結果を表示するための「テストエクスプローラー」を実行しましょう。Visual Studio でプロジェクトをビルドして、次の2つのファイルをみつけてください:
 
-- (A) ``X.Test/bin/Debug/X.Test.dll``
+- (A) ``X.UnitTest/bin/Debug/X.UnitTest.dll``
 - (B) ``packages/EnumerableTest.Runner.Wpf/tools/EnumerableTest.Runner.Wpf.exe``
 
 Drag (A) and drop to (B). You will see a window opens and displays nothing. Keep it open and continue to read.
@@ -30,9 +30,9 @@ To say it simply, to use **EnumerableTest**, all you need to do is to define *te
 **EnumerableTest** の基本的な使い方は、他の単体フレームワークと同様に、テストメソッド (表明メソッドを書き並べたメソッド) を定義するだけです。**EnumerableTest** が提供する表明メソッド (例えば2つの値が等しいことを表明する ``Test.Equal`` など) は `Test` 型の値を返しますので、テストメソッドではこれらを ``yield return`` していきます。
 
 ### Successful tests (成功するテスト)
-As the simplest example, let's test the ``++`` operator increments a variable. Add a .cs file to X.Test project and copy-and-paste the following:
+As the simplest example, let's test the ``++`` operator increments a variable. Add a .cs file to X.UnitTest project and copy-and-paste the following:
 
-最も単純な例として、「変数をインクリメントすると値が1増える」ことをテストしてみましょう。X.Test プロジェクトに次の内容のソースコードを追加します:
+最も単純な例として、「変数をインクリメントすると値が1増える」ことをテストしてみましょう。X.UnitTest プロジェクトに次の内容のソースコードを追加します:
 
 ```csharp
 using System.Collections.Generic;

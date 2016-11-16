@@ -47,8 +47,8 @@ module Result =
 
 module Observable =
   open System
+  open System.Reactive.Subjects
   open System.Threading
-  open DotNetKit.Observing
 
   type IConnectableObservable<'x> =
     inherit IObservable<'x>
@@ -77,7 +77,7 @@ module Observable =
   /// which executes async tasks when connected and notifies each result.
   let ofParallel asyncs =
     let gate = obj()
-    let subject = Subject.Create()
+    let subject = new Subject<_>()
     let computation =
       async {
         let! (_: array<unit>) =
@@ -100,7 +100,7 @@ module Observable =
 
   let startParallel computations =
     let gate = obj()
-    let subject = Subject.Create()
+    let subject = new Subject<_>()
     let computations = computations |> Seq.toArray
     let connect () =
       let mutable count = 0
@@ -193,7 +193,7 @@ module FileSystemInfo =
     seq {
       for packagesDirectory in thisFile |> ancestors |> Seq.filter (fun d -> d.Name = "packages") do
       for solutionDirectory in packagesDirectory.Parent |> Option.ofObj |> Option.toArray do
-      for suffix in ["Test"; "UnitTest"; "Tests"; "UnitTests"] do
+      for suffix in [".UnitTest"; ".Tests"; ".UnitTests"] do
       for projectDirectory in solutionDirectory.GetDirectories(sprintf "*%s" suffix) do
       for binDirectory in projectDirectory.GetDirectories("bin") do
       for debugDirectory in binDirectory.GetDirectories("Debug") do

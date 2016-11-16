@@ -2,7 +2,6 @@
 
 open System
 open System.Collections.ObjectModel
-open DotNetKit.Observing
 open EnumerableTest.Runner
 
 type TestClassNode(assemblyShortName: string, name: string) =
@@ -20,10 +19,10 @@ type TestClassNode(assemblyShortName: string, name: string) =
     |> ReadOnlyUptodateCollection.sumBy TestStatistic.groupSig
 
   let testStatus =
-    testStatistic.Select(Func<_, _>(TestStatus.ofTestStatistic))
+    testStatistic |> ReactiveProperty.map TestStatus.ofTestStatistic
 
   let isPassed =
-    testStatus.Select
+    testStatus |> ReactiveProperty.map
       (function
         | NotCompleted | Passed ->
           true
@@ -32,7 +31,7 @@ type TestClassNode(assemblyShortName: string, name: string) =
       )
 
   let isExpanded =
-    isPassed.Select(not)
+    isPassed |> ReactiveProperty.map not
 
   member this.Children = children
 
@@ -68,4 +67,4 @@ type TestClassNode(assemblyShortName: string, name: string) =
       children.Insert(0, node)
 
   interface INodeViewModel with
-    override this.IsExpanded = isExpanded
+    override this.IsExpanded = isExpanded |> ReactiveProperty.asReadOnly
