@@ -1,14 +1,12 @@
 ﻿namespace EnumerableTest.Runner.Wpf
 
+open System
 open System.IO
-open Argu
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module AppArgument =
-  let argumentParser = ArgumentParser.Create<AppArgument>()
-  let appConfig = argumentParser.ParseCommandLine()
-
   let files =
-    appConfig.GetResult(<@ AppArgument.Files @>, defaultValue = [])
+    Environment.GetCommandLineArgs()
+    |> Seq.tail
     |> Seq.map FileInfo
     |> Seq.toArray

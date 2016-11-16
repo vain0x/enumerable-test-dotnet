@@ -5,7 +5,6 @@ open System.Collections.ObjectModel
 open System.IO
 open System.Reflection
 open System.Threading
-open DotNetKit.Observing
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
 
@@ -29,7 +28,7 @@ type TestAssemblyNode(file: FileInfo) =
 
   let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
 
-  let currentDomain = Uptodate.Create(None)
+  let currentDomain = ReactiveProperty.create None
 
   let cancel () =
     match currentDomain.Value with
@@ -40,7 +39,7 @@ type TestAssemblyNode(file: FileInfo) =
     | None -> ()
 
   let cancelCommand =
-    let command = currentDomain.Select(Option.isSome).ToObservableCommand()
+    let command = currentDomain |> ReactiveProperty.map Option.isSome |> ReactiveCommand.create
     command.Subscribe(cancel) |> ignore<IDisposable>
     command
 
@@ -129,5 +128,6 @@ type TestAssemblyNode(file: FileInfo) =
       this.Dispose()
 
   interface INodeViewModel with
-    override this.IsExpanded =
-      Uptodate.True
+    override val IsExpanded =
+      ReactiveProperty.create true
+      |> ReactiveProperty.asReadOnly

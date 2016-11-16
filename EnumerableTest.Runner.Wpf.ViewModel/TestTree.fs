@@ -5,8 +5,6 @@ open System.Collections.ObjectModel
 open System.IO
 open System.Reflection
 open System.Threading
-open DotNetKit.Observing
-open DotNetKit.Threading.Experimental
 open EnumerableTest.Runner
 open EnumerableTest.Sdk
 

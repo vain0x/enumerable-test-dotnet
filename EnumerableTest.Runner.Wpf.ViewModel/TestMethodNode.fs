@@ -1,16 +1,17 @@
 ﻿namespace EnumerableTest.Runner.Wpf
 
 open System
+open System.Reactive.Linq
 open Basis.Core
-open DotNetKit.Observing
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
+open Reactive.Bindings
 
 type TestMethodNode(name: string) =
-  let lastResult = Uptodate.Create((None: option<TestMethod>))
+  let lastResult = new ReactiveProperty<_>(initialValue = (None: option<TestMethod>))
 
-  let lastResultUntyped =
-    lastResult.Select
+  let lastResultUntyped: ReactiveProperty<_> =
+    lastResult |> ReactiveProperty.map
       (function
         | Some testMethod ->
           testMethod :> obj
@@ -19,7 +20,7 @@ type TestMethodNode(name: string) =
       )
 
   let testStatistic =
-    lastResult.Select
+    lastResult |> ReactiveProperty.map
       (function
         | Some testMethod ->
           TestStatistic.ofTestMethod testMethod
@@ -28,7 +29,7 @@ type TestMethodNode(name: string) =
       )
 
   let testStatus =
-    testStatistic.Select(Func<_, _>(TestStatus.ofTestStatistic))
+    testStatistic |> ReactiveProperty.map TestStatus.ofTestStatistic
 
   member this.Name = name
 
@@ -45,5 +46,6 @@ type TestMethodNode(name: string) =
     lastResult.Value <- Some testMethod
 
   interface INodeViewModel with
-    override this.IsExpanded =
-      Uptodate.False
+    override val IsExpanded =
+      ReactiveProperty.create false
+      |> ReactiveProperty.asReadOnly
