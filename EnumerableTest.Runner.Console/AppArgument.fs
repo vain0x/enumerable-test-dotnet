@@ -15,4 +15,3 @@ module AppArgument =
 
   let isVerbose =
     appConfig.Contains <@ AppArgument.Verbose @>
-    || true
