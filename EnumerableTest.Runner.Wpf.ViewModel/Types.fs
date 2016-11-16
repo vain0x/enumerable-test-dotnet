@@ -2,7 +2,7 @@
 
 open System
 open Argu
-open DotNetKit.Observing
+open Reactive.Bindings
 open EnumerableTest.Runner
 
 type AppArgument =
@@ -25,4 +25,4 @@ type TestSuite =
   IObservable<TestMethodResult>
 
 type INodeViewModel =
-  abstract member IsExpanded: IReadOnlyUptodate<bool>
+  abstract member IsExpanded: IReadOnlyReactiveProperty<bool>

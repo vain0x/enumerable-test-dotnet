@@ -5,7 +5,6 @@ open System.Reflection
 open System.Threading.Tasks
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
-open DotNetKit.Observing
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestMethodResult =
