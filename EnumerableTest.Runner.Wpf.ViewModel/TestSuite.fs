@@ -52,4 +52,4 @@ module TestSuite =
     (schema, observable)
 
   let empty: TestSuite =
-    DotNetKit.Observing.Observable.Empty()
+    System.Reactive.Linq.Observable.Empty()

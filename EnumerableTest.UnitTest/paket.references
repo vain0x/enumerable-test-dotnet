@@ -1,7 +1,5 @@
 System.Reactive
 Basis.Core
-DotNetKit.Async
-DotNetKit.Core
 Persimmon
 Persimmon.Console
 ReactiveProperty
