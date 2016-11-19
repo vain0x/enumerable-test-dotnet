@@ -9,7 +9,7 @@ module TestClass =
     let methodInfos = typ |> TestClassType.testMethodInfos
     let instantiate = typ |> TestClassType.instantiate
     try
-      let result =
+      let computations =
         methodInfos
         |> Seq.map
           (fun m ->
@@ -19,19 +19,19 @@ module TestClass =
             }
           )
         |> Seq.toArray
-      (result, None)
+      (computations, None)
     with
     | e ->
       ([||], Some e)
 
   let create (typ: Type): TestClass =
-    let (result, instantiationError) =
+    let (computations, instantiationError) =
       runAsync typ
     let testClass =
       {
         TypeFullName                    = (typ: Type).FullName
         InstantiationError              = instantiationError
-        Result                          = result |> Array.map Async.RunSynchronously
+        Result                          = computations |> Array.map Async.RunSynchronously
       }
     testClass
 
