@@ -1,7 +1,7 @@
 # EnumerableTest
 [![NuGet version](https://badge.fury.io/nu/EnumerableTest.Core.svg)](https://badge.fury.io/nu/EnumerableTest.Core)
 
-A unit test framework for .NET framework.
+A unit testing framework for .NET framework.
 
 .NET フレームワーク向けの単体テストフレームワーク。
 
@@ -11,4 +11,4 @@ A unit test framework for .NET framework.
 - [Tutorial (チュートリアル)](document/Tutorial.md)
 
 ## License
-[MIT License](LICENSE.md).
+[MIT License](LICENSE.md)

@@ -24,7 +24,7 @@ module Model =
 
 type TestAssemblyNode(file: FileInfo) =
   let context =
-    SynchronizationContext.Current
+    SynchronizationContext.capture ()
 
   let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
 
@@ -33,15 +33,14 @@ type TestAssemblyNode(file: FileInfo) =
   let cancel () =
     match currentDomain.Value with
     | Some domain ->
-      ((domain: AppDomain.DisposableAppDomain) :> IDisposable).Dispose()
-      context |> SynchronizationContext.send
-        (fun () -> currentDomain.Value <- None)
+      (domain: AppDomain.DisposableAppDomain).Dispose()
+      currentDomain.Value <- None
     | None -> ()
 
   let cancelCommand =
-    let command = currentDomain |> ReactiveProperty.map Option.isSome |> ReactiveCommand.create
-    command.Subscribe(cancel) |> ignore<IDisposable>
-    command
+    currentDomain
+    |> ReactiveProperty.map Option.isSome
+    |> ReactiveCommand.ofFunc cancel
 
   let children = ObservableCollection<_>()
 

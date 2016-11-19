@@ -20,6 +20,14 @@ module Seq =
         seconds.Add(x)
     (firsts :> IReadOnlyList<_>, seconds :> IReadOnlyList<_>)
 
+module Option =
+  let tryCatch f =
+    try
+      f ()
+      None
+    with
+    | e -> Some e
+
 module Result =
   open Basis.Core
 
@@ -219,3 +227,10 @@ module MarshalByRefObject =
 
   let ofValue value =
     MarshalByRefValue(value)
+
+module Environment =
+  open System
+
+  let commandLineArguments () =
+    Environment.GetCommandLineArgs()
+    |> Array.tail // SAFE: The first element is the path to the executable.
