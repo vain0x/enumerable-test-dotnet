@@ -82,9 +82,9 @@ namespace EnumerableTest
         #endregion
 
         #region Assertions
-        static Test Equality<X>(string name, X target, X actual, IEqualityComparer comparer)
+        static Test Equality<X>(string name, X expected, X actual, IEqualityComparer comparer)
         {
-            return OfAssertion(name, new EqualAssertion(actual, target, comparer));
+            return OfAssertion(name, new EqualAssertion(actual, expected, comparer));
         }
 
         /// <summary>

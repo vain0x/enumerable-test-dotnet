@@ -99,12 +99,12 @@ namespace EnumerableTest.Sdk
         public MarshalValue Actual { get; }
 
         /// <summary>
-        /// Gets the value to be compared to.
+        /// Gets the expected value.
         /// <para lang="ja">
-        /// 比較対象の値を取得する。
+        /// 期待される値を取得する。
         /// </para>
         /// </summary>
-        public MarshalValue Target { get; }
+        public MarshalValue Expected { get; }
 
         /// <summary>
         /// Gets a comparer to compare two values.
@@ -122,11 +122,11 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed { get; }
 
-        internal EqualAssertion(object actual, object target, IEqualityComparer comparer)
+        internal EqualAssertion(object actual, object expected, IEqualityComparer comparer)
         {
-            IsPassed = comparer.Equals(actual, target);
+            IsPassed = comparer.Equals(actual, expected);
             Actual = MarshalValue.FromObject(actual, IsPassed);
-            Target = MarshalValue.FromObject(target, IsPassed);
+            Expected = MarshalValue.FromObject(expected, IsPassed);
             Comparer = comparer;
         }
     }

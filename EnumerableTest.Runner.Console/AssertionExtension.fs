@@ -14,7 +14,7 @@ module AssertionExtension =
         | True _ -> failwith "never"
         | False a -> a.Message
         | Equal a ->
-          sprintf "Expected: %A\r\nActual: %A" a.Target a.Actual
+          sprintf "Expected: %A\r\nActual: %A" a.Expected a.Actual
         | SelectEqual a ->
           sprintf
             "Expected: %A\r\nActual: %A\r\nSource: %A\r\nFunc: %A"
