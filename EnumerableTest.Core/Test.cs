@@ -82,11 +82,6 @@ namespace EnumerableTest
         #endregion
 
         #region Assertions
-        static Test Equality<X>(string name, X expected, X actual, IEqualityComparer comparer)
-        {
-            return OfAssertion(name, new EqualAssertion(actual, expected, comparer));
-        }
-
         /// <summary>
         /// Tests that two values are equal, using <paramref name="comparer"/>.
         /// <para lang="ja">
@@ -100,7 +95,7 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test Equal<X>(X expected, X actual, IEqualityComparer comparer)
         {
-            return Equality(nameof(Equal), expected, actual, comparer);
+            return OfAssertion(nameof(Equal), new EqualAssertion(actual, expected, comparer));
         }
 
         /// <summary>
