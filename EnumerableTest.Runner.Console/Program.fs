@@ -41,6 +41,7 @@ module Program =
     let assemblyFiles =
       FileSystemInfo.getTestAssemblies thisFile
       |> Seq.append AppArgument.files
+      |> Seq.distinctBy (fun file -> file.FullName)
     let isPassed =
       run AppArgument.isVerbose AppArgument.timeout assemblyFiles
     let exitCode =
