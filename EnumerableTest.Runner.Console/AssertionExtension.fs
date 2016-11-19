@@ -12,7 +12,7 @@ module AssertionExtension =
       let message =
         match a with
         | True _ -> failwith "never"
-        | False a ->
+        | Custom a ->
           seq {
             yield a.Message
             for KeyValue (key, value) in a.Data do

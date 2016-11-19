@@ -145,9 +145,19 @@
         <TextBlock Text="Passed." />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:FalseAssertion}">
+    <DataTemplate DataType="{x:Type sdk:CustomAssertion}">
         <StackPanel>
-            <TextBlock Text="{Binding Message}" />
+            <TextBlock Text="{Binding Message}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsPassed}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
             <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Data}">
                 <DataGrid.Columns>
                     <DataGridTextColumn

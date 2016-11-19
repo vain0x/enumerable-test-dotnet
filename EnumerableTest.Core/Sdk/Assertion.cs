@@ -49,13 +49,13 @@ namespace EnumerableTest.Sdk
     }
 
     /// <summary>
-    /// Represents a violated assertion.
+    /// Represents a custom assertion.
     /// <para lang="ja">
-    /// 不成立な表明を表す。
+    /// ユーザー定義の表明を表す。
     /// </para>
     /// </summary>
     [Serializable]
-    public sealed class FalseAssertion
+    public sealed class CustomAssertion
         : Assertion
     {
         /// <summary>
@@ -80,15 +80,15 @@ namespace EnumerableTest.Sdk
         /// 表明が成立したかどうかを取得する。
         /// </para>
         /// </summary>
-        public override bool IsPassed => false;
+        public override bool IsPassed { get; }
 
-        internal FalseAssertion(string message, IEnumerable<KeyValuePair<string, object>> data)
+        internal CustomAssertion(bool isPassed, string message, IEnumerable<KeyValuePair<string, object>> data)
         {
+            IsPassed = isPassed;
             Message = message;
-
             Data =
                 (from kv in data
-                 let value = MarshalValue.FromObject(kv.Value, false)
+                 let value = MarshalValue.FromObject(kv.Value, IsPassed)
                  select new KeyValuePair<string, MarshalValue>(kv.Key, value)
                 ).ToArray();
         }
