@@ -5,19 +5,22 @@ open System.Reflection
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClass =
-  let create (typ: Type): TestClass =
+  let private run (typ: Type) =
     let methodInfos = typ |> TestClassType.testMethodInfos
     let instantiate = typ |> TestClassType.instantiate
+    try
+      let result =
+        methodInfos
+        |> Seq.map (fun m -> m |> TestMethod.create (instantiate ()))
+        |> Seq.toArray
+      (result, None)
+    with
+    | e ->
+      ([||], Some e)
+
+  let create (typ: Type): TestClass =
     let (result, instantiationError) =
-      try
-        let result =
-          methodInfos
-          |> Seq.map (fun m -> m |> TestMethod.create (instantiate ()))
-          |> Seq.toArray
-        (result, None)
-      with
-      | e ->
-        ([||], Some e)
+      run typ
     let testClass =
       {
         TypeFullName                    = (typ: Type).FullName
