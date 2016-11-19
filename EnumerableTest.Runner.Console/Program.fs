@@ -33,11 +33,7 @@ module Program =
     results.Connect()
     results |> Observable.wait
     printer.PrintSummaryAsync(counter.Current) |> Async.RunSynchronously
-    let exitCode =
-      if counter.IsAllGreen
-        then 0
-        else -1
-    exitCode
+    counter.IsAllGreen
 
   [<EntryPoint>]
   let main _ =
@@ -45,4 +41,10 @@ module Program =
     let assemblyFiles =
       FileSystemInfo.getTestAssemblies thisFile
       |> Seq.append AppArgument.files
-    run AppArgument.isVerbose AppArgument.timeout assemblyFiles
+    let isPassed =
+      run AppArgument.isVerbose AppArgument.timeout assemblyFiles
+    let exitCode =
+      if isPassed
+        then 0
+        else -1
+    exitCode
