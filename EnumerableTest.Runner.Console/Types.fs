@@ -18,12 +18,5 @@ with
       | Verbose ->
         "Print debug outputs"
 
-type TestClass =
-  {
-    TypeFullName                : string
-    InstantiationError          : option<Exception>
-    Result                      : array<TestMethod>
-  }
-
 type TestSuite =
   array<TestClass>
