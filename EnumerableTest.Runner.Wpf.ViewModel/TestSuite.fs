@@ -50,6 +50,3 @@ module TestSuite =
       |> Seq.collect id
       |> Observable.startParallel
     (schema, observable)
-
-  let empty: TestSuite =
-    System.Reactive.Linq.Observable.Empty()
