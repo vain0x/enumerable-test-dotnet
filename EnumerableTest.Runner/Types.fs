@@ -39,5 +39,5 @@ type TestClass =
     TypeFullName                : string
     InstantiationError          : option<Exception>
     Result                      : array<TestMethod>
-    SkippedMethods              : array<TestMethodSchema>
+    NotCompletedMethods         : array<TestMethodSchema>
   }
