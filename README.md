@@ -9,6 +9,7 @@ A unit testing framework for .NET framework.
 
 ## Document
 - [Tutorial (チュートリアル)](document/Tutorial.md)
+- [Expert (上級者向けの解説)](document/Expert.md)
 
 ## License
 [MIT License](LICENSE.md)
