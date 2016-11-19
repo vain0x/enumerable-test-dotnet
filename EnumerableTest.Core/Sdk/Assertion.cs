@@ -99,17 +99,12 @@ namespace EnumerableTest.Sdk
         public MarshalValue Actual { get; }
 
         /// <summary>
-        /// Gets the value to be compared to.
+        /// Gets the expected value.
         /// <para lang="ja">
-        /// 比較対象の値を取得する。
+        /// 期待される値を取得する。
         /// </para>
         /// </summary>
-        public MarshalValue Target { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether two values should be equal or not.
-        /// </summary>
-        public bool Expected { get; }
+        public MarshalValue Expected { get; }
 
         /// <summary>
         /// Gets a comparer to compare two values.
@@ -127,55 +122,34 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed { get; }
 
-        internal EqualAssertion(object actual, object target, bool expected, IEqualityComparer comparer)
+        internal EqualAssertion(object actual, object expected, IEqualityComparer comparer)
         {
-            IsPassed = comparer.Equals(actual, target) == expected;
+            IsPassed = comparer.Equals(actual, expected);
             Actual = MarshalValue.FromObject(actual, IsPassed);
-            Target = MarshalValue.FromObject(target, IsPassed);
-            Expected = expected;
+            Expected = MarshalValue.FromObject(expected, IsPassed);
             Comparer = comparer;
         }
     }
 
     /// <summary>
-    /// Represents an assertion which asserts a result of a function is (not) equal to a value.
+    /// Represents an assertion which a value satisfies a condition.
     /// <para lang="ja">
-    /// 関数の結果がある値に等しい (あるいは等しくない) ことの表明を表す。
+    /// 値が条件を満たすことの表明を表す。
     /// </para>
     /// </summary>
     [Serializable]
-    public sealed class SelectEqualAssertion
+    public sealed class SatisfyAssertion
         : Assertion
     {
         /// <summary>
-        /// Gets the value to be compared to.
+        /// Gets the value.
         /// </summary>
-        public MarshalValue Target { get; }
+        public MarshalValue Value { get; }
 
         /// <summary>
-        /// Gets the value passed to the function.
+        /// Gets a string which represents the predicate.
         /// </summary>
-        public MarshalValue Source { get; }
-
-        /// <summary>
-        /// Gets the result of the function.
-        /// </summary>
-        public MarshalValue Actual { get; }
-
-        /// <summary>
-        /// Gets a string which represents the function.
-        /// </summary>
-        public string Func { get; }
-
-        /// <summary>
-        /// Gets the comparer.
-        /// </summary>
-        public IEqualityComparer Comparer { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether two values should equal.
-        /// </summary>
-        public bool Expected { get; }
+        public string Predicate { get; }
 
         /// <summary>
         /// Gets a value indicating whether the assertion was true.
@@ -185,22 +159,11 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed { get; }
 
-        internal SelectEqualAssertion(
-            object target,
-            object source,
-            object actual,
-            Expression func,
-            IEqualityComparer comparer,
-            bool expected
-        )
+        internal SatisfyAssertion(object value, Expression predicate, bool isPassed)
         {
-            IsPassed = comparer.Equals(actual, target) == expected;
-            Target = MarshalValue.FromObject(target, IsPassed);
-            Source = MarshalValue.FromObject(source, IsPassed);
-            Actual = MarshalValue.FromObject(actual, IsPassed);
-            Func = func.ToString();
-            Comparer = comparer;
-            Expected = expected;
+            IsPassed = isPassed;
+            Value = MarshalValue.FromObject(value, IsPassed);
+            Predicate = predicate.ToString();
         }
     }
 

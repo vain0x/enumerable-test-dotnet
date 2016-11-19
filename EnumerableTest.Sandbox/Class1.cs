@@ -79,12 +79,13 @@ namespace EnumerableTest.Sandbox
             yield return Test.Equal(Tuple.Create(new[] { 0 }), Tuple.Create(new[] { 0 }));
         }
 
-        /*
-        public IEnumerable<Test> test_SelectEqual()
+        public IEnumerable<Test> test_Satisfy()
         {
-            yield return Test.Satisfy(new List<int> { 0, 1, 2 }, list => list.Count < 0);
+            var list = new List<int> { 0, 1, 2 };
+            yield return Test.Satisfy(list, l => l.Count < 0);
+            yield return Test.Satisfy(list, l => l[1] != 0);
         }
-        /*/
+
         public IEnumerable<Test> New_test()
         {
             yield return Test.Equal(1, 0);
@@ -95,7 +96,6 @@ namespace EnumerableTest.Sandbox
             yield return Test.Equal(0, 0);
             //while (true) continue;
         }
-        //*/
 
         sealed class MyClass
         {

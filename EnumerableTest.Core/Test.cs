@@ -82,11 +82,6 @@ namespace EnumerableTest
         #endregion
 
         #region Assertions
-        static Test Equality<X>(string name, X target, X actual, IEqualityComparer comparer, bool expected)
-        {
-            return OfAssertion(name, new EqualAssertion(actual, target, expected, comparer));
-        }
-
         /// <summary>
         /// Tests that two values are equal, using <paramref name="comparer"/>.
         /// <para lang="ja">
@@ -100,7 +95,7 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test Equal<X>(X expected, X actual, IEqualityComparer comparer)
         {
-            return Equality(nameof(Equal), expected, actual, comparer, true);
+            return OfAssertion(nameof(Equal), new EqualAssertion(actual, expected, comparer));
         }
 
         /// <summary>
@@ -121,60 +116,7 @@ namespace EnumerableTest
         }
 
         /// <summary>
-        /// Tests that two values are not equal, using <paramref name="comparer"/>.
-        /// <para lang="ja">
-        /// <paramref name="comparer"/> で比較して、2つの値が等しくないことを検査する。
-        /// </para>
-        /// </summary>
-        /// <typeparam name="X"></typeparam>
-        /// <param name="unexpected"></param>
-        /// <param name="actual"></param>
-        /// <param name="comparer"></param>
-        /// <returns></returns>
-        public static Test NotEqual<X>(X unexpected, X actual, IEqualityComparer comparer)
-        {
-            return Equality(nameof(NotEqual), unexpected, actual, comparer, false);
-        }
-
-        /// <summary>
-        /// Tests that two values are not equal,
-        /// using <see cref="StructuralComparisons.StructuralEqualityComparer"/>.
-        /// <para lang="ja">
-        /// <see cref="StructuralComparisons.StructuralEqualityComparer"/> を使用して、
-        /// 2つの値が等しくないことを検査する。
-        /// </para>
-        /// </summary>
-        /// <typeparam name="X"></typeparam>
-        /// <param name="unexpected"></param>
-        /// <param name="actual"></param>
-        /// <returns></returns>
-        public static Test NotEqual<X>(X unexpected, X actual)
-        {
-            return NotEqual(unexpected, actual, StructuralComparisons.StructuralEqualityComparer);
-        }
-
-        static Test SelectEquality<X, Y>(
-            string name,
-            Y target,
-            X source,
-            Expression<Func<X, Y>> f,
-            IEqualityComparer comparer,
-            bool expected
-        )
-        {
-            var actual = f.Compile().Invoke(source);
-            var assertion = new SelectEqualAssertion(target, source, actual, f, comparer, expected);
-            return OfAssertion(name, assertion);
-        }
-
-        static Test SelectEqual<X, Y>(string name, Y expected, X source, Expression<Func<X, Y>> f)
-        {
-            var comparer = StructuralComparisons.StructuralEqualityComparer;
-            return SelectEquality(name, expected, source, f, comparer, true);
-        }
-
-        /// <summary>
-        /// Tests that a value satisfies a predicate
+        /// Tests that a value satisfies a predicate.
         /// <para lang="ja">
         /// 値が条件を満たすことを検査する。
         /// </para>
@@ -185,7 +127,8 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test Satisfy<X>(X value, Expression<Func<X, bool>> predicate)
         {
-            return SelectEqual(nameof(Satisfy), true, value, predicate);
+            var isPassed = predicate.Compile().Invoke(value);
+            return OfAssertion(nameof(Satisfy), new SatisfyAssertion(value, predicate, isPassed));
         }
 
         /// <summary>

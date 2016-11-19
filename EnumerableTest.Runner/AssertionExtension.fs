@@ -4,7 +4,7 @@ open EnumerableTest.Sdk
 
 [<AutoOpen>]
 module AssertionExtension =
-  let (|True|False|Equal|SelectEqual|Catch|) (assertion: Assertion) =
+  let (|True|False|Equal|Satisfy|Catch|) (assertion: Assertion) =
     match assertion with
     | :? TrueAssertion as a ->
       True a
@@ -12,8 +12,8 @@ module AssertionExtension =
       False a
     | :? EqualAssertion as a ->
       Equal a
-    | :? SelectEqualAssertion as a ->
-      SelectEqual a
+    | :? SatisfyAssertion as a ->
+      Satisfy a
     | :? CatchAssertion as a ->
       Catch a
     | a -> failwithf "Unknown assertion: %A" a
