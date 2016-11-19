@@ -67,6 +67,14 @@ namespace EnumerableTest.Sdk
         public string Message { get; }
 
         /// <summary>
+        /// Gets the data related to the assertion.
+        /// <para lang="ja">
+        /// 表明に関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public KeyValuePair<string, MarshalValue>[] Data { get; }
+
+        /// <summary>
         /// Gets a value indicating whether the assertion was true.
         /// <para lang="ja">
         /// 表明が成立したかどうかを取得する。
@@ -74,9 +82,15 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed => false;
 
-        internal FalseAssertion(string message)
+        internal FalseAssertion(string message, IEnumerable<KeyValuePair<string, object>> data)
         {
             Message = message;
+
+            Data =
+                (from kv in data
+                 let value = MarshalValue.FromObject(kv.Value, false)
+                 select new KeyValuePair<string, MarshalValue>(kv.Key, value)
+                ).ToArray();
         }
     }
 

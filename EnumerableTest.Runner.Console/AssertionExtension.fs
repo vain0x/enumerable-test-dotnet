@@ -12,7 +12,13 @@ module AssertionExtension =
       let message =
         match a with
         | True _ -> failwith "never"
-        | False a -> a.Message
+        | False a ->
+          seq {
+            yield a.Message
+            for KeyValue (key, value) in a.Data do
+              yield sprintf "%s: %A" key value
+          }
+          |> String.concat "\r\n"
         | Equal a ->
           sprintf "Expected: %A\r\nActual: %A" a.Expected a.Actual
         | Satisfy a ->

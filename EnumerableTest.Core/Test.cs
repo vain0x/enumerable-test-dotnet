@@ -74,10 +74,26 @@ namespace EnumerableTest
         /// </summary>
         /// <param name="name"></param>
         /// <param name="message"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static Test Violate(string name, string message, IEnumerable<KeyValuePair<string, object>> data)
+        {
+            return OfAssertion(name, new FalseAssertion(message, data));
+        }
+
+        /// <summary>
+        /// Creates a violating unit test.
+        /// <para lang="ja">
+        /// 「違反」を表す単体テストの結果を生成する。
+        /// </para>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="message"></param>
         /// <returns></returns>
         public static Test Violate(string name, string message)
         {
-            return OfAssertion(name, new FalseAssertion(message));
+            var data = Enumerable.Empty<KeyValuePair<string, object>>();
+            return Violate(name, message, data);
         }
         #endregion
 

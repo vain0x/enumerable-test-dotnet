@@ -10,7 +10,7 @@ module TestTest =
   let violatedTest = Test.Violate("violate", "it violated")
 
   let assertion1 = TrueAssertion.Instance
-  let assertion2 = FalseAssertion("assertion2 violated")
+  let assertion2 = FalseAssertion("assertion2 violated", [||])
   let assertionTest1 = Test.OfAssertion("assertion1", assertion1)
   let assertionTest2 = Test.OfAssertion("assertion2", assertion2)
   let groupTest =
