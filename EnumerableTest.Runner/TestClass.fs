@@ -36,11 +36,18 @@ module TestClass =
     observable |> Observable.subscribe results.Enqueue |> ignore<IDisposable>
     observable.Connect()
     observable |> Observable.waitTimeout timeout |> ignore<bool>
+    let results = results |> Seq.toArray
+    let skippedMethods =
+      methods |> Seq.map (fun (m, _) -> m.Name)
+      |> Seq.except (results |> Seq.map (fun m -> m.MethodName))
+      |> Seq.map (fun name -> { TestMethodSchema.MethodName = name })
+      |> Seq.toArray
     let testClass =
       {
         TypeFullName                    = (typ: Type).FullName
         InstantiationError              = instantiationError
-        Result                          = results |> Seq.toArray
+        Result                          = results
+        SkippedMethods                  = skippedMethods
       }
     testClass
 
@@ -50,4 +57,5 @@ module TestClass =
 
   let isPassed (testClass: TestClass) =
     testClass.InstantiationError.IsNone
+    && testClass.SkippedMethods |> Array.isEmpty
     && testClass.Result |> Seq.forall TestMethod.isPassed
