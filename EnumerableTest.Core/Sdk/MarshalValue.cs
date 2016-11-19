@@ -50,6 +50,13 @@ namespace EnumerableTest.Sdk
     [Serializable]
     public abstract class MarshalResult
     {
+        /// <summary>
+        /// Determines the runtime type of this and evaluates a function for it.
+        /// </summary>
+        /// <typeparam name="X"></typeparam>
+        /// <param name="onValue"></param>
+        /// <param name="onException"></param>
+        /// <returns></returns>
         public X Match<X>(Func<MarshalValue, X> onValue, Func<Exception, X> onException)
         {
             var exception = this as MarshalResultException;

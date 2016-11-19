@@ -74,7 +74,7 @@ namespace EnumerableTest
         /// </summary>
         /// <param name="name"></param>
         /// <param name="isPassed"></param>
-        /// <param name="violationMessage"></param>
+        /// <param name="message"></param>
         /// <param name="data"></param>
         /// <returns></returns>
         public static Test
