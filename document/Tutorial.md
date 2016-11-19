@@ -1,6 +1,6 @@
 # Tutorial (チュートリアル)
 ## 1. Create a Test Project (テストプロジェクトの作成)
-Before installing EnumerableTest, we recommend to add a project for unit testing to your solution.
+Before installing **EnumerableTest**, we recommend to add a project for unit testing to your solution.
 
 **EnumerableTest** をインストールする前に、単体テスト専用のプロジェクトを作成することをおすすめします。
 
