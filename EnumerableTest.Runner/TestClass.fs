@@ -5,7 +5,7 @@ open System.Reflection
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClass =
-  let private runAsync (typ: Type) =
+  let runAsync (typ: Type) =
     let methodInfos = typ |> TestClassType.testMethodInfos
     let instantiate = typ |> TestClassType.instantiate
     try
