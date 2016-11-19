@@ -20,6 +20,18 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public MarshalValue MarshalValue { get; }
 
+        /// <summary>
+        /// Invokes <paramref name="onValue"/>.
+        /// </summary>
+        /// <typeparam name="X"></typeparam>
+        /// <param name="onValue"></param>
+        /// <param name="onException"></param>
+        /// <returns></returns>
+        public override X Match<X>(Func<MarshalValue, X> onValue, Func<Exception, X> onException)
+        {
+            return onValue(MarshalValue);
+        }
+
         internal MarshalResultValue(MarshalValue value)
         {
             MarshalValue = value;
@@ -37,6 +49,18 @@ namespace EnumerableTest.Sdk
         /// Gets the exception.
         /// </summary>
         public Exception Exception { get; }
+
+        /// <summary>
+        /// Invokes <paramref name="onException"/>.
+        /// </summary>
+        /// <typeparam name="X"></typeparam>
+        /// <param name="onValue"></param>
+        /// <param name="onException"></param>
+        /// <returns></returns>
+        public override X Match<X>(Func<MarshalValue, X> onValue, Func<Exception, X> onException)
+        {
+            return onException(Exception);
+        }
 
         internal MarshalResultException(Exception exception)
         {
@@ -57,15 +81,7 @@ namespace EnumerableTest.Sdk
         /// <param name="onValue"></param>
         /// <param name="onException"></param>
         /// <returns></returns>
-        public X Match<X>(Func<MarshalValue, X> onValue, Func<Exception, X> onException)
-        {
-            var exception = this as MarshalResultException;
-            if (exception != null)
-            {
-                return onException(exception.Exception);
-            }
-            return onValue(((MarshalResultValue)this).MarshalValue);
-        }
+        public abstract X Match<X>(Func<MarshalValue, X> onValue, Func<Exception, X> onException);
 
         internal static MarshalResult Create(Func<MarshalValue> create)
         {
