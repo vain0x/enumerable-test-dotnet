@@ -86,6 +86,13 @@ namespace EnumerableTest.Sandbox
             yield return Test.Satisfy(list, l => l[1] != 0);
         }
 
+        public IEnumerable<Test> test_CustomAssertion()
+        {
+            var a = new[] { 0, 1, 2 };
+            yield return a.IsNot(a);
+            yield return a.IsNot(new[] { 0, 1 });
+        }
+
         public IEnumerable<Test> New_test()
         {
             yield return Test.Equal(1, 0);

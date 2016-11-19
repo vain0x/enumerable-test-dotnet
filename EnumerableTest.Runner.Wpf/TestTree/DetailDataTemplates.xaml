@@ -142,11 +142,45 @@
 
     <!-- Assertions-->
     <DataTemplate DataType="{x:Type sdk:TrueAssertion}">
-        <TextBlock Text="Always passed." />
+        <TextBlock Text="Passed." />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:FalseAssertion}">
-        <TextBlock Text="{Binding Message}" />
+    <DataTemplate DataType="{x:Type sdk:CustomAssertion}">
+        <StackPanel>
+            <TextBlock Text="{Binding Message}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsPassed}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Data}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        CellStyle="{StaticResource DataGridCellStyle}"
+                        IsReadOnly="True"
+                        Header="Key"
+                        Binding="{Binding Key}"
+                        />
+                    <DataGridTemplateColumn
+                        CellStyle="{StaticResource DataGridCellStyle}"
+                        IsReadOnly="True"
+                        Width="*"
+                        Header="Value"
+                        >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Value}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type sdk:EqualAssertion}">
