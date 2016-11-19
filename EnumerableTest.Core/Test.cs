@@ -120,39 +120,6 @@ namespace EnumerableTest
             return Equal(expected, actual, StructuralComparisons.StructuralEqualityComparer);
         }
 
-        /// <summary>
-        /// Tests that two values are not equal, using <paramref name="comparer"/>.
-        /// <para lang="ja">
-        /// <paramref name="comparer"/> で比較して、2つの値が等しくないことを検査する。
-        /// </para>
-        /// </summary>
-        /// <typeparam name="X"></typeparam>
-        /// <param name="unexpected"></param>
-        /// <param name="actual"></param>
-        /// <param name="comparer"></param>
-        /// <returns></returns>
-        public static Test NotEqual<X>(X unexpected, X actual, IEqualityComparer comparer)
-        {
-            return Equality(nameof(NotEqual), unexpected, actual, comparer, false);
-        }
-
-        /// <summary>
-        /// Tests that two values are not equal,
-        /// using <see cref="StructuralComparisons.StructuralEqualityComparer"/>.
-        /// <para lang="ja">
-        /// <see cref="StructuralComparisons.StructuralEqualityComparer"/> を使用して、
-        /// 2つの値が等しくないことを検査する。
-        /// </para>
-        /// </summary>
-        /// <typeparam name="X"></typeparam>
-        /// <param name="unexpected"></param>
-        /// <param name="actual"></param>
-        /// <returns></returns>
-        public static Test NotEqual<X>(X unexpected, X actual)
-        {
-            return NotEqual(unexpected, actual, StructuralComparisons.StructuralEqualityComparer);
-        }
-
         static Test SelectEquality<X, Y>(
             string name,
             Y target,
