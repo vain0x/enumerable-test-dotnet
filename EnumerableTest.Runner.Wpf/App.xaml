@@ -7,7 +7,7 @@
     >
     <Application.Resources>
         <Style x:Key="DefaultTextBlockStyle" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Yu Gothic UI,Meiryo" />
+            <Setter Property="FontFamily" Value="Meiryo" />
             <Setter Property="FontSize" Value="13" />
         </Style>
         
