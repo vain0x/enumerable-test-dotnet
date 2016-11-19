@@ -17,10 +17,6 @@ module Assembly =
 
 module Program =
   let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
-    if isVerbose then
-      printfn "assemblies:"
-      for file in assemblyFiles do
-        printfn "  - %s" file.FullName
     let results =
       assemblyFiles
       |> Seq.choose Assembly.tryLoadFile
