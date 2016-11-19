@@ -25,9 +25,9 @@ Drag (A) and drop to (B). You will see a window opens and displays nothing. Keep
 (A) をドラッグして、(B) にドロップすると、真っ白のウィンドウが表示されるはずです。これを開けたまま、続きをお読みください。
 
 ## 3. Overview (概要)
-To say it simply, to use **EnumerableTest**, all you need to do is to define *test methods* in which invokes assertion methods like other unit testing frameworks. Assertion methods provided by **EnumerableTest** (for example, ``Test.Equal`` which asserts two values are equal) returns a value of `Test` class and your test methods shall ``yield return`` them.
+To say it simply, to use **EnumerableTest**, all you need to do is to define *test methods* in which invokes assertion methods like other unit testing frameworks. Assertion methods provided by **EnumerableTest** (for example, `Is` which asserts two values are equal) returns a value of `Test` class and your test methods shall ``yield return`` them.
 
-**EnumerableTest** の基本的な使い方は、他の単体フレームワークと同様に、テストメソッド (表明メソッドを書き並べたメソッド) を定義するだけです。**EnumerableTest** が提供する表明メソッド (例えば2つの値が等しいことを表明する ``Test.Equal`` など) は `Test` 型の値を返しますので、テストメソッドではこれらを ``yield return`` していきます。
+**EnumerableTest** の基本的な使い方は、他の単体フレームワークと同様に、テストメソッド (表明メソッドを書き並べたメソッド) を定義するだけです。**EnumerableTest** が提供する表明メソッド (例えば2つの値が等しいことを表明する `Is` など) は `Test` 型の値を返しますので、テストメソッドではこれらを ``yield return`` していきます。
 
 ### Successful tests (成功するテスト)
 As the simplest example, let's test the ``++`` operator increments a variable. Add a .cs file to X.UnitTest project and copy-and-paste the following:
@@ -52,13 +52,13 @@ public class OperatorTest
 
         // Assert that n == 0.
         // n が 0 に等しいことを表明します。
-        yield return Test.Equal(0, n);
+        yield return n.Is(0);
 
         n++;
 
         // And assert that n == 1 here.
         // ここでは n が 1 に等しいことを表明します。
-        yield return Test.Equal(1, n);
+        yield return n.Is(1);
     }
 }
 ```
@@ -77,13 +77,13 @@ Next we show an example of a test which doesn't pass. Add the following method t
 
         // Although this assertion is violated, the execution continues.
         // この表明は失敗するが、実行は継続される。
-        yield return Test.Equal(1, n);
+        yield return n.Is(1);
 
         n--;
 
         // This assertion succeeds.
         // この表明は成功する。
-        yield return Test.Equal(-1, n);
+        yield return n.Is(-1);
     }
 ```
 
