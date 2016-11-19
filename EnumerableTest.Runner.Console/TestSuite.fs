@@ -28,13 +28,6 @@ module TestClass =
       }
     testClass
 
-  let testMethods (testClass: TestClass): array<TestMethod> =
-    match testClass.InstantiationError with
-    | Some e ->
-      [| TestMethod.ofInstantiationError e |]
-    | None ->
-      testClass.Result
-
   let assertions (testClass: TestClass) =
     testClass.Result
     |> Seq.collect (fun testMethod -> testMethod.Result.Assertions)
