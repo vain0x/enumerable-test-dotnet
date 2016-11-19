@@ -24,7 +24,7 @@ module Model =
 
 type TestAssemblyNode(file: FileInfo) =
   let context =
-    SynchronizationContext.Current
+    SynchronizationContext.capture ()
 
   let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
 
