@@ -77,9 +77,16 @@
             Content="{Binding ElementName=treeView, Path=SelectedItem}"
             >
             <ScrollViewer.Resources>
-                <ResourceDictionary
-                    Source="/EnumerableTest.Runner.Wpf;component/TestTree/DetailDataTemplates.xaml"
-                    />
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary
+                            Source="/EnumerableTest.Runner.Wpf;component/AppResource.xaml"
+                            />
+                        <ResourceDictionary
+                            Source="/EnumerableTest.Runner.Wpf;component/TestTree/DetailDataTemplates.xaml"
+                            />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
             </ScrollViewer.Resources>
         </ScrollViewer>
     </Grid>
