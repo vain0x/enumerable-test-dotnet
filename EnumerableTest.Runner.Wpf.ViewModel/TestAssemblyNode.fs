@@ -80,8 +80,7 @@ type TestAssemblyNode(file: FileInfo) =
     let runnerDomain =
       cancel ()
       let domain = AppDomain.create domainName
-      context |> SynchronizationContext.send
-        (fun () -> currentDomain.Value <- Some domain)
+      currentDomain.Value <- Some domain
       domain
     let (schema, connectable) =
       runnerDomain.Value
