@@ -77,22 +77,21 @@ type TestAssemblyNode(file: FileInfo) =
   let load () =
     let domainName =
       sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
-    let runnerDomain =
+    let domain =
       cancel ()
       let domain = AppDomain.create domainName
-      context |> SynchronizationContext.send
-        (fun () -> currentDomain.Value <- Some domain)
+      currentDomain.Value <- Some domain
       domain
-    let result =
-      runnerDomain.Value
+    let (schema, connectable) =
+      domain.Value
       |> AppDomain.runObservable (Model.loadAssembly assemblyName)
-    match result with
-    | (Some schema, connectable) ->
+    match schema with
+    | Some schema->
       context |> SynchronizationContext.send
         (fun () -> updateSchema schema)
       connectable.Subscribe(testClassObserver cancel) |> ignore<IDisposable>
       connectable.Connect()
-    | (None, _) ->
+    | None ->
       cancel ()
 
   let testStatistic =

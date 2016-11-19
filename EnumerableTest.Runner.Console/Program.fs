@@ -16,28 +16,24 @@ module Assembly =
     | _ -> None
 
 module Program =
-  let run isVerbose (assemblyFiles: seq<FileInfo>) =
-    if isVerbose then
-      printfn "assemblies:"
-      for file in assemblyFiles do
-        printfn "  - %s" file.FullName
-    let results =
+  let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
+    let (assemblies, unloadedFiles) =
       assemblyFiles
-      |> Seq.choose Assembly.tryLoadFile
-      |> Seq.collect TestSuite.ofAssemblyAsync
+      |> Seq.paritionMap Assembly.tryLoadFile
+    let results =
+      assemblies
+      |> Seq.collect (TestSuite.ofAssemblyAsync timeout)
       |> Observable.ofParallel
-    let printer = TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
+    let printer =
+      TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
+      |> tap (fun p -> p.PrintUnloadedFiles(unloadedFiles))
     let counter = AssertionCounter()
     results.Subscribe(printer) |> ignore<IDisposable>
     results.Subscribe(counter) |> ignore<IDisposable>
     results.Connect()
     results |> Observable.wait
     printer.PrintSummaryAsync(counter.Current) |> Async.RunSynchronously
-    let exitCode =
-      if counter.IsAllGreen
-        then 0
-        else -1
-    exitCode
+    counter.IsAllGreen
 
   [<EntryPoint>]
   let main _ =
@@ -45,4 +41,11 @@ module Program =
     let assemblyFiles =
       FileSystemInfo.getTestAssemblies thisFile
       |> Seq.append AppArgument.files
-    run AppArgument.isVerbose assemblyFiles
+      |> Seq.distinctBy (fun file -> file.FullName)
+    let isPassed =
+      run AppArgument.isVerbose AppArgument.timeout assemblyFiles
+    let exitCode =
+      if isPassed
+        then 0
+        else -1
+    exitCode

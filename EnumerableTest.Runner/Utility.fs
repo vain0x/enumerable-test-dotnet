@@ -2,6 +2,12 @@
 
 open System.Collections.Generic
 
+[<AutoOpen>]
+module Misc =
+  let tap f x =
+     f x
+     x
+
 module Seq =
   let indexed xs =
     xs |> Seq.mapi (fun i x -> (i, x))
@@ -74,12 +80,17 @@ module Observable =
       }
     observable.Subscribe(observer)
 
-  let wait observable =
+  let waitTimeout (timeout: TimeSpan) observable =
     use event = new ManualResetEvent(initialState = false)
     observable
     |> subscribeEnd (fun _ -> event.Set() |> ignore<bool>)
     |> ignore<IDisposable>
-    event.WaitOne() |> ignore<bool>
+    event.WaitOne(timeout)
+
+  let wait observable =
+    observable
+    |> waitTimeout Timeout.InfiniteTimeSpan
+    |> ignore<bool>
 
   /// Creates a connectable observable
   /// which executes async tasks when connected and notifies each result.

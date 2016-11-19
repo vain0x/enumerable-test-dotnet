@@ -1,6 +1,7 @@
 ﻿namespace EnumerableTest.Runner.Wpf
 
 open System
+open System.Collections.Generic
 open System.Collections.ObjectModel
 open System.IO
 open System.Reflection
@@ -11,8 +12,11 @@ open EnumerableTest.Sdk
 type TestTree() =
   let children = ObservableCollection<TestAssemblyNode>()
 
+  let fileNames = HashSet<_>()
+
   member this.LoadFile(file: FileInfo) =
-    children.Add(new TestAssemblyNode(file))
+    if fileNames.Add(file.FullName) then
+      children.Add(new TestAssemblyNode(file))
 
   member this.Children =
     children

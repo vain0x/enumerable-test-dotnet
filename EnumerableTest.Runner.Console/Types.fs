@@ -9,6 +9,7 @@ type AppArgument =
   | [<MainCommand>]
     Files of list<string>
   | Verbose
+  | Timeout of int
 with
   interface IArgParserTemplate with
     member this.Usage =
@@ -17,13 +18,8 @@ with
         "Paths to test assembly"
       | Verbose ->
         "Print debug outputs"
-
-type TestClass =
-  {
-    TypeFullName                : string
-    InstantiationError          : option<Exception>
-    Result                      : array<TestMethod>
-  }
+      | Timeout _ ->
+        "Timeout [ms] for a test class execution"
 
 type TestSuite =
   array<TestClass>

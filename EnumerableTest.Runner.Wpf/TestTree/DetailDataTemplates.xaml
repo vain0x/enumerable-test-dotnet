@@ -132,7 +132,7 @@
                 Total: <Run Text="{Binding AssertionCount.TotalCount, Mode=OneWay}" />
                 / Violated: <Run Text="{Binding AssertionCount.ViolatedCount, Mode=OneWay}" />
                 / Error: <Run Text="{Binding AssertionCount.ErrorCount, Mode=OneWay}" />
-                / NotCompleted: <Run Text="{Binding NotCompletedTestCount, Mode=OneWay}" />
+                / NotCompleted: <Run Text="{Binding AssertionCount.NotCompletedCount, Mode=OneWay}" />
             </TextBlock>
             <TextBlock>
                 Total duration: <Run Text="{Binding Duration, Mode=OneWay}" />
@@ -142,11 +142,45 @@
 
     <!-- Assertions-->
     <DataTemplate DataType="{x:Type sdk:TrueAssertion}">
-        <TextBlock Text="Always passed." />
+        <TextBlock Text="Passed." />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:FalseAssertion}">
-        <TextBlock Text="{Binding Message}" />
+    <DataTemplate DataType="{x:Type sdk:CustomAssertion}">
+        <StackPanel>
+            <TextBlock Text="{Binding Message}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsPassed}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Data}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        CellStyle="{StaticResource DataGridCellStyle}"
+                        IsReadOnly="True"
+                        Header="Key"
+                        Binding="{Binding Key}"
+                        />
+                    <DataGridTemplateColumn
+                        CellStyle="{StaticResource DataGridCellStyle}"
+                        IsReadOnly="True"
+                        Width="*"
+                        Header="Value"
+                        >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Value}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type sdk:EqualAssertion}">
@@ -161,23 +195,17 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Target" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Target}" />
+            <TextBlock Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
+            <Label Grid.Column="1" Content="{Binding Expected}" />
 
             <TextBlock Grid.Row="1" Text="Actual" Style="{StaticResource LabelTextBlockStyle}" />
             <Label Grid.Row="1" Grid.Column="1" Content="{Binding Actual}" />
-
-            <TextBlock Grid.Row="2" Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="2" Grid.Column="1" Content="{Binding Expected}" />
         </Grid>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:SelectEqualAssertion}">
+    <DataTemplate DataType="{x:Type sdk:SatisfyAssertion}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -186,20 +214,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Target" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Target}" />
+            <TextBlock Text="Value" Style="{StaticResource LabelTextBlockStyle}" />
+            <Label Grid.Column="1" Content="{Binding Value}" />
 
-            <TextBlock Grid.Row="1" Text="Source" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Source}" />
-
-            <TextBlock Grid.Row="2" Text="Actual" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="2" Grid.Column="1" Content="{Binding Actual}" />
-
-            <TextBlock Grid.Row="3" Text="Func" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="3" Grid.Column="1" Content="{Binding Func}" />
-
-            <TextBlock Grid.Row="4" Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="4" Grid.Column="1" Content="{Binding Expected}" />
+            <TextBlock Grid.Row="1" Text="Predicate" Style="{StaticResource LabelTextBlockStyle}" />
+            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Predicate}" />
         </Grid>
     </DataTemplate>
 

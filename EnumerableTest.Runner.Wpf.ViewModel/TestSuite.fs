@@ -17,23 +17,12 @@ module TestMethodResult =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuite =
   let executeType (typ: Type) =
-    let methodInfos = typ |> TestClassType.testMethodInfos
-    let instantiate = typ |> TestClassType.instantiate
-    try
-      methodInfos
-      |> Seq.map
-        (fun m->
-          let instance = instantiate ()
-          async {
-            let testMethod = m |> TestMethod.create instance
-            return TestMethodResult.create typ testMethod
-          }
-        )
-      |> Seq.toArray
-    with
-    | e ->
+    match TestClass.runAsync typ with
+    | (_, Some e) ->
       let result = TestMethodResult.create typ (TestMethod.ofInstantiationError e)
       [| async { return result } |]
+    | (methods, None) ->
+      methods |> Array.map (snd >> Async.map (TestMethodResult.create typ))
 
   let ofAssemblyAsObservable (assembly: Assembly) =
     let (types, asyncSeqSeq) =
@@ -50,6 +39,3 @@ module TestSuite =
       |> Seq.collect id
       |> Observable.startParallel
     (schema, observable)
-
-  let empty: TestSuite =
-    System.Reactive.Linq.Observable.Empty()
