@@ -1,6 +1,7 @@
 ﻿namespace EnumerableTest.Runner
 
 open System
+open System.Collections.Concurrent
 open System.Reflection
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
@@ -24,14 +25,20 @@ module TestClass =
     | e ->
       ([||], Some e)
 
-  let create (typ: Type): TestClass =
+  let create timeout (typ: Type): TestClass =
     let (computations, instantiationError) =
       runAsync typ
+    let observable =
+      computations |> Observable.startParallel
+    let results = ConcurrentQueue<_>()
+    observable |> Observable.subscribe results.Enqueue |> ignore<IDisposable>
+    observable.Connect()
+    observable |> Observable.waitTimeout timeout |> ignore<bool>
     let testClass =
       {
         TypeFullName                    = (typ: Type).FullName
         InstantiationError              = instantiationError
-        Result                          = computations |> Array.map Async.RunSynchronously
+        Result                          = results |> Seq.toArray
       }
     testClass
 

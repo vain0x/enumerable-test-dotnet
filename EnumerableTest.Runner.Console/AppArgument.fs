@@ -1,5 +1,6 @@
 ﻿namespace EnumerableTest.Runner.Console
 
+open System
 open System.IO
 open Argu
 
@@ -15,3 +16,11 @@ module AppArgument =
 
   let isVerbose =
     appConfig.Contains <@ AppArgument.Verbose @>
+
+  let timeout =
+    let defaultTimeout = 10 * 1000
+#if DEBUG
+    let defaultTimeout = 3 * 1000
+#endif
+    appConfig.GetResult(<@ AppArgument.Timeout @>, defaultValue = defaultTimeout)
+    |> float |> TimeSpan.FromMilliseconds
