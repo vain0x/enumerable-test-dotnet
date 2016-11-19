@@ -50,6 +50,7 @@
     <Compile Include="AssertionExtension.fs" />
     <Compile Include="TestExtension.fs" />
     <Compile Include="TestMethod.fs" />
+    <Compile Include="TestClass.fs" />
     <Compile Include="AssertionCount.fs" />
     <Compile Include="TestStatistic.fs" />
   </ItemGroup>
