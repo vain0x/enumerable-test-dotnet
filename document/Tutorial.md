@@ -91,6 +91,42 @@ The first assertion (``n == 1``) "is violated" and the second assertion (``n == 
 
 ``n == 1`` を表す1つ目の表明は「失敗」しますが、実行は継続され、2つ目の ``n == -1`` を表す表明が成功することを確認できます。少なくとも1つの表明が失敗しているため、テストメソッドの結果は「失敗」(表明違反)になります。
 
+### Assertion methods (表明メソッド)
+**EnumerableTest** provides three assertion methods for usual use and two for uncommon cases. Because we believe that the former three covers 99.9% of assertions, we explain only them here. The first one is `Is`, which has been already metioned above.
+
+**EnumerableTest** が提供する表明メソッドには、普段使用する3つのメソッドと、特殊な用途に用いる2つのメソッドを提供しています。99.9% の表明は前者でまかなえるはずですので、ここではそれらだけ説明しましょう。1つは、さきほど紹介した `Is` です。
+
+The second is `Satisfies`, which is a generalized method of `Is`. It allows you to test *any* property of a value. The following code shows a test method that tests an array isn't empty.
+
+2つ目の `Satisfies` は、`Is` を一般化したものです。これは、値の任意の性質をテストするのに使用できます。次のコードは、「配列の長さがゼロでない」ことをテストするテストメソッドです。
+
+```csharp
+    public int[] MakeArray()
+    {
+        return new[] { 0, 1, 2 };
+    }
+
+    public IEnumerable<Test> test_MakeArray_returns_a_nonempty_array()
+    {
+        yield return MakeArray().Satisfies(a => a.Length != 0);
+    }
+```
+
+The third is ``Test.Catch``, which tries to catch an exception. You can use this to test that a method rejects invalid arguments or something. For example, let's test that the array indexer rejects an invalid index.
+
+3つ目は、例外を捕捉する ``Test.Catch`` です。例えば、メソッドが異常な引数を拒絶することをテストするのに使えます。次のコードは、「配列のインデックスの範囲外にアクセスすると例外が送出される」ことをテストするテストメソッドです。
+
+```csharp
+    public IEnumerable<Test> test_array_indexer_rejects_invalid_index()
+    {
+        var array = new[] { 0, 1, 2 };
+        Test.Catch(() =>
+        {
+            return array[3];
+        });
+    }
+```
+
 ## 4. Expert usage (上級者向けの解説)
 ### Set up/Tear down
 If you want to do something before/after each test method (so-called set up and tear down), use the constructor and ``IDisposable.Dispose`` method. **EnumerableTest** instantiates a test class for each test method it has.
