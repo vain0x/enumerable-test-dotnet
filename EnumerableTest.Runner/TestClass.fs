@@ -15,9 +15,11 @@ module TestClass =
         |> Seq.map
           (fun m ->
             let instance = instantiate ()
-            async {
-              return m |> TestMethod.create instance
-            }
+            let computation =
+              async {
+                return m |> TestMethod.create instance
+              }
+            (m, computation)
           )
         |> Seq.toArray
       (computations, None)
@@ -26,10 +28,10 @@ module TestClass =
       ([||], Some e)
 
   let create timeout (typ: Type): TestClass =
-    let (computations, instantiationError) =
+    let (methods, instantiationError) =
       runAsync typ
     let observable =
-      computations |> Observable.startParallel
+      methods |> Seq.map snd |> Observable.startParallel
     let results = ConcurrentQueue<_>()
     observable |> Observable.subscribe results.Enqueue |> ignore<IDisposable>
     observable.Connect()
