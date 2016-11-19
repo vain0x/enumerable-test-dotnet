@@ -92,11 +92,11 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
     async {
       do! printHardSeparatorAsync ()
       let message =
-        sprintf "Total: %d, Violated: %d, Error: %d, Skipped: %d"
+        sprintf "Total: %d, Violated: %d, Error: %d, Not completed: %d"
           count.TotalCount
           count.ViolatedCount
           count.ErrorCount
-          count.SkippedCount
+          count.NotCompletedCount
       return! printer.WriteLineAsync(message)
     }
 
