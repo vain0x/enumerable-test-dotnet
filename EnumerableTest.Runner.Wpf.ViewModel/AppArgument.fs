@@ -2,11 +2,11 @@
 
 open System
 open System.IO
+open EnumerableTest.Runner
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module AppArgument =
   let files =
-    Environment.GetCommandLineArgs()
-    |> Seq.tail
+    Environment.commandLineArguments ()
     |> Seq.map FileInfo
     |> Seq.toArray

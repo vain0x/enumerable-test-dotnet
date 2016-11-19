@@ -227,3 +227,10 @@ module MarshalByRefObject =
 
   let ofValue value =
     MarshalByRefValue(value)
+
+module Environment =
+  open System
+
+  let commandLineArguments () =
+    Environment.GetCommandLineArgs()
+    |> Array.tail // SAFE: The first element is the path to the executable.
