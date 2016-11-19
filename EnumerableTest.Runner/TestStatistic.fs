@@ -6,7 +6,6 @@ type TestStatistic =
   {
     AssertionCount              : AssertionCount
     Duration                    : TimeSpan
-    NotCompletedTestCount       : int
   }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
@@ -15,24 +14,24 @@ module TestStatistic =
     {
       AssertionCount            = AssertionCount.zero
       Duration                  = TimeSpan.Zero
-      NotCompletedTestCount     = 0
     }
 
   let notCompleted =
-    { zero with NotCompletedTestCount = 1 }
+    {
+      AssertionCount            = AssertionCount.ofNotCompleted 1
+      Duration                  = TimeSpan.Zero
+    }
 
   let add (l: TestStatistic) (r: TestStatistic) =
     {
       AssertionCount            = AssertionCount.add l.AssertionCount r.AssertionCount
       Duration                  = l.Duration + r.Duration
-      NotCompletedTestCount     = l.NotCompletedTestCount + r.NotCompletedTestCount
     }
 
   let subtract (l: TestStatistic) (r: TestStatistic) =
     {
       AssertionCount            = AssertionCount.subtract l.AssertionCount r.AssertionCount
       Duration                  = l.Duration - r.Duration
-      NotCompletedTestCount     = l.NotCompletedTestCount - r.NotCompletedTestCount
     }
 
   let groupSig =
@@ -46,5 +45,4 @@ module TestStatistic =
     {
       AssertionCount            = testMethod |> AssertionCount.ofTestMethod
       Duration                  = testMethod.Duration
-      NotCompletedTestCount     = 0
     }
