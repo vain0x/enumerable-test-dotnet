@@ -17,12 +17,16 @@ module Assembly =
 
 module Program =
   let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
-    let results =
+    let (assemblies, unloadedFiles) =
       assemblyFiles
-      |> Seq.choose Assembly.tryLoadFile
+      |> Seq.paritionMap Assembly.tryLoadFile
+    let results =
+      assemblies
       |> Seq.collect (TestSuite.ofAssemblyAsync timeout)
       |> Observable.ofParallel
-    let printer = TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
+    let printer =
+      TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
+      |> tap (fun p -> p.PrintUnloadedFiles(unloadedFiles))
     let counter = AssertionCounter()
     results.Subscribe(printer) |> ignore<IDisposable>
     results.Subscribe(counter) |> ignore<IDisposable>

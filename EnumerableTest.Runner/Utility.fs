@@ -2,6 +2,12 @@
 
 open System.Collections.Generic
 
+[<AutoOpen>]
+module Misc =
+  let tap f x =
+     f x
+     x
+
 module Seq =
   let indexed xs =
     xs |> Seq.mapi (fun i x -> (i, x))
