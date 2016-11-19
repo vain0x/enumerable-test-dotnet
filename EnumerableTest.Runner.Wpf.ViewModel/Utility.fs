@@ -1,10 +1,11 @@
 ﻿namespace EnumerableTest.Runner.Wpf
 
 module Counter =
+  open System.Threading
+
   let private counter = ref 0
   let generate () =
-    counter |> incr
-    !counter
+    Interlocked.Increment(counter)
 
 module ReadOnlyList =
   open System.Collections.Generic

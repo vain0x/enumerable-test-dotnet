@@ -23,7 +23,7 @@ module TestStatus =
       Error
     elif k.ViolatedCount > 0 then
       Violated
-    elif testStatistic.NotCompletedTestCount > 0 then
+    elif k.NotCompletedCount > 0 then
       NotCompleted
     else
       Passed

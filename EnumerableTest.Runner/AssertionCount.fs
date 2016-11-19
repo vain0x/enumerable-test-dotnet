@@ -7,7 +7,7 @@ type AssertionCount =
     TotalCount                  : int
     ViolatedCount               : int
     ErrorCount                  : int
-    SkippedCount                : int
+    NotCompletedCount           : int
   }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
@@ -17,7 +17,7 @@ module AssertionCount =
       TotalCount                = 0
       ViolatedCount             = 0
       ErrorCount                = 0
-      SkippedCount              = 0
+      NotCompletedCount         = 0
     }
 
   let onePassed =
@@ -25,7 +25,7 @@ module AssertionCount =
       TotalCount                = 1
       ViolatedCount             = 0
       ErrorCount                = 0
-      SkippedCount              = 0
+      NotCompletedCount         = 0
     }
 
   let oneViolated =
@@ -33,7 +33,7 @@ module AssertionCount =
       TotalCount                = 1
       ViolatedCount             = 1
       ErrorCount                = 0
-      SkippedCount              = 0
+      NotCompletedCount         = 0
     }
 
   let oneError =
@@ -41,15 +41,15 @@ module AssertionCount =
       TotalCount                = 1
       ViolatedCount             = 0
       ErrorCount                = 1
-      SkippedCount              = 0
+      NotCompletedCount         = 0
     }
 
-  let ofSkipped n =
+  let ofNotCompleted n =
     {
       TotalCount                = n
       ViolatedCount             = 0
       ErrorCount                = 0
-      SkippedCount              = n
+      NotCompletedCount         = n
     }
 
   let add (l: AssertionCount) (r: AssertionCount) =
@@ -57,7 +57,7 @@ module AssertionCount =
       TotalCount                = l.TotalCount + r.TotalCount
       ViolatedCount             = l.ViolatedCount + r.ViolatedCount
       ErrorCount                = l.ErrorCount + r.ErrorCount
-      SkippedCount              = l.SkippedCount + r.SkippedCount
+      NotCompletedCount         = l.NotCompletedCount + r.NotCompletedCount
     }
 
   let subtract (l: AssertionCount) (r: AssertionCount) =
@@ -65,7 +65,7 @@ module AssertionCount =
       TotalCount                = l.TotalCount - r.TotalCount
       ViolatedCount             = l.ViolatedCount - r.ViolatedCount
       ErrorCount                = l.ErrorCount - r.ErrorCount
-      SkippedCount              = l.SkippedCount - r.SkippedCount
+      NotCompletedCount         = l.NotCompletedCount - r.NotCompletedCount
     }
 
   let groupSig =
@@ -98,4 +98,4 @@ module AssertionCount =
       )
 
   let isAllGreen (count: AssertionCount) =
-    count.ViolatedCount = 0 && count.ErrorCount = 0
+    count.ViolatedCount = 0 && count.ErrorCount = 0 && count.NotCompletedCount = 0
