@@ -33,7 +33,7 @@ type TestAssemblyNode(file: FileInfo) =
   let cancel () =
     match currentDomain.Value with
     | Some domain ->
-      ((domain: AppDomain.DisposableAppDomain) :> IDisposable).Dispose()
+      (domain: AppDomain.DisposableAppDomain).Dispose()
       context |> SynchronizationContext.send
         (fun () -> currentDomain.Value <- None)
     | None -> ()

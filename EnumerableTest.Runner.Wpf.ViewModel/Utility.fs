@@ -52,9 +52,12 @@ module AppDomain =
   type DisposableAppDomain(appDomain: AppDomain) =
     member this.Value = appDomain
 
+    member this.Dispose() =
+      AppDomain.Unload(appDomain)
+
     interface IDisposable with
       override this.Dispose() =
-        AppDomain.Unload(appDomain)
+        this.Dispose()
 
   let create name =
     let appDomain = AppDomain.CreateDomain(name, null, AppDomain.CurrentDomain.SetupInformation)
