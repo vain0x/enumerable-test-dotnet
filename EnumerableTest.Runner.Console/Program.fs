@@ -16,7 +16,7 @@ module Assembly =
     | _ -> None
 
 module Program =
-  let run isVerbose (assemblyFiles: seq<FileInfo>) =
+  let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
     if isVerbose then
       printfn "assemblies:"
       for file in assemblyFiles do
@@ -24,7 +24,7 @@ module Program =
     let results =
       assemblyFiles
       |> Seq.choose Assembly.tryLoadFile
-      |> Seq.collect TestSuite.ofAssemblyAsync
+      |> Seq.collect (TestSuite.ofAssemblyAsync timeout)
       |> Observable.ofParallel
     let printer = TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
     let counter = AssertionCounter()
@@ -45,4 +45,4 @@ module Program =
     let assemblyFiles =
       FileSystemInfo.getTestAssemblies thisFile
       |> Seq.append AppArgument.files
-    run AppArgument.isVerbose assemblyFiles
+    run AppArgument.isVerbose AppArgument.timeout assemblyFiles

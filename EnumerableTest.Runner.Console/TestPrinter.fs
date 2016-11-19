@@ -66,14 +66,25 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
         | None -> ()
     }
 
+  let printSkippedMethodsAsync (testMethodSchemas: array<TestMethodSchema>) =
+    async {
+      if testMethodSchemas |> Array.isEmpty |> not then
+        do! printSoftSeparatorAsync ()
+        do! printer.WriteLineAsync("Skipped methods:")
+        use indenting = printer.AddIndent()
+        for (i, schema) in testMethodSchemas |> Seq.indexed do
+          do! printer.WriteLineAsync(sprintf "%d. %s" i schema.MethodName)
+    }
+
   member this.PrintSummaryAsync(count: AssertionCount) =
     async {
       do! printHardSeparatorAsync ()
       let message =
-        sprintf "Total: %d, Violated: %d, Error: %d"
+        sprintf "Total: %d, Violated: %d, Error: %d, Skipped: %d"
           count.TotalCount
           count.ViolatedCount
           count.ErrorCount
+          count.SkippedCount
       return! printer.WriteLineAsync(message)
     }
 
@@ -89,6 +100,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
         | None ->
           for (i, testMethod) in testClass.Result |> Seq.indexed do
             do! testMethod |> printTestMethodAsync i
+          do! printSkippedMethodsAsync testClass.SkippedMethods
     }
 
   interface IObserver<TestClass> with

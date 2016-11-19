@@ -14,6 +14,7 @@ type AssertionCounter() =
       | None ->
         for testMethod in testClass.Result do
           yield AssertionCount.ofTestMethod testMethod
+        yield AssertionCount.ofSkipped (testClass.SkippedMethods |> Array.length)
     }
     |> Seq.fold AssertionCount.add count
 

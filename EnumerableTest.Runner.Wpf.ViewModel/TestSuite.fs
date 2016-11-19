@@ -21,8 +21,8 @@ module TestSuite =
     | (_, Some e) ->
       let result = TestMethodResult.create typ (TestMethod.ofInstantiationError e)
       [| async { return result } |]
-    | (computations, None) ->
-      computations |> Array.map (Async.map (TestMethodResult.create typ))
+    | (methods, None) ->
+      methods |> Array.map (snd >> Async.map (TestMethodResult.create typ))
 
   let ofAssemblyAsObservable (assembly: Assembly) =
     let (types, asyncSeqSeq) =
