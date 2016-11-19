@@ -142,7 +142,7 @@
 
     <!-- Assertions-->
     <DataTemplate DataType="{x:Type sdk:TrueAssertion}">
-        <TextBlock Text="Always passed." />
+        <TextBlock Text="Passed." />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type sdk:FalseAssertion}">
