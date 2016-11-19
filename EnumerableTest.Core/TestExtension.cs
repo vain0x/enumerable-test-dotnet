@@ -52,5 +52,17 @@ namespace EnumerableTest
         {
             return Test.Equal(expected, actual);
         }
+
+        /// <summary>
+        /// Equivalent to <see cref="Test.Satisfy{X}(X, Expression{Func{X, bool}})"/>.
+        /// </summary>
+        /// <typeparam name="X"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static Test Satisfies<X>(this X value, Expression<Func<X, bool>> predicate)
+        {
+            return Test.Satisfy(value, predicate);
+        }
     }
 }
