@@ -70,11 +70,7 @@ module TestMethod =
     let groupTest =
       tests.ToTestGroup(m.Name)
     let disposingError =
-      try
-        instance |> Disposable.dispose
-        None
-      with
-      | e -> Some e
+      Option.tryCatch (fun () -> instance |> Disposable.dispose)
     ofResult m.Name groupTest disposingError stopwatch.Elapsed
 
   let isPassed (testMethod: TestMethod) =

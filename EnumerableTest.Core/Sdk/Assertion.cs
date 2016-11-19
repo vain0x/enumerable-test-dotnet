@@ -228,7 +228,7 @@ namespace EnumerableTest.Sdk
         /// 捕捉された例外を取得する。例外が送出されていなかったなら、null を取得する。
         /// </para>
         /// </summary>
-        public Exception Exception { get; }
+        public Exception ExceptionOrNull { get; }
 
         /// <summary>
         /// Gets a value indicating whether the assertion was true.
@@ -236,12 +236,12 @@ namespace EnumerableTest.Sdk
         /// 表明が成立したかどうかを取得する。
         /// </para>
         /// </summary>
-        public override bool IsPassed => !ReferenceEquals(Exception, null);
+        public override bool IsPassed => !ReferenceEquals(ExceptionOrNull, null);
 
-        internal CatchAssertion(Type type, Exception exception)
+        internal CatchAssertion(Type type, Exception exceptionOrNull)
         {
             Type = type;
-            Exception = exception;
+            ExceptionOrNull = exceptionOrNull;
         }
     }
 }

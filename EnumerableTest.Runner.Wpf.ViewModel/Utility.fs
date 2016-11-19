@@ -52,9 +52,12 @@ module AppDomain =
   type DisposableAppDomain(appDomain: AppDomain) =
     member this.Value = appDomain
 
+    member this.Dispose() =
+      AppDomain.Unload(appDomain)
+
     interface IDisposable with
       override this.Dispose() =
-        AppDomain.Unload(appDomain)
+        this.Dispose()
 
   let create name =
     let appDomain = AppDomain.CreateDomain(name, null, AppDomain.CurrentDomain.SetupInformation)
@@ -118,6 +121,22 @@ module AppDomain =
 
 module SynchronizationContext =
   open System.Threading
+
+  let immediate =
+    { new SynchronizationContext() with
+        override this.Post(f, state) =
+          f.Invoke(state)
+        override this.Send(f, state) =
+          f.Invoke(state)
+    }
+
+  let current () =
+    SynchronizationContext.Current |> Option.ofObj
+
+  let capture () =
+    match current () with
+    | Some c -> c
+    | None -> immediate
 
   let send f (this: SynchronizationContext) =
     this.Send((fun _ -> f ()), ())
@@ -188,10 +207,16 @@ module ReactiveProperty =
     this :> IReadOnlyReactiveProperty<_>
 
 module ReactiveCommand =
+  open System
   open Reactive.Bindings
 
   let create (canExecute: IReadOnlyReactiveProperty<_>) =
     new ReactiveCommand<_>(canExecuteSource = canExecute)
+
+  let ofFunc (f: _ -> unit) canExecute =
+    let it = create canExecute
+    it.Subscribe(f) |> ignore<IDisposable>
+    it
 
 open System
 open System.Collections

@@ -214,7 +214,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Exception" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Exception}" />
+            <Label Grid.Column="1" Content="{Binding ExceptionOrNull}" />
         </Grid>
     </DataTemplate>
 
