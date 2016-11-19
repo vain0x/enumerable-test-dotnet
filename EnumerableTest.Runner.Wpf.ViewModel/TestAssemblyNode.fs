@@ -83,16 +83,16 @@ type TestAssemblyNode(file: FileInfo) =
       context |> SynchronizationContext.send
         (fun () -> currentDomain.Value <- Some domain)
       domain
-    let result =
+    let (schema, connectable) =
       runnerDomain.Value
       |> AppDomain.runObservable (Model.loadAssembly assemblyName)
-    match result with
-    | (Some schema, connectable) ->
+    match schema with
+    | Some schema->
       context |> SynchronizationContext.send
         (fun () -> updateSchema schema)
       connectable.Subscribe(testClassObserver cancel) |> ignore<IDisposable>
       connectable.Connect()
-    | (None, _) ->
+    | None ->
       cancel ()
 
   let testStatistic =
