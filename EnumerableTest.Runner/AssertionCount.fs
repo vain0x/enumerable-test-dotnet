@@ -7,6 +7,7 @@ type AssertionCount =
     TotalCount                  : int
     ViolatedCount               : int
     ErrorCount                  : int
+    SkippedCount                : int
   }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
@@ -16,6 +17,7 @@ module AssertionCount =
       TotalCount                = 0
       ViolatedCount             = 0
       ErrorCount                = 0
+      SkippedCount              = 0
     }
 
   let onePassed =
@@ -23,6 +25,7 @@ module AssertionCount =
       TotalCount                = 1
       ViolatedCount             = 0
       ErrorCount                = 0
+      SkippedCount              = 0
     }
 
   let oneViolated =
@@ -30,6 +33,7 @@ module AssertionCount =
       TotalCount                = 1
       ViolatedCount             = 1
       ErrorCount                = 0
+      SkippedCount              = 0
     }
 
   let oneError =
@@ -37,6 +41,15 @@ module AssertionCount =
       TotalCount                = 1
       ViolatedCount             = 0
       ErrorCount                = 1
+      SkippedCount              = 0
+    }
+
+  let ofSkipped n =
+    {
+      TotalCount                = n
+      ViolatedCount             = 0
+      ErrorCount                = 0
+      SkippedCount              = n
     }
 
   let add (l: AssertionCount) (r: AssertionCount) =
@@ -44,6 +57,7 @@ module AssertionCount =
       TotalCount                = l.TotalCount + r.TotalCount
       ViolatedCount             = l.ViolatedCount + r.ViolatedCount
       ErrorCount                = l.ErrorCount + r.ErrorCount
+      SkippedCount              = l.SkippedCount + r.SkippedCount
     }
 
   let subtract (l: AssertionCount) (r: AssertionCount) =
@@ -51,6 +65,7 @@ module AssertionCount =
       TotalCount                = l.TotalCount - r.TotalCount
       ViolatedCount             = l.ViolatedCount - r.ViolatedCount
       ErrorCount                = l.ErrorCount - r.ErrorCount
+      SkippedCount              = l.SkippedCount - r.SkippedCount
     }
 
   let groupSig =
