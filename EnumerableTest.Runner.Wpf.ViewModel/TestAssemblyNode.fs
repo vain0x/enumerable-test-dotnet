@@ -38,9 +38,9 @@ type TestAssemblyNode(file: FileInfo) =
     | None -> ()
 
   let cancelCommand =
-    let command = currentDomain |> ReactiveProperty.map Option.isSome |> ReactiveCommand.create
-    command.Subscribe(cancel) |> ignore<IDisposable>
-    command
+    currentDomain
+    |> ReactiveProperty.map Option.isSome
+    |> ReactiveCommand.ofFunc cancel
 
   let children = ObservableCollection<_>()
 

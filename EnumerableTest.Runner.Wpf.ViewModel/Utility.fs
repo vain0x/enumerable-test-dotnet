@@ -207,10 +207,16 @@ module ReactiveProperty =
     this :> IReadOnlyReactiveProperty<_>
 
 module ReactiveCommand =
+  open System
   open Reactive.Bindings
 
   let create (canExecute: IReadOnlyReactiveProperty<_>) =
     new ReactiveCommand<_>(canExecuteSource = canExecute)
+
+  let ofFunc (f: _ -> unit) canExecute =
+    let it = create canExecute
+    it.Subscribe(f) |> ignore<IDisposable>
+    it
 
 open System
 open System.Collections
