@@ -1,6 +1,6 @@
 # Tutorial (チュートリアル)
 ## 1. Create a Test Project (テストプロジェクトの作成)
-Before installing EnumerableTest, we recommend to add a project for unit testing to your solution.
+Before installing **EnumerableTest**, we recommend to add a project for unit testing to your solution.
 
 **EnumerableTest** をインストールする前に、単体テスト専用のプロジェクトを作成することをおすすめします。
 
@@ -25,9 +25,9 @@ Drag (A) and drop to (B). You will see a window opens and displays nothing. Keep
 (A) をドラッグして、(B) にドロップすると、真っ白のウィンドウが表示されるはずです。これを開けたまま、続きをお読みください。
 
 ## 3. Overview (概要)
-To say it simply, to use **EnumerableTest**, all you need to do is to define *test methods* in which invokes assertion methods like other unit testing frameworks. Assertion methods provided by **EnumerableTest** (for example, ``Test.Equal`` which asserts two values are equal) returns a value of `Test` class and your test methods shall ``yield return`` them.
+To say it simply, to use **EnumerableTest**, all you need to do is to define *test methods* in which invokes assertion methods like other unit testing frameworks. Assertion methods provided by **EnumerableTest** (for example, `Is` which asserts two values are equal) returns a value of `Test` class and your test methods shall ``yield return`` them.
 
-**EnumerableTest** の基本的な使い方は、他の単体フレームワークと同様に、テストメソッド (表明メソッドを書き並べたメソッド) を定義するだけです。**EnumerableTest** が提供する表明メソッド (例えば2つの値が等しいことを表明する ``Test.Equal`` など) は `Test` 型の値を返しますので、テストメソッドではこれらを ``yield return`` していきます。
+**EnumerableTest** の基本的な使い方は、他の単体フレームワークと同様に、テストメソッド (表明メソッドを書き並べたメソッド) を定義するだけです。**EnumerableTest** が提供する表明メソッド (例えば2つの値が等しいことを表明する `Is` など) は `Test` 型の値を返しますので、テストメソッドではこれらを ``yield return`` していきます。
 
 ### Successful tests (成功するテスト)
 As the simplest example, let's test the ``++`` operator increments a variable. Add a .cs file to X.UnitTest project and copy-and-paste the following:
@@ -52,13 +52,13 @@ public class OperatorTest
 
         // Assert that n == 0.
         // n が 0 に等しいことを表明します。
-        yield return Test.Equal(0, n);
+        yield return n.Is(0);
 
         n++;
 
         // And assert that n == 1 here.
         // ここでは n が 1 に等しいことを表明します。
-        yield return Test.Equal(1, n);
+        yield return n.Is(1);
     }
 }
 ```
@@ -77,13 +77,13 @@ Next we show an example of a test which doesn't pass. Add the following method t
 
         // Although this assertion is violated, the execution continues.
         // この表明は失敗するが、実行は継続される。
-        yield return Test.Equal(1, n);
+        yield return n.Is(1);
 
         n--;
 
         // This assertion succeeds.
         // この表明は成功する。
-        yield return Test.Equal(-1, n);
+        yield return n.Is(-1);
     }
 ```
 
@@ -91,26 +91,38 @@ The first assertion (``n == 1``) "is violated" and the second assertion (``n == 
 
 ``n == 1`` を表す1つ目の表明は「失敗」しますが、実行は継続され、2つ目の ``n == -1`` を表す表明が成功することを確認できます。少なくとも1つの表明が失敗しているため、テストメソッドの結果は「失敗」(表明違反)になります。
 
-## 4. Expert usage (上級者向けの解説)
-### Set up/Tear down
-If you want to do something before/after each test method (so-called set up and tear down), use the constructor and ``IDisposable.Dispose`` method. **EnumerableTest** instantiates a test class for each test method it has.
+### Assertion methods (表明メソッド)
+**EnumerableTest** provides three assertion methods for usual use and two for uncommon cases. Because we believe that the former three covers 99.9% of assertions, we explain only them here. The first one is `Is`, which has been already metioned above.
 
-テストメソッドの実行前後に何かを行いたい場合 (いわゆる set up と tear down)、コンストラクターと Dispose を使います。EnumerableTest は1つのテストメソッドごとに1個のインスタンスを作成するわけです。
+**EnumerableTest** が提供する表明メソッドには、普段使用する3つのメソッドと、特殊な用途に用いる2つのメソッドを提供しています。99.9% の表明は前者でまかなえるはずですので、ここではそれらだけ説明しましょう。1つは、さきほど紹介した `Is` です。
+
+The second is `Satisfies`, which is a generalized method of `Is`. It allows you to test *any* property of a value. The following code shows a test method that tests an array isn't empty.
+
+2つ目の `Satisfies` は、`Is` を一般化したものです。これは、値の任意の性質をテストするのに使用できます。次のコードは、「配列の長さがゼロでない」ことをテストするテストメソッドです。
 
 ```csharp
-public class MyTest
-    : IDisposable  // IMPORTANT!
-{
-    public MyTest()
+    public int[] MakeArray()
     {
-        // set up
+        return new[] { 0, 1, 2 };
     }
 
-    public void Dispose()
+    public IEnumerable<Test> test_MakeArray_returns_a_nonempty_array()
     {
-         // tear down
+        yield return MakeArray().Satisfies(a => a.Length != 0);
     }
+```
 
-    // test methods...
-}
+The third is ``Test.Catch``, which tries to catch an exception. You can use this to test that a method rejects invalid arguments or something. For example, let's test that the array indexer rejects an invalid index.
+
+3つ目は、例外を捕捉する ``Test.Catch`` です。例えば、メソッドが異常な引数を拒絶することをテストするのに使えます。次のコードは、「配列のインデックスの範囲外にアクセスすると例外が送出される」ことをテストするテストメソッドです。
+
+```csharp
+    public IEnumerable<Test> test_array_indexer_rejects_invalid_index()
+    {
+        var array = new[] { 0, 1, 2 };
+        Test.Catch(() =>
+        {
+            return array[3];
+        });
+    }
 ```
