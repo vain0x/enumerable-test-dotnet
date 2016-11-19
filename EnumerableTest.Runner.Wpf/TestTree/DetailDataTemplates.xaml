@@ -169,12 +169,9 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:SelectEqualAssertion}">
+    <DataTemplate DataType="{x:Type sdk:SatisfyAssertion}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -183,20 +180,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Target" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Target}" />
+            <TextBlock Text="Value" Style="{StaticResource LabelTextBlockStyle}" />
+            <Label Grid.Column="1" Content="{Binding Value}" />
 
-            <TextBlock Grid.Row="1" Text="Source" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Source}" />
-
-            <TextBlock Grid.Row="2" Text="Actual" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="2" Grid.Column="1" Content="{Binding Actual}" />
-
-            <TextBlock Grid.Row="3" Text="Func" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="3" Grid.Column="1" Content="{Binding Func}" />
-
-            <TextBlock Grid.Row="4" Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="4" Grid.Column="1" Content="{Binding Expected}" />
+            <TextBlock Grid.Row="1" Text="Predicate" Style="{StaticResource LabelTextBlockStyle}" />
+            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Predicate}" />
         </Grid>
     </DataTemplate>
 

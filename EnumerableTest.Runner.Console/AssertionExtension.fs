@@ -15,10 +15,10 @@ module AssertionExtension =
         | False a -> a.Message
         | Equal a ->
           sprintf "Expected: %A\r\nActual: %A" a.Expected a.Actual
-        | SelectEqual a ->
+        | Satisfy a ->
           sprintf
-            "Expected: %A\r\nActual: %A\r\nSource: %A\r\nFunc: %A"
-            a.Target a.Actual a.Source (string a.Func)
+            "A value should satisfy a predicate but didn't.\r\nValue: %A\r\nPredicate: %A"
+            a.Value a.Predicate
         | Catch a ->
           sprintf
             "An exception of a type should be thrown but didn't.\r\nExpected: typeof(%A)"

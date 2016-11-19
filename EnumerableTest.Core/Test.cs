@@ -115,28 +115,8 @@ namespace EnumerableTest
             return Equal(expected, actual, StructuralComparisons.StructuralEqualityComparer);
         }
 
-        static Test SelectEquality<X, Y>(
-            string name,
-            Y target,
-            X source,
-            Expression<Func<X, Y>> f,
-            IEqualityComparer comparer,
-            bool expected
-        )
-        {
-            var actual = f.Compile().Invoke(source);
-            var assertion = new SelectEqualAssertion(target, source, actual, f, comparer, expected);
-            return OfAssertion(name, assertion);
-        }
-
-        static Test SelectEqual<X, Y>(string name, Y expected, X source, Expression<Func<X, Y>> f)
-        {
-            var comparer = StructuralComparisons.StructuralEqualityComparer;
-            return SelectEquality(name, expected, source, f, comparer, true);
-        }
-
         /// <summary>
-        /// Tests that a value satisfies a predicate
+        /// Tests that a value satisfies a predicate.
         /// <para lang="ja">
         /// 値が条件を満たすことを検査する。
         /// </para>
@@ -147,7 +127,8 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test Satisfy<X>(X value, Expression<Func<X, bool>> predicate)
         {
-            return SelectEqual(nameof(Satisfy), true, value, predicate);
+            var isPassed = predicate.Compile().Invoke(value);
+            return OfAssertion(nameof(Satisfy), new SatisfyAssertion(value, predicate, isPassed));
         }
 
         /// <summary>
