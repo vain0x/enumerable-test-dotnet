@@ -77,13 +77,13 @@ type TestAssemblyNode(file: FileInfo) =
   let load () =
     let domainName =
       sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
-    let runnerDomain =
+    let domain =
       cancel ()
       let domain = AppDomain.create domainName
       currentDomain.Value <- Some domain
       domain
     let (schema, connectable) =
-      runnerDomain.Value
+      domain.Value
       |> AppDomain.runObservable (Model.loadAssembly assemblyName)
     match schema with
     | Some schema->
