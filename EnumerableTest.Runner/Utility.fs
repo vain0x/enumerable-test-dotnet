@@ -82,9 +82,9 @@ module Observable =
 
   let waitTimeout (timeout: TimeSpan) observable =
     use event = new ManualResetEvent(initialState = false)
-    observable
-    |> subscribeEnd (fun _ -> event.Set() |> ignore<bool>)
-    |> ignore<IDisposable>
+    use subscription =
+      observable
+      |> subscribeEnd (fun _ -> event.Set() |> ignore<bool>)
     event.WaitOne(timeout)
 
   let wait observable =
