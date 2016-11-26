@@ -51,7 +51,7 @@ namespace EnumerableTest.Sdk
         {
             Tests = tests;
             ExceptionOrNull = exceptionOrNull;
-            IsPassed = Tests.All(test => test.IsPassed);
+            IsPassed = ExceptionOrNull == null && Tests.All(test => test.IsPassed);
             Assertions = Tests.SelectMany(test => test.Assertions).ToArray();
         }
     }

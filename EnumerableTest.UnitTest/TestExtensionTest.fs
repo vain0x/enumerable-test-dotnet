@@ -53,7 +53,7 @@ module TestExtensionTest =
       }
     |> body
       ( "passing-exception"
-      , true // TODO: should be false
+      , false
       , fun a -> a.Length = 2
       , (=) e
       )
