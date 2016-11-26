@@ -146,3 +146,19 @@ module TestClassTypeAndTestMethodTest =
           do! testMethod.DisposingError |> assertSatisfies Option.isSome
         }
       ]
+
+    let ``test createManyAsync`` =
+      [
+        test {
+          let (testMethods, instantiationError) =
+            typeof<TestClass1> |> TestMethod.createManyAsync
+          do! instantiationError |> assertEquals None
+          do! testMethods |> assertSatisfies (Array.length >> (=) 3)
+        }
+        test {
+          let (testMethods, instantiationError) =
+            typeof<Uninstantiatable> |> TestMethod.createManyAsync
+          do! instantiationError |> assertSatisfies Option.isSome
+          do! testMethods |> assertSatisfies Array.isEmpty
+        }
+      ]
