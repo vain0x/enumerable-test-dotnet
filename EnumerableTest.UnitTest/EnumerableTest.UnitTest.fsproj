@@ -49,6 +49,7 @@
     <Compile Include="TestTest.fs" />
     <Compile Include="TestExtensionTest.fs" />
     <Compile Include="TestMethodTest.fs" />
+    <Compile Include="TestClassTest.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
