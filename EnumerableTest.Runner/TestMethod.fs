@@ -63,6 +63,8 @@ module TestMethod =
     let result = new GroupTest(name, [||], e)
     ofResult name result None TimeSpan.Zero
 
+  /// Creates an instance of TestMethod
+  /// by executing a test method of an instance and disposing the instance.
   let create (instance: TestInstance) (m: MethodInfo) =
     let stopwatch = Stopwatch.StartNew()
     let tests =
