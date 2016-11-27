@@ -4,7 +4,7 @@ open System
 open System.Collections.ObjectModel
 open EnumerableTest.Runner
 
-type TestClassNode(assemblyShortName: string, name: string) =
+type TestClassNode(name: string) =
   let children =
     ObservableCollection<TestMethodNode>([||])
 
@@ -34,8 +34,6 @@ type TestClassNode(assemblyShortName: string, name: string) =
     isPassed |> ReactiveProperty.map not
 
   member this.Children = children
-
-  member this.AssemblyShortName = assemblyShortName
 
   member this.Name = name
 
