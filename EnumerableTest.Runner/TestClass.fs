@@ -6,30 +6,9 @@ open System.Reflection
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClass =
-  let runAsync (typ: Type) =
-    let methodInfos = typ |> TestClassType.testMethodInfos
-    let instantiate = typ |> TestClassType.instantiate
-    try
-      let computations =
-        methodInfos
-        |> Seq.map
-          (fun m ->
-            let instance = instantiate ()
-            let computation =
-              async {
-                return m |> TestMethod.create instance
-              }
-            (m, computation)
-          )
-        |> Seq.toArray
-      (computations, None)
-    with
-    | e ->
-      ([||], Some e)
-
   let create timeout (typ: Type): TestClass =
     let (methods, instantiationError) =
-      runAsync typ
+      TestMethod.createManyAsync typ
     let observable =
       methods |> Seq.map snd |> Observable.startParallel
     let results = ConcurrentQueue<_>()

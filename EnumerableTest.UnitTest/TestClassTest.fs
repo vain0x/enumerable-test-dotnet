@@ -1,86 +1,51 @@
 ﻿namespace EnumerableTest.UnitTest
 
 open System
-open System.Reflection
-open Basis.Core
+open System.Threading
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest
 open EnumerableTest.Runner
 
 module TestClassTest =
-  let passingTest = 
-    seq {
-      yield Test.Equal(0, 0)
-    }
-
-  let violatingTest =
-    seq {
-      yield Test.Equal(1, 2)
-    }
-
-  type TestClass1() =
-    member this.PassingTestMethod() =
-      passingTest
-
-    member this.ViolatingTestMethod() =
-      violatingTest
-
-    member this.ThrowingTestMethod() =
-      seq {
-        yield Test.Equal(0, 0)
-        Exception() |> raise
+  module test_create =
+    let body (isPassed, instantiationErrorCondition, resultCondition, notCompletedCondition) typ =
+      test {
+        let timeout = TimeSpan.FromMilliseconds 50.0
+        let testClass = TestClass.create timeout typ
+        do! testClass.InstantiationError
+            |> assertSatisfies instantiationErrorCondition
+        do! testClass.Result
+            |> assertSatisfies resultCondition
+        do! testClass.NotCompletedMethods
+            |> assertSatisfies notCompletedCondition
+        do! testClass |> TestClass.isPassed
+            |> assertEquals isPassed
       }
 
-    member this.NotTestMethodBecauseOfBeingProperty
-      with get () =
-        passingTest
+    let passingCase =
+      typeof<TestClass.Passing>
+      |> body
+        ( true
+        , Option.isNone
+        , Array.length >> (=) 1
+        , Array.isEmpty
+        )
 
-    member this.NotTestMethodBecauseOfReturnType() =
-      Test.Equal(1, 1)
+    let neverCase =
+      typeof<TestClass.Never>
+      |> body
+        ( false
+        , Option.isNone
+        , Array.length >> (=) 2
+        , Array.length >> (=) 1
+        )
 
-    member this.NotTestMethodBecauseOfTypeParameters<'x>() =
-      seq {
-        yield Test.Equal((Exception() |> raise |> ignore<'x>), ())
-      }
-
-    member this.NotTestMethodBecauseOfParameters(i: int) =
-      passingTest
-
-    static member NotTestMethodBecauseOfStatic =
-      passingTest
-
-  type NotTestClass() =
-    member this.X() = 0
-
-  type Uninstantiatable() =
-    do Exception() |> raise
-
-    member this.PassingTest() =
-      passingTest
-
-    member this.ViolatingTest() =
-      violatingTest
-
-  type TestClassWithThrowingDispose() =
-    member this.PassingTest() =
-      passingTest
-
-    member this.ThrowingTest() =
-      Exception() |> raise
-
-    interface IDisposable with
-      override this.Dispose() =
-        Exception() |> raise
-
-  let ``test testMethodInfos`` =
-    test {
-      let typ = typeof<TestClass1>
-      let expected =
-        [
-          typ.GetMethod("PassingTestMethod")
-          typ.GetMethod("ViolatingTestMethod")
-          typ.GetMethod("ThrowingTestMethod")
-        ]
-      do! typ |> TestClassType.testMethodInfos |> assertSeqEquals expected
-    }
+    let uninstantiatableCase =
+      typeof<TestClass.Uninstantiatable>
+      |> body
+        ( false
+        , Option.isSome
+        , Array.isEmpty
+        , Array.isEmpty
+        )

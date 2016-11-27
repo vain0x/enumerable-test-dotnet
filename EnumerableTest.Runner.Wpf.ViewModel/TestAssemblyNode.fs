@@ -56,7 +56,7 @@ type TestAssemblyNode(file: FileInfo) =
     for (_, updatedNode, testClassSchema) in difference.Intersect do
       updatedNode.UpdateSchema(testClassSchema)
     for testClassSchema in difference.Right do
-      let node = TestClassNode(assemblyName.Name, testClassSchema.TypeFullName)
+      let node = TestClassNode(testClassSchema.TypeFullName)
       node.UpdateSchema(testClassSchema)
       children.Add(node)
 

@@ -13,5 +13,10 @@ type TestMethodResult =
 type TestSuite =
   IObservable<TestMethodResult>
 
+type NotExecutedResult private () =
+  static member val Instance =
+    new NotExecutedResult()
+
 type INodeViewModel =
   abstract member IsExpanded: IReadOnlyReactiveProperty<bool>
+  

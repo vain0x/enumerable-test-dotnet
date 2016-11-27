@@ -17,7 +17,7 @@ module TestMethodResult =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuite =
   let executeType (typ: Type) =
-    match TestClass.runAsync typ with
+    match TestMethod.createManyAsync typ with
     | (_, Some e) ->
       let result = TestMethodResult.create typ (TestMethod.ofInstantiationError e)
       [| async { return result } |]

@@ -5,6 +5,107 @@ open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 
+module ObservableTest =
+  open System
+  open System.Reactive.Linq
+  open System.Reactive.Subjects
+  open System.Threading
+
+  let ``test waitTimeout`` =
+    [
+      test {
+        let observable = new Subject<_>()
+        do!
+          observable |> Observable.waitTimeout (TimeSpan.FromMilliseconds(1.0))
+          |> assertEquals false
+      }
+      test {
+        let observable = [| 0; 1; 2 |].ToObservable()
+        do!
+         observable |> Observable.waitTimeout (TimeSpan.FromMilliseconds(1.0))
+         |> assertEquals true
+      }
+    ]
+    
+  let ``test ofParallel`` =
+    test {
+      let executionCount = ref 0
+      let notificationCount = ref 0
+      let n = 5
+      let computations =
+        seq {
+          for i in 0..(n - 1) ->
+            async {
+              Interlocked.Increment(executionCount) |> ignore
+              return i
+            }
+        }
+      let connectable =
+        computations |> Observable.ofParallel
+      connectable
+      |> Observable.subscribe (fun i -> notificationCount := !notificationCount + i)
+      |> ignore
+      connectable.Connect()
+      connectable |> Observable.wait
+      do! !executionCount |> assertEquals n
+      do! !notificationCount |> assertEquals (seq { 0..(n - 1) } |> Seq.sum)
+    }
+
+  let ``test startParallel`` =
+    test {
+      let executionCount = ref 0
+      let notificationCount = ref 0
+      let n = 5
+      let computations =
+        seq {
+          for i in 0..(n - 1) ->
+            async {
+              Interlocked.Increment(executionCount) |> ignore
+              return i
+            }
+        }
+      let connectable =
+        computations |> Observable.startParallel
+      connectable
+      |> Observable.subscribe (fun i -> notificationCount := !notificationCount + i)
+      |> ignore
+      connectable.Connect()
+      connectable |> Observable.wait
+      do! !executionCount |> assertEquals n
+      do! !notificationCount |> assertEquals (seq { 0..(n - 1) } |> Seq.sum)
+    }
+
+module StringTest =
+  let ``test convertToLF`` =
+    let body (source, expected) =
+      test {
+        do! source |> String.convertToLF |> assertEquals expected
+      }
+    parameterize {
+      case ("a\r\nb", "a\nb")
+      case ("a\n\r\n\rb", "a\n\n\nb")
+      run body
+    }
+
+module DisposableTest =
+  open System.Reactive.Disposables
+
+  module test_dispose =
+    let ofDisposable =
+      test {
+        let count = ref 0
+        let disposable = Disposable.Create(fun () -> count |> incr)
+        disposable |> Disposable.dispose
+        do! !count |> assertEquals 1
+      }
+
+    let ofNonDisposable =
+      test {
+        let x = obj()
+        x |> Disposable.dispose
+        return ()
+      }
+
 module ReadOnlyListTest =
   open System.Collections.Generic
 

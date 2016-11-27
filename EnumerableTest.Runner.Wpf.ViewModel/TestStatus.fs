@@ -27,7 +27,3 @@ module TestStatus =
       NotCompleted
     else
       Passed
-
-type NotExecutedResult() =
-  static member val Instance =
-    new NotExecutedResult()
