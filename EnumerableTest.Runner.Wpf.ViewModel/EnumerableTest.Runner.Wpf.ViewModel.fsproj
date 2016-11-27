@@ -53,6 +53,7 @@
     <Compile Include="TestClassNode.fs" />
     <Compile Include="TestAssemblyNode.fs" />
     <Compile Include="TestTree.fs" />
+    <Compile Include="PermanentTestRunner.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
