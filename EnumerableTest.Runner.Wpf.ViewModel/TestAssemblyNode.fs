@@ -47,7 +47,7 @@ type TestAssemblyNode(testAssembly: TestAssembly) =
     new CompositeDisposable()
 
   do
-    testAssembly.SchemaUpdated
+    testAssembly.TestSchema
     |> Observable.subscribe
       (fun schema ->
         context |> SynchronizationContext.send

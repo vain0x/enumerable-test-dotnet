@@ -3,9 +3,11 @@
 open System
 open System.IO
 open System.Reactive.Disposables
+open System.Reactive.Linq
 open System.Reactive.Subjects
 open System.Reflection
 open Reactive.Bindings
+open Reactive.Bindings.Extensions
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
 
@@ -28,6 +30,8 @@ type TestAssembly(file: FileInfo) =
 
   let currentDomain = ReactiveProperty.create None
 
+  let currentTestSchema = ReactiveProperty.create [||]
+
   let cancel () =
     match currentDomain.Value with
     | Some domain ->
@@ -41,7 +45,10 @@ type TestAssembly(file: FileInfo) =
     |> ReactiveCommand.ofFunc cancel
 
   let schemaUpdated =
-    new Subject<TestSuiteSchema>()
+    currentTestSchema.Pairwise().Select
+      (fun pair ->
+        TestSuiteSchema.difference pair.OldItem pair.NewItem
+      )
 
   let testMethodCompleted =
     new Subject<TestMethodResult>()
@@ -69,7 +76,7 @@ type TestAssembly(file: FileInfo) =
       |> AppDomain.runObservable (TestAssemblyModule.load assemblyName)
     match schema with
     | Some schema->
-      schemaUpdated.OnNext(schema)
+      currentTestSchema.Value <- schema
       connectable.Subscribe(resultObserver) |> ignore<IDisposable>
       connectable.Connect()
     | None ->
@@ -88,6 +95,9 @@ type TestAssembly(file: FileInfo) =
 
   member this.CancelCommand =
     cancelCommand
+
+  member this.TestSchema =
+    currentTestSchema |> ReactiveProperty.asReadOnly
 
   member this.SchemaUpdated =
     schemaUpdated :> IObservable<_>
