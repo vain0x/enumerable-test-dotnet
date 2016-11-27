@@ -49,11 +49,12 @@
     <Compile Include="AppArgument.fs" />
     <Compile Include="TestStatus.fs" />
     <Compile Include="TestSuite.fs" />
+    <Compile Include="TestAssembly.fs" />
+    <Compile Include="PermanentTestRunner.fs" />
     <Compile Include="TestMethodNode.fs" />
     <Compile Include="TestClassNode.fs" />
     <Compile Include="TestAssemblyNode.fs" />
     <Compile Include="TestTree.fs" />
-    <Compile Include="PermanentTestRunner.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">

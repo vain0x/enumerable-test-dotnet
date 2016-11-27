@@ -1,27 +1,22 @@
 ﻿namespace EnumerableTest.Runner.Wpf
 
 open System
-open System.Collections.Generic
 open System.Collections.ObjectModel
-open System.IO
-open System.Reflection
-open System.Threading
-open EnumerableTest.Runner
-open EnumerableTest.Sdk
 
-type TestTree() =
+type TestTree(runner: PermanentTestRunner) =
   let children = ObservableCollection<TestAssemblyNode>()
 
-  let fileNames = HashSet<_>()
-
-  member this.LoadFile(file: FileInfo) =
-    if fileNames.Add(file.FullName) then
-      children.Add(new TestAssemblyNode(file))
+  let subscription =
+    runner.AssemblyAdded |> Observable.subscribe
+      (fun testAssembly ->
+        children.Add(new TestAssemblyNode(testAssembly))
+      )
 
   member this.Children =
     children
 
   member this.Dispose() =
+    subscription.Dispose()
     for node in children do
       node.Dispose()
 
