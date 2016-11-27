@@ -8,37 +8,6 @@ open EnumerableTest
 open EnumerableTest.Runner
 
 module TestClassTest =
-  type Passing() =
-    member this.PassingTest() =
-      seq {
-        yield (0).Is(0)
-      }
-
-  type Never() =
-    member this.PassingTest() =
-      seq {
-        yield (0).Is(0)
-      }
-
-    member this.ViolatedTest() =
-      seq {
-        yield (0).Is(1)
-      }
-
-    member this.NeverTest(): seq<Test> =
-      seq {
-        while true do
-          ()
-      }
-
-  type Uninstantiatable() =
-    do exn() |> raise
-
-    member this.PassingTest() =
-      seq {
-        yield (0).Is(0)
-      }
-
   module test_create =
     let body (isPassed, instantiationErrorCondition, resultCondition, notCompletedCondition) typ =
       test {
@@ -55,7 +24,7 @@ module TestClassTest =
       }
 
     let passingCase =
-      typeof<Passing>
+      typeof<TestClass.Passing>
       |> body
         ( true
         , Option.isNone
@@ -64,7 +33,7 @@ module TestClassTest =
         )
 
     let neverCase =
-      typeof<Never>
+      typeof<TestClass.Never>
       |> body
         ( false
         , Option.isNone
@@ -73,7 +42,7 @@ module TestClassTest =
         )
 
     let uninstantiatableCase =
-      typeof<Uninstantiatable>
+      typeof<TestClass.Uninstantiatable>
       |> body
         ( false
         , Option.isSome

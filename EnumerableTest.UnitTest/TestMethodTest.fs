@@ -9,74 +9,10 @@ open EnumerableTest
 open EnumerableTest.Runner
 
 module TestClassTypeAndTestMethodTest =
-  let passingTest = 
-    seq {
-      yield Test.Equal(0, 0)
-    }
-
-  let violatingTest =
-    seq {
-      yield Test.Equal(1, 2)
-    }
-
-  type TestClass1() =
-    member this.PassingTestMethod() =
-      passingTest
-
-    member this.ViolatingTestMethod() =
-      violatingTest
-
-    member this.ThrowingTestMethod() =
-      seq {
-        yield Test.Equal(0, 0)
-        Exception() |> raise
-      }
-
-    member this.NotTestMethodBecauseOfBeingProperty
-      with get () =
-        passingTest
-
-    member this.NotTestMethodBecauseOfReturnType() =
-      Test.Equal(1, 1)
-
-    member this.NotTestMethodBecauseOfTypeParameters<'x>() =
-      seq {
-        yield Test.Equal((Exception() |> raise |> ignore<'x>), ())
-      }
-
-    member this.NotTestMethodBecauseOfParameters(i: int) =
-      passingTest
-
-    static member NotTestMethodBecauseOfStatic =
-      passingTest
-
-  type NotTestClass() =
-    member this.X() = 0
-
-  type Uninstantiatable() =
-    do Exception() |> raise
-
-    member this.PassingTest() =
-      passingTest
-
-    member this.ViolatingTest() =
-      violatingTest
-
-  type TestClassWithThrowingDispose() =
-    member this.PassingTest() =
-      passingTest
-
-    member this.ThrowingTest() =
-      Exception() |> raise
-
-    interface IDisposable with
-      override this.Dispose() =
-        Exception() |> raise
-
   module TestClassTypeTest =
     let ``test testMethodInfos`` =
       test {
-        let typ = typeof<TestClass1>
+        let typ = typeof<TestClass.WithManyProperties>
         let expected =
           [
             typ.GetMethod("PassingTestMethod")
@@ -92,30 +28,30 @@ module TestClassTypeAndTestMethodTest =
           do! typ |> TestClassType.isTestClass |> assertEquals expected
         }
       parameterize {
-        case (typeof<TestClass1>, true)
-        case (typeof<Uninstantiatable>, true)
-        case (typeof<TestClassWithThrowingDispose>, true)
-        case (typeof<NotTestClass>, false)
+        case (typeof<TestClass.WithManyProperties>, true)
+        case (typeof<TestClass.Uninstantiatable>, true)
+        case (typeof<TestClass.WithThrowingDispose>, true)
+        case (typeof<TestClass.NotTestClass>, false)
         run body
       }
 
     let ``test instantiate`` =
       [
         test {
-          let instantiate = typeof<TestClass1> |> TestClassType.instantiate
+          let instantiate = typeof<TestClass.Passing> |> TestClassType.instantiate
           let instance = instantiate ()
-          do! instance.GetType() |> assertEquals typeof<TestClass1>
+          do! instance.GetType() |> assertEquals typeof<TestClass.Passing>
         }
         test {
-          let instantiate = typeof<Uninstantiatable> |> TestClassType.instantiate
+          let instantiate = typeof<TestClass.Uninstantiatable> |> TestClassType.instantiate
           let! (_: exn) = trap { it (instantiate ()) }
           return ()
         }
       ]
 
   module TestMethodTest =
-    let ``test create TestClass1`` =
-      let typ = typeof<TestClass1>
+    let ``test create TestClass.WithManyProperties1`` =
+      let typ = typeof<TestClass.WithManyProperties>
       let instantiate = typ |> TestClassType.instantiate
       [
         test {
@@ -137,8 +73,8 @@ module TestClassTypeAndTestMethodTest =
         }
       ]
 
-    let ``test create TestClassWithThrowingDispose`` =
-      let typ = typeof<TestClassWithThrowingDispose>
+    let ``test create TestClass.WithThrowingDispose`` =
+      let typ = typeof<TestClass.WithThrowingDispose>
       let instantiate = typ |> TestClassType.instantiate
       [
         test {
@@ -151,13 +87,13 @@ module TestClassTypeAndTestMethodTest =
       [
         test {
           let (testMethods, instantiationError) =
-            typeof<TestClass1> |> TestMethod.createManyAsync
+            typeof<TestClass.WithManyProperties> |> TestMethod.createManyAsync
           do! instantiationError |> assertEquals None
           do! testMethods |> assertSatisfies (Array.length >> (=) 3)
         }
         test {
           let (testMethods, instantiationError) =
-            typeof<Uninstantiatable> |> TestMethod.createManyAsync
+            typeof<TestClass.Uninstantiatable> |> TestMethod.createManyAsync
           do! instantiationError |> assertSatisfies Option.isSome
           do! testMethods |> assertSatisfies Array.isEmpty
         }
