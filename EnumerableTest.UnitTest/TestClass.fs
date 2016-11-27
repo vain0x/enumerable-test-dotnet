@@ -14,6 +14,21 @@ module TestClass =
       yield (0).Is(1)
     }
 
+  let throwingTest =
+    seq {
+      yield (0).Is(0)
+      yield (0).Is(1)
+      exn() |> raise
+    }
+
+  let neverTest: seq<Test> =
+    seq {
+      yield (0).Is(0)
+      yield (0).Is(1)
+      while true do
+        ()
+    }
+
   type Passing() =
     member this.PassingTest() =
       passingTest
@@ -27,20 +42,13 @@ module TestClass =
 
   type Never() =
     member this.PassingTest() =
-      seq {
-        yield (0).Is(0)
-      }
+      passingTest
 
     member this.ViolatedTest() =
-      seq {
-        yield (0).Is(1)
-      }
+      violatingTest
 
-    member this.NeverTest(): seq<Test> =
-      seq {
-        while true do
-          ()
-      }
+    member this.NeverTest() =
+      neverTest
 
   type Uninstantiatable() =
     do Exception() |> raise
@@ -56,7 +64,7 @@ module TestClass =
       passingTest
 
     member this.ThrowingTest() =
-      exn() |> raise
+      throwingTest
 
     interface IDisposable with
       override this.Dispose() =
@@ -70,10 +78,7 @@ module TestClass =
       violatingTest
 
     member this.ThrowingTestMethod() =
-      seq {
-        yield (0).Is(0)
-        exn() |> raise
-      }
+      throwingTest
 
     member this.NotTestMethodBecauseOfBeingProperty
       with get () =
