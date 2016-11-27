@@ -22,7 +22,7 @@ namespace EnumerableTest.Runner.Wpf
     /// </summary>
     public partial class TestTreeView : UserControl
     {
-        readonly TestTree testTree = new TestTree();
+        readonly PermanentTestRunner runner = new PermanentTestRunner();
 
         IEnumerable<FileInfo> AssemblyFiles
         {
@@ -39,11 +39,12 @@ namespace EnumerableTest.Runner.Wpf
 
             foreach (var assemblyFile in AssemblyFiles)
             {
-                testTree.LoadFile(assemblyFile);
+                runner.LoadFile(assemblyFile);
             }
 
-            DataContext = testTree;
-            Unloaded += (sender, e) => testTree.Dispose();
+            Unloaded += (sender, e) => runner.Dispose();
+
+            DataContext = runner.TestTree;
         }
     }
 }
