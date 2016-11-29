@@ -13,7 +13,7 @@
         <StackPanel>
             <TextBlock Text="{Binding Name}" />
             <Separator />
-            <Label Content="{Binding TestStatistic.Value}" />
+            <ContentPresenter Content="{Binding TestStatistic.Value}" />
         </StackPanel>
     </DataTemplate>
 
@@ -21,17 +21,17 @@
         <StackPanel>
             <TextBlock Text="{Binding Name}" />
             <Separator />
-            <Label Content="{Binding LastResult.Value}" />
+            <ContentPresenter Content="{Binding LastResult.Value}" />
         </StackPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type model:TestGroupNode}">
-        <Label Content="{Binding GroupTest}" />
+        <ContentPresenter Content="{Binding GroupTest}" />
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type runner:TestMethod}">
         <StackPanel>
-            <Label Content="{Binding Result}" />
+            <ContentPresenter Content="{Binding Result}" />
             <StackPanel>
                 <StackPanel.Style>
                     <Style
@@ -50,7 +50,7 @@
                     <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
                     <TextBlock Text="RUNTIME ERROR in Dispose" />
                 </StackPanel>
-                <Label Content="{Binding DisposingErrorOrNull}" />
+                <ContentPresenter Content="{Binding DisposingErrorOrNull}" />
             </StackPanel>
             <Separator />
             <TextBlock>
@@ -78,7 +78,7 @@
                 </Style>
             </Expander.Style>
 
-            <Label Content="{Binding Assertion}" />
+            <ContentPresenter Content="{Binding Assertion}" />
         </Expander>
     </DataTemplate>
 
@@ -104,7 +104,7 @@
                         <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
                         <TextBlock Text="RUNTIME ERROR" />
                     </StackPanel>
-                    <Label Content="{Binding ExceptionOrNull}" />
+                    <ContentPresenter Content="{Binding ExceptionOrNull}" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -170,7 +170,7 @@
                         >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding Value}" />
+                                <ContentPresenter Content="{Binding Value}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -192,10 +192,10 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Expected}" />
+            <ContentPresenter Grid.Column="1" Content="{Binding Expected}" />
 
             <TextBlock Grid.Row="1" Text="Actual" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Actual}" />
+            <ContentPresenter Grid.Row="1" Grid.Column="1" Content="{Binding Actual}" />
         </Grid>
     </DataTemplate>
 
@@ -211,10 +211,10 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Value" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Value}" />
+            <ContentPresenter Grid.Column="1" Content="{Binding Value}" />
 
             <TextBlock Grid.Row="1" Text="Predicate" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Predicate}" />
+            <ContentPresenter Grid.Row="1" Grid.Column="1" Content="{Binding Predicate}" />
         </Grid>
     </DataTemplate>
 
@@ -229,7 +229,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Exception" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding ExceptionOrNull}" />
+            <ContentPresenter Grid.Column="1" Content="{Binding ExceptionOrNull}" />
         </Grid>
     </DataTemplate>
 
@@ -271,7 +271,7 @@
                         >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding Value}" />
+                                <ContentPresenter Content="{Binding Value}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -288,12 +288,12 @@
                     <TextBlock Text="{Binding Exception.Message}" />
                 </StackPanel>
             </Expander.Header>
-            <Label Content="{Binding Exception}" />
+            <ContentPresenter Content="{Binding Exception}" />
         </Expander>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type sdk:MarshalResultValue}">
-        <Label Content="{Binding MarshalValue}" />
+        <ContentPresenter Content="{Binding MarshalValue}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type system:Exception}">
