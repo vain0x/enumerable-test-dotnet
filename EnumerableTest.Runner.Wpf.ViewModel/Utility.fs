@@ -143,6 +143,19 @@ module SynchronizationContext =
     this.Send((fun _ -> f ()), ())
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module Command =
+  open System.Windows.Input
+
+  let never =
+    let canExecuteChanged = Event<_, _>()
+    { new ICommand with
+        override this.CanExecute(_) = false
+        override this.Execute(_) = ()
+        [<CLIEvent>]
+        override this.CanExecuteChanged = canExecuteChanged.Publish
+    }
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module FileInfo =
   open System
   open System.IO

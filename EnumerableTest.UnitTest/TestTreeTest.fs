@@ -14,10 +14,6 @@ open EnumerableTest.Runner.Wpf
 open EnumerableTest.Sdk
 
 module TestTreeTest =
-  let cancelCommand =
-    ReactiveProperty.create false
-    |> ReactiveCommand.ofFunc (fun () -> ())
-
   module TestTreeNodeTest =
     let empty () =
       FolderNode.CreateRoot()
@@ -96,7 +92,7 @@ module TestTreeTest =
 
     let ``test initial state`` =
       test {
-        let node = TestMethodNode(testMethodSchema, cancelCommand)
+        let node = TestMethodNode(testMethodSchema, Command.never)
         do! node.Name |> assertEquals "method"
         do! node.LastResult.Value |> assertEquals (NotExecutedResult.Instance :> obj)
         do! node.Children |> assertSatisfies Seq.isEmpty
@@ -105,7 +101,7 @@ module TestTreeTest =
 
     let ``test UpdateResult`` =
       test {
-        let node = TestMethodNode(testMethodSchema, cancelCommand)
+        let node = TestMethodNode(testMethodSchema, Command.never)
         let duration = TimeSpan.FromMilliseconds(1.2)
         let testMethod =
           TestMethod.ofResult
@@ -161,8 +157,8 @@ module TestTreeTest =
       let ``test updating`` =
         test {
           let node = FolderNode("folderNode")
-          let a = TestMethodNode({ MethodName = "a" }, cancelCommand)
-          let b = TestMethodNode({ MethodName = "b" }, cancelCommand)
+          let a = TestMethodNode({ MethodName = "a" }, Command.never)
+          let b = TestMethodNode({ MethodName = "b" }, Command.never)
           node.AddChild(a)
           node.AddChild(b)
           do! node.TestStatistic.Value |> assertEquals
@@ -246,7 +242,7 @@ module TestTreeTest =
             override this.TestResults =
               testResults :> _
             override this.CancelCommand =
-              cancelCommand :> _
+              Command.never
             override this.Start() = ()
             override this.Dispose() = ()
         }
