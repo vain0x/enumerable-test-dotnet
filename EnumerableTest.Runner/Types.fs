@@ -14,8 +14,20 @@ type TestMethodSchema =
     MethodName                  : string
   }
 
+type TestClassPath =
+  {
+    NamespacePath:
+      array<string>
+    ClassPath:
+      array<string>
+    Name:
+      string
+  }
+
 type TestClassSchema =
   {
+    Path:
+      TestClassPath
     TypeFullName                : string
     Methods                     : array<TestMethodSchema>
   }

@@ -2,21 +2,21 @@
 
 open System
 open Reactive.Bindings
+open Basis.Core
 open EnumerableTest.Runner
 
-type TestMethodResult =
+type TestResult =
   {
-    TypeFullName                : string
-    Method                      : TestMethod
+    TypeFullName:
+      string
+    /// Represents completion of a test method or an instantiation error.
+    Result:
+      Result<TestMethod, exn>
   }
 
 type TestSuite =
-  IObservable<TestMethodResult>
+  IObservable<TestResult>
 
 type NotExecutedResult private () =
   static member val Instance =
     new NotExecutedResult()
-
-type INodeViewModel =
-  abstract member IsExpanded: IReadOnlyReactiveProperty<bool>
-  

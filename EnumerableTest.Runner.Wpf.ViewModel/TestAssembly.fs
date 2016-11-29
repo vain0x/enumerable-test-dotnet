@@ -50,13 +50,13 @@ type TestAssembly(file: FileInfo) =
         TestSuiteSchema.difference pair.OldItem pair.NewItem
       )
 
-  let testMethodCompleted =
-    new Subject<TestMethodResult>()
+  let testResults =
+    new Subject<TestResult>()
 
   let resultObserver =
     { new IObserver<_> with
-        override this.OnNext(testMethodResult) =
-          testMethodCompleted.OnNext(testMethodResult)
+        override this.OnNext(result) =
+          testResults.OnNext(result)
         override this.OnError(_) =
           cancel ()
         override this.OnCompleted() =
@@ -97,13 +97,13 @@ type TestAssembly(file: FileInfo) =
     cancelCommand
 
   member this.TestSchema =
-    currentTestSchema |> ReactiveProperty.asReadOnly
+    currentTestSchema :> IReadOnlyReactiveProperty<_>
 
   member this.SchemaUpdated =
     schemaUpdated :> IObservable<_>
 
-  member this.TestMethodCompleted =
-    testMethodCompleted :> IObservable<_>
+  member this.TestResults =
+    testResults :> IObservable<_>
 
   member this.Start() =
     start ()

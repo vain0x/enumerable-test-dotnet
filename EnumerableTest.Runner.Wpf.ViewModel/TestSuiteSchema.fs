@@ -30,7 +30,7 @@ type TestSuiteSchemaDifference =
     Removed:
       IReadOnlyList<TestClassSchema>
     Modified:
-      Map<string, TestClassSchemaDifference>
+      Map<list<string>, TestClassSchemaDifference>
   }
 with
   static member Create(added, removed, modified) =
@@ -74,7 +74,7 @@ module TestSuiteSchema =
     let modified =
       d.Intersect |> Seq.map
         (fun (name, l, r) ->
-          (name, TestClassSchema.difference l r)
+          (l.Path |> TestClassPath.fullPath, TestClassSchema.difference l r)
         )
       |> Map.ofSeq
     TestSuiteSchemaDifference.Create

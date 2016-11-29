@@ -201,11 +201,8 @@ module ReactiveProperty =
   let create x =
     new ReactiveProperty<_>(initialValue = x)
 
-  let map (f: 'x -> 'y) (this: ReactiveProperty<'x>) =
+  let map (f: 'x -> 'y) (this: IReadOnlyReactiveProperty<'x>) =
     this.Select(f).ToReactiveProperty()
-
-  let asReadOnly this =
-    this :> IReadOnlyReactiveProperty<_>
 
 module ReactiveCommand =
   open System
@@ -310,7 +307,7 @@ module ReadOnlyUptodateCollection =
   open Reactive.Bindings
   open Reactive.Bindings.Extensions
 
-  let ofUptodate (uptodate: ReactiveProperty<'x>) =
+  let ofUptodate (uptodate: IReadOnlyReactiveProperty<'x>) =
     let subscribe (observer: IObserver<UptodateCollectionNotification<_>>) =
       uptodate.Pairwise() |> Observable.subscribe
         (fun window ->

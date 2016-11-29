@@ -20,6 +20,12 @@ namespace EnumerableTest.Runner.Wpf
                 return status;
             }
 
+            var statistic = value as TestStatistic;
+            if (statistic != null)
+            {
+                return TestStatusModule.ofTestStatistic(statistic);
+            }
+
             var assertionTest = value as AssertionTest;
             if (assertionTest != null)
             {
