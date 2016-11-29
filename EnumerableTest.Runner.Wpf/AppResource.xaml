@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     >
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
     <Style x:Key="DefaultTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Meiryo" />
         <Setter Property="FontSize" Value="13" />
