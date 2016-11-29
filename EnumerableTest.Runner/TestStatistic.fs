@@ -41,6 +41,12 @@ module TestStatistic =
         override this.Divide(l, r) = subtract l r
     }
 
+  let ofGroupTest groupTest =
+    {
+      AssertionCount            = groupTest |> AssertionCount.ofGroupTest
+      Duration                  = TimeSpan.Zero
+    }
+
   let ofTestMethod testMethod =
     {
       AssertionCount            = testMethod |> AssertionCount.ofTestMethod

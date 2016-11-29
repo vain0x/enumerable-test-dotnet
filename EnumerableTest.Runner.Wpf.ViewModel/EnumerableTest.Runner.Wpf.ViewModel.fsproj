@@ -53,6 +53,7 @@
     <Compile Include="TestAssembly.fs" />
     <Compile Include="PermanentTestRunner.fs" />
     <Compile Include="TestTreeNode.fs" />
+    <Compile Include="TestGroupNode.fs" />
     <Compile Include="TestMethodNode.fs" />
     <Compile Include="FolderNode.fs" />
     <Compile Include="TestTree.fs" />

@@ -15,6 +15,9 @@ type TestMethodNode(testMethodSchema: TestMethodSchema, cancelCommand: ICommand)
 
   let name = testMethodSchema.MethodName
 
+  let children =
+    ObservableCollection<_>()
+
   let lastResult = ReactiveProperty.create None
   
   let lastResultUntyped =
@@ -45,14 +48,18 @@ type TestMethodNode(testMethodSchema: TestMethodSchema, cancelCommand: ICommand)
 
   override this.TestStatistic = testStatistic
 
-  override val Children =
-    ObservableCollection<TestTreeNode>()
+  override this.Children = children
 
   override val IsExpanded =
     ReactiveProperty.create false :> IReadOnlyReactiveProperty<_>
 
   member this.UpdateSchema(_) =
     lastResult.Value <- None
+    children.Clear()
 
   member this.UpdateResult(testMethod) =
     lastResult.Value <- Some testMethod
+    testMethod.Result.Tests |> Seq.choose tryCast |> Seq.iter
+      (fun groupTest ->
+        children.Add(TestGroupNode(groupTest))
+      )

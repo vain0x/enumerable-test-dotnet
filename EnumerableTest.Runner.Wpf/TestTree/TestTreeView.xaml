@@ -33,7 +33,10 @@
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
-                <HierarchicalDataTemplate DataType="{x:Type model:TestMethodNode}">
+                <HierarchicalDataTemplate
+                    DataType="{x:Type model:TestMethodNode}"
+                    ItemsSource="{Binding Children}"
+                    >
                     <StackPanel Orientation="Horizontal">
                         <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
                         <TextBlock Text="{Binding Name}" />
@@ -46,6 +49,16 @@
                             HorizontalAlignment="Right"
                             Command="{Binding CancelCommand}"
                             />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <HierarchicalDataTemplate
+                    DataType="{x:Type model:TestGroupNode}"
+                    ItemsSource="{Binding Children}"
+                    >
+                    <StackPanel Orientation="Horizontal">
+                        <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
+                        <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
