@@ -123,11 +123,7 @@ namespace EnumerableTest
         }
 
         /// <summary>
-        /// Tests that two values are equal,
-        /// using <see cref="StructuralComparisons.StructuralEqualityComparer"/>.
-        /// <para lang="ja">
-        /// <see cref="StructuralComparisons.StructuralEqualityComparer"/> を使用して、
-        /// 2つの値が等しいことを検査する。
+        /// Equivalent to <see cref="TestExtension.Is{X}(X, X)"/>.
         /// </para>
         /// </summary>
         /// <typeparam name="X"></typeparam>

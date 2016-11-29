@@ -42,7 +42,11 @@ namespace EnumerableTest
         }
 
         /// <summary>
-        /// Equivalent to <see cref="Test.Equal{X}(X, X)"/>.
+        /// Tests that two values are equal,
+        /// using <see cref="StructuralComparisons.StructuralEqualityComparer"/>.
+        /// <para lang="ja">
+        /// <see cref="StructuralComparisons.StructuralEqualityComparer"/> を使用して、
+        /// 2つの値が等しいことを検査する。
         /// </summary>
         /// <typeparam name="X"></typeparam>
         /// <param name="actual"></param>
