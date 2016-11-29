@@ -50,7 +50,7 @@
                     <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
                     <TextBlock Text="RUNTIME ERROR in Dispose" />
                 </StackPanel>
-                <ContentPresenter Content="{Binding DisposingErrorOrNull}" />
+                <Label Content="{Binding DisposingErrorOrNull}" />
             </StackPanel>
             <Separator />
             <TextBlock>
@@ -78,7 +78,7 @@
                 </Style>
             </Expander.Style>
 
-            <ContentPresenter Content="{Binding Assertion}" />
+            <Label Content="{Binding Assertion}" />
         </Expander>
     </DataTemplate>
 
@@ -104,7 +104,7 @@
                         <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
                         <TextBlock Text="RUNTIME ERROR" />
                     </StackPanel>
-                    <ContentPresenter Content="{Binding ExceptionOrNull}" />
+                    <Label Content="{Binding ExceptionOrNull}" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -192,10 +192,10 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
-            <ContentPresenter Grid.Column="1" Content="{Binding Expected}" />
+            <Label Grid.Column="1" Content="{Binding Expected}" />
 
             <TextBlock Grid.Row="1" Text="Actual" Style="{StaticResource LabelTextBlockStyle}" />
-            <ContentPresenter Grid.Row="1" Grid.Column="1" Content="{Binding Actual}" />
+            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Actual}" />
         </Grid>
     </DataTemplate>
 
@@ -211,10 +211,10 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Value" Style="{StaticResource LabelTextBlockStyle}" />
-            <ContentPresenter Grid.Column="1" Content="{Binding Value}" />
+            <Label Grid.Column="1" Content="{Binding Value}" />
 
             <TextBlock Grid.Row="1" Text="Predicate" Style="{StaticResource LabelTextBlockStyle}" />
-            <ContentPresenter Grid.Row="1" Grid.Column="1" Content="{Binding Predicate}" />
+            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Predicate}" />
         </Grid>
     </DataTemplate>
 
@@ -229,7 +229,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Exception" Style="{StaticResource LabelTextBlockStyle}" />
-            <ContentPresenter Grid.Column="1" Content="{Binding ExceptionOrNull}" />
+            <Label Grid.Column="1" Content="{Binding ExceptionOrNull}" />
         </Grid>
     </DataTemplate>
 
