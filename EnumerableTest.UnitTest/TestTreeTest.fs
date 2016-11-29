@@ -58,7 +58,7 @@ module TestTreeTest =
           override this.TestResults =
             testResults :> _
           override this.CancelCommand =
-            Command.never
+            ObservableCommand.never
           override this.Start() = ()
           override this.Dispose() = ()
       }

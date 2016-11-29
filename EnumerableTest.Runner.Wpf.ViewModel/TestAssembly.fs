@@ -28,7 +28,7 @@ module TestAssemblyModule =
 
 [<AbstractClass>]
 type TestAssembly() =
-  abstract CancelCommand: ICommand
+  abstract CancelCommand: ObservableCommand<unit>
 
   abstract SchemaUpdated: IObservable<TestSuiteSchemaDifference>
 
@@ -62,7 +62,7 @@ type FileLoadingTestAssembly(file: FileInfo) =
   let cancelCommand =
     currentDomain
     |> ReactiveProperty.map Option.isSome
-    |> ReactiveCommand.ofFunc cancel
+    |> ObservableCommand.ofFunc cancel
 
   let schemaUpdated =
     currentTestSchema.Pairwise().Select
@@ -114,7 +114,7 @@ type FileLoadingTestAssembly(file: FileInfo) =
     assemblyName
 
   override this.CancelCommand =
-    cancelCommand :> ICommand
+    cancelCommand
 
   member this.TestSchema =
     currentTestSchema :> IReadOnlyReactiveProperty<_>
