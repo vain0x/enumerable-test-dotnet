@@ -136,7 +136,7 @@ namespace EnumerableTest
         }
 
         /// <summary>
-        /// Equivalent to <see cref="TestExtension.Satisfies{X}(X, Expression{Func{X, bool}})"/>.
+        /// Equivalent to <see cref="TestExtension.TestSatisfy{X}(X, Expression{Func{X, bool}})"/>.
         /// </summary>
         /// <typeparam name="X"></typeparam>
         /// <param name="value"></param>

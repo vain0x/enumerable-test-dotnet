@@ -67,7 +67,7 @@ namespace EnumerableTest
         /// <param name="value"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public static Test Satisfies<X>(this X value, Expression<Func<X, bool>> predicate)
+        public static Test TestSatisfy<X>(this X value, Expression<Func<X, bool>> predicate)
         {
             return Test.Satisfy(value, predicate);
         }

@@ -96,9 +96,9 @@ The first assertion (``n == 1``) "is violated" and the second assertion (``n == 
 
 **EnumerableTest** が提供する表明メソッドには、普段使用する3つのメソッドと、特殊な用途に用いる2つのメソッドを提供しています。99.9% の表明は前者でまかなえるはずですので、ここではそれらだけ説明しましょう。1つは、さきほど紹介した `Is` です。
 
-The second is `Satisfies`, which is a generalized method of `Is`. It allows you to test *any* property of a value. The following code shows a test method that tests an array isn't empty.
+The second is `TestSatisfy`, which is a generalized method of `Is`. It allows you to test *any* property of a value. The following code shows a test method that tests an array isn't empty.
 
-2つ目の `Satisfies` は、`Is` を一般化したものです。これは、値の任意の性質をテストするのに使用できます。次のコードは、「配列の長さがゼロでない」ことをテストするテストメソッドです。
+2つ目の `TestSatisfy` は、`Is` を一般化したものです。これは、値の任意の性質をテストするのに使用できます。次のコードは、「配列の長さがゼロでない」ことをテストするテストメソッドです。
 
 ```csharp
     public int[] MakeArray()
@@ -108,7 +108,7 @@ The second is `Satisfies`, which is a generalized method of `Is`. It allows you 
 
     public IEnumerable<Test> test_MakeArray_returns_a_nonempty_array()
     {
-        yield return MakeArray().Satisfies(a => a.Length != 0);
+        yield return MakeArray().TestSatisfy(a => a.Length != 0);
     }
 ```
 
