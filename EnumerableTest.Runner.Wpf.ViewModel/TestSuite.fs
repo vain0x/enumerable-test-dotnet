@@ -27,9 +27,9 @@ module TestSuite =
     | (methods, None) ->
       methods |> Array.map (snd >> Async.map (Success >> TestResult.create typ))
 
-  let ofAssemblyAsObservable (assembly: Assembly) =
+  let ofTypesAsObservable types =
     let (types, asyncSeqSeq) =
-      assembly.GetTypes()
+      types
       |> Seq.filter (fun typ -> typ |> TestClassType.isTestClass)
       |> Seq.map (fun typ -> (typ, typ |> executeType))
       |> Seq.toArray
@@ -42,3 +42,7 @@ module TestSuite =
       |> Seq.collect id
       |> Observable.startParallel
     (schema, observable)
+
+  let ofAssemblyAsObservable (assembly: Assembly) =
+    assembly.GetTypes()
+    |> ofTypesAsObservable
