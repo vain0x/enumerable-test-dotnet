@@ -10,7 +10,7 @@ namespace EnumerableTest.Sandbox
     {
         public IEnumerable<Test> test_success()
         {
-            yield return Test.Equal(0, 0);
+            yield return 0.Is(0);
         }
     }
 }

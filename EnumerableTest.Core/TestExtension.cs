@@ -42,7 +42,11 @@ namespace EnumerableTest
         }
 
         /// <summary>
-        /// Equivalent to <see cref="Test.Equal{X}(X, X)"/>.
+        /// Tests that two values are equal,
+        /// using <see cref="StructuralComparisons.StructuralEqualityComparer"/>.
+        /// <para lang="ja">
+        /// <see cref="StructuralComparisons.StructuralEqualityComparer"/> を使用して、
+        /// 2つの値が等しいことを検査する。
         /// </summary>
         /// <typeparam name="X"></typeparam>
         /// <param name="actual"></param>
@@ -54,15 +58,33 @@ namespace EnumerableTest
         }
 
         /// <summary>
-        /// Equivalent to <see cref="Test.Satisfy{X}(X, Expression{Func{X, bool}})"/>.
+        /// Tests that a value satisfies a predicate.
+        /// <para lang="ja">
+        /// 値が条件を満たすことを検査する。
+        /// </para>
         /// </summary>
         /// <typeparam name="X"></typeparam>
         /// <param name="value"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public static Test Satisfies<X>(this X value, Expression<Func<X, bool>> predicate)
+        public static Test TestSatisfy<X>(this X value, Expression<Func<X, bool>> predicate)
         {
             return Test.Satisfy(value, predicate);
+        }
+
+        /// <summary>
+        /// Tests a sequence consists of the specified values.
+        /// <para lang="ja">
+        /// シーケンスが与えられた要素の列からなることを検査する。
+        /// </para>
+        /// </summary>
+        /// <typeparam name="X"></typeparam>
+        /// <param name="this"></param>
+        /// <param name="expected"></param>
+        /// <returns></returns>
+        public static Test TestSequence<X>(this IEnumerable<X> @this, params X[] expected)
+        {
+            return @this.ToArray().Is(expected);
         }
     }
 }

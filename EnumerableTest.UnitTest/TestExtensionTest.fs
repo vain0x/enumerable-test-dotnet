@@ -21,7 +21,7 @@ module TestExtensionTest =
     let passingCase =
       seq {
         yield (0).Is(0)
-        yield "abc".Satisfies(fun s -> s.StartsWith("a"))
+        yield "abc".TestSatisfy(fun s -> s.StartsWith("a"))
         yield Test.Catch(fun () -> exn() |> raise)
       }
       |> body
@@ -71,3 +71,13 @@ module TestExtensionTest =
       , fun a -> a.Length = 2
       , (=) e
       )
+
+  let ``test TestSequence`` =
+    test {
+      do!
+        TestExtension.TestSequence([0; 1; 2], 0, 1, 2)
+        |> assertSatisfies (fun a -> a.IsPassed)
+      do! 
+        TestExtension.TestSequence([], 0)
+        |> assertSatisfies (fun a -> a.IsPassed |> not)
+    }
