@@ -71,5 +71,20 @@ namespace EnumerableTest
         {
             return Test.Satisfy(value, predicate);
         }
+
+        /// <summary>
+        /// Tests a sequence consists of the specified values.
+        /// <para lang="ja">
+        /// シーケンスが与えられた要素の列からなることを検査する。
+        /// </para>
+        /// </summary>
+        /// <typeparam name="X"></typeparam>
+        /// <param name="this"></param>
+        /// <param name="expected"></param>
+        /// <returns></returns>
+        public static Test TestSequence<X>(this IEnumerable<X> @this, params X[] expected)
+        {
+            return @this.ToArray().Is(expected);
+        }
     }
 }

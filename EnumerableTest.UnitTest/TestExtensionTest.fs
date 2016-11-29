@@ -71,3 +71,13 @@ module TestExtensionTest =
       , fun a -> a.Length = 2
       , (=) e
       )
+
+  let ``test TestSequence`` =
+    test {
+      do!
+        TestExtension.TestSequence([0; 1; 2], 0, 1, 2)
+        |> assertSatisfies (fun a -> a.IsPassed)
+      do! 
+        TestExtension.TestSequence([], 0)
+        |> assertSatisfies (fun a -> a.IsPassed |> not)
+    }
