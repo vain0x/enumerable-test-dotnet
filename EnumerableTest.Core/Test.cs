@@ -136,10 +136,7 @@ namespace EnumerableTest
         }
 
         /// <summary>
-        /// Tests that a value satisfies a predicate.
-        /// <para lang="ja">
-        /// 値が条件を満たすことを検査する。
-        /// </para>
+        /// Equivalent to <see cref="TestExtension.Satisfies{X}(X, Expression{Func{X, bool}})"/>.
         /// </summary>
         /// <typeparam name="X"></typeparam>
         /// <param name="value"></param>
