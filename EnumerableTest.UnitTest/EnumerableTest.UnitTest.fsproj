@@ -54,6 +54,9 @@
     <Compile Include="TestMethodTest.fs" />
     <Compile Include="TestClassTest.fs" />
     <Compile Include="AsserionCountTest.fs" />
+    <Compile Include="TestTreeNodeTest.fs" />
+    <Compile Include="TestMethodNodeTest.fs" />
+    <Compile Include="FolderNodeTest.fs" />
     <Compile Include="TestTreeTest.fs" />
   </ItemGroup>
   <ItemGroup>
