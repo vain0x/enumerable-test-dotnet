@@ -13,7 +13,7 @@
         <StackPanel>
             <TextBlock Text="{Binding Name}" />
             <Separator />
-            <Label Content="{Binding TestStatistic.Value}" />
+            <ContentPresenter Content="{Binding TestStatistic.Value}" />
         </StackPanel>
     </DataTemplate>
 
@@ -21,17 +21,17 @@
         <StackPanel>
             <TextBlock Text="{Binding Name}" />
             <Separator />
-            <Label Content="{Binding LastResult.Value}" />
+            <ContentPresenter Content="{Binding LastResult.Value}" />
         </StackPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type model:TestGroupNode}">
-        <Label Content="{Binding GroupTest}" />
+        <ContentPresenter Content="{Binding GroupTest}" />
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type runner:TestMethod}">
         <StackPanel>
-            <Label Content="{Binding Result}" />
+            <ContentPresenter Content="{Binding Result}" />
             <StackPanel>
                 <StackPanel.Style>
                     <Style
@@ -170,7 +170,7 @@
                         >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding Value}" />
+                                <ContentPresenter Content="{Binding Value}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -271,7 +271,7 @@
                         >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding Value}" />
+                                <ContentPresenter Content="{Binding Value}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -288,12 +288,12 @@
                     <TextBlock Text="{Binding Exception.Message}" />
                 </StackPanel>
             </Expander.Header>
-            <Label Content="{Binding Exception}" />
+            <ContentPresenter Content="{Binding Exception}" />
         </Expander>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type sdk:MarshalResultValue}">
-        <Label Content="{Binding MarshalValue}" />
+        <ContentPresenter Content="{Binding MarshalValue}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type system:Exception}">
