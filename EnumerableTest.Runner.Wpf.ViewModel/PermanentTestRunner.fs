@@ -5,7 +5,20 @@ open System.Collections.Generic
 open System.IO
 open System.Reactive.Subjects
 
+[<AbstractClass>]
 type PermanentTestRunner() =
+  abstract AssemblyAdded: IObservable<TestAssembly>
+
+  abstract Dispose: unit -> unit
+
+  interface IDisposable with
+    override this.Dispose() =
+      this.Dispose()
+
+[<Sealed>]
+type FileLoadingPermanentTestRunner() =
+  inherit PermanentTestRunner()
+
   let fileNames = HashSet<_>()
 
   let assemblies = ResizeArray()
@@ -13,7 +26,7 @@ type PermanentTestRunner() =
   let assemblyAdded =
     new Subject<_>()
 
-  member this.AssemblyAdded =
+  override this.AssemblyAdded =
     assemblyAdded :> IObservable<_>
 
   member this.LoadFile(file: FileInfo) =
@@ -23,11 +36,7 @@ type PermanentTestRunner() =
       assemblyAdded.OnNext(assembly)
       assembly.Start()
 
-  member this.Dispose() =
+  override this.Dispose() =
     assemblyAdded.Dispose()
     for assembly in assemblies do
       assembly.Dispose()
-
-  interface IDisposable with
-    override this.Dispose() =
-      this.Dispose()
