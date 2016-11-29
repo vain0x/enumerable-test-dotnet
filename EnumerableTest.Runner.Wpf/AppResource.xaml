@@ -11,6 +11,7 @@
     <Style x:Key="DefaultTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Meiryo" />
         <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
         
     <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStyle}" />
