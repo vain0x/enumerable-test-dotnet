@@ -6,6 +6,7 @@ open System.Reactive.Disposables
 open System.Reactive.Linq
 open System.Reactive.Subjects
 open System.Reflection
+open System.Windows.Input
 open Reactive.Bindings
 open Reactive.Bindings.Extensions
 open EnumerableTest.Sdk
@@ -25,7 +26,26 @@ module TestAssemblyModule =
     | _ ->
       None
 
-type TestAssembly(file: FileInfo) =
+[<AbstractClass>]
+type TestAssembly() =
+  abstract CancelCommand: ICommand
+
+  abstract SchemaUpdated: IObservable<TestSuiteSchemaDifference>
+
+  abstract TestResults: IObservable<TestResult>
+
+  abstract Start: unit -> unit
+
+  abstract Dispose: unit -> unit
+
+  interface IDisposable with
+    override this.Dispose() =
+      this.Dispose()
+
+[<Sealed>]
+type FileLoadingTestAssembly(file: FileInfo) =
+  inherit TestAssembly()
+
   let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
 
   let currentDomain = ReactiveProperty.create None
@@ -93,24 +113,20 @@ type TestAssembly(file: FileInfo) =
   member this.AssemblyName =
     assemblyName
 
-  member this.CancelCommand =
-    cancelCommand
+  override this.CancelCommand =
+    cancelCommand :> ICommand
 
   member this.TestSchema =
     currentTestSchema :> IReadOnlyReactiveProperty<_>
 
-  member this.SchemaUpdated =
-    schemaUpdated :> IObservable<_>
+  override this.SchemaUpdated =
+    schemaUpdated
 
-  member this.TestResults =
+  override this.TestResults =
     testResults :> IObservable<_>
 
-  member this.Start() =
+  override this.Start() =
     start ()
 
-  member this.Dispose() =
+  override this.Dispose() =
     subscription.Dispose()
-
-  interface IDisposable with
-    override this.Dispose() =
-      this.Dispose()

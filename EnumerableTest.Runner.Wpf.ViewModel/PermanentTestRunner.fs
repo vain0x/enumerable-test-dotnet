@@ -18,7 +18,7 @@ type PermanentTestRunner() =
 
   member this.LoadFile(file: FileInfo) =
     if fileNames.Add(file.FullName) then
-      let assembly = new TestAssembly(file)
+      let assembly = new FileLoadingTestAssembly(file)
       assemblies.Add(assembly)
       assemblyAdded.OnNext(assembly)
       assembly.Start()
