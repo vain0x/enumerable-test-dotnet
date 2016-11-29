@@ -4,9 +4,9 @@ open System
 open System.Diagnostics
 open System.Reflection
 open System.Threading
+open Basis.Core
 open EnumerableTest
 open EnumerableTest.Sdk
-open Basis.Core
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassType =
@@ -37,9 +37,37 @@ module TestMethodSchema =
     }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TestClassPath =
+  let ofFullName fullName =
+    let namespacePath =
+      fullName |> Str.splitBy "."
+    let classPath =
+      fullName |> Str.splitBy "." |> Seq.last |> Str.splitBy "+"
+    {
+      NamespacePath =
+        namespacePath.[0..(namespacePath.Length - 2)]
+      ClassPath =
+        classPath.[0..(classPath.Length - 2)]
+      Name =
+        classPath.[classPath.Length - 1]
+    }
+
+  let ofType (typ: Type) =
+    typ.FullName |> ofFullName
+
+  let fullPath (this: TestClassPath) =
+    [
+      yield! this.NamespacePath
+      yield! this.ClassPath
+      yield this.Name
+    ]
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassSchema =
   let ofType (typ: Type): TestClassSchema =
     {
+      Path =
+        typ |> TestClassPath.ofType
       TypeFullName                = typ.FullName
       Methods                     = 
         typ

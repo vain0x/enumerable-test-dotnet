@@ -21,17 +21,24 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TreeView x:Name="treeView" ItemsSource="{Binding Children}">
+        <TreeView x:Name="treeView" ItemsSource="{Binding Root.Children}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate
-                    DataType="{x:Type model:TestAssemblyNode}"
+                    DataType="{x:Type model:FolderNode}"
                     ItemsSource="{Binding Children}"
                     >
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <HierarchicalDataTemplate
+                    DataType="{x:Type model:TestMethodNode}"
+                    ItemsSource="{Binding Children}"
+                    >
+                    <StackPanel Orientation="Horizontal">
+                        <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
                         <TextBlock Text="{Binding Name}" />
                         <Button
                             Grid.Column="1"
@@ -40,31 +47,25 @@
                             FontSize="8"
                             Margin="10,0,0,0"
                             HorizontalAlignment="Right"
+                            Visibility="{Binding CancelCommand.CanExecute.Value, Converter={StaticResource BooleanToVisibilityConverter}}"
                             Command="{Binding CancelCommand}"
                             />
-                    </Grid>
-                </HierarchicalDataTemplate>
-                
-                <HierarchicalDataTemplate
-                    DataType="{x:Type model:TestClassNode}"
-                    ItemsSource="{Binding Children}"
-                    >
-                    <StackPanel Orientation="Horizontal">
-                        <local:TestStatusMark DataContext="{Binding TestStatus.Value}" />
-                        <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
-                <HierarchicalDataTemplate DataType="{x:Type model:TestMethodNode}">
+                <HierarchicalDataTemplate
+                    DataType="{x:Type model:TestGroupNode}"
+                    ItemsSource="{Binding Children}"
+                    >
                     <StackPanel Orientation="Horizontal">
-                        <local:TestStatusMark DataContext="{Binding TestStatus.Value}" />
+                        <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding (model:INodeViewModel.IsExpanded).Value}" Value="True">
+                        <DataTrigger Binding="{Binding IsExpanded.Value}" Value="True">
                             <Setter Property="IsExpanded" Value="True" />
                         </DataTrigger>
                     </Style.Triggers>

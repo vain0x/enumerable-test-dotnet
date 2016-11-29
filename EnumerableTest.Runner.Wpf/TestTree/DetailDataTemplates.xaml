@@ -9,15 +9,7 @@
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     >
     <!-- Nodes -->
-    <DataTemplate DataType="{x:Type model:TestAssemblyNode}">
-        <StackPanel>
-            <TextBlock Text="{Binding Name}" />
-            <Separator />
-            <Label Content="{Binding TestStatistic.Value}" />
-        </StackPanel>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type model:TestClassNode}">
+    <DataTemplate DataType="{x:Type model:FolderNode}">
         <StackPanel>
             <TextBlock Text="{Binding Name}" />
             <Separator />
@@ -33,6 +25,10 @@
         </StackPanel>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type model:TestGroupNode}">
+        <Label Content="{Binding GroupTest}" />
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type runner:TestMethod}">
         <StackPanel>
             <Label Content="{Binding Result}" />

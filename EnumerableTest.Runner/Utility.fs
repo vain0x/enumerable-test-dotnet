@@ -8,6 +8,13 @@ module Misc =
      f x
      x
 
+  let tryCast<'x, 'y> (x: 'x) =
+    match x |> box with
+    | :? 'y as y ->
+      Some y
+    | _ ->
+      None
+
 module Seq =
   let indexed xs =
     xs |> Seq.mapi (fun i x -> (i, x))
