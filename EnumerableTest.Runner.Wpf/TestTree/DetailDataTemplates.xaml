@@ -180,15 +180,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type runner:MarshalResultException}">
-        <Expander>
-            <Expander.Header>
-                <StackPanel Orientation="Horizontal">
-                    <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
-                    <TextBlock Text="{Binding Exception.Message}" />
-                </StackPanel>
-            </Expander.Header>
-            <ContentPresenter Content="{Binding Exception}" />
-        </Expander>
+        <ContentPresenter Content="{Binding Exception}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type runner:MarshalResultValue}">
@@ -196,8 +188,14 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type system:Exception}">
-        <Border Style="{StaticResource RoundBorderStyle}">
+        <Expander>
+            <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                    <TextBlock Text="{Binding Message}" />
+                </StackPanel>
+            </Expander.Header>
             <TextBlock TextWrapping="Wrap" Margin="10" Text="{Binding}" />
-        </Border>
+        </Expander>
     </DataTemplate>
 </ResourceDictionary>
