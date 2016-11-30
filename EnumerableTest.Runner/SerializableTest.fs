@@ -62,7 +62,10 @@ module SerializableAssertion =
       Message =
         assertion.MessageOrNull |> Option.ofObj
       Data =
-        assertion.Data |> Seq.toArray
+        [|
+          for KeyValue (key, value) in assertion.Data do
+            yield KeyValuePair<_, _>(key, MarshalValue.ofObj value)
+        |]
     }
 
 [<AutoOpen>]

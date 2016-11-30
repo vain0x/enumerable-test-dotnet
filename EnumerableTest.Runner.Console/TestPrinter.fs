@@ -43,7 +43,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
               yield message
             | _ -> ()
             for KeyValue (key, value) in result.Data do
-              yield sprintf "%s: %A" key value
+              yield sprintf "%s: %s" key value.String
           }
           |> String.concat "\r\n"
         return! printer.WriteLineAsync(message)

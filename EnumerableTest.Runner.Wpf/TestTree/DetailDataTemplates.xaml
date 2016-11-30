@@ -157,7 +157,7 @@
     </DataTemplate>
 
     <!-- MarshalValue -->
-    <DataTemplate DataType="{x:Type sdk:MarshalValue}">
+    <DataTemplate DataType="{x:Type runner:MarshalValue}">
         <Expander>
             <Expander.Header>
                 <TextBlock>
@@ -179,7 +179,7 @@
         </Expander>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:MarshalResultException}">
+    <DataTemplate DataType="{x:Type runner:MarshalResultException}">
         <Expander>
             <Expander.Header>
                 <StackPanel Orientation="Horizontal">
@@ -191,7 +191,7 @@
         </Expander>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:MarshalResultValue}">
+    <DataTemplate DataType="{x:Type runner:MarshalResultValue}">
         <ContentPresenter Content="{Binding MarshalValue}" />
     </DataTemplate>
 

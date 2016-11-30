@@ -61,14 +61,9 @@ namespace EnumerableTest
                 IEnumerable<KeyValuePair<string, object>> data
             )
         {
-            var marshalData =
-                (from kv in data
-                 let value = MarshalValue.FromObject(kv.Value, isPassed)
-                 select KeyValuePair.Create(kv.Key, value)
-                 ).ToArray();
-            return OfAssertion(name, new Assertion(isPassed, messageOrNull, marshalData));
+            return OfAssertion(name, new Assertion(isPassed, messageOrNull, data));
         }
-
+    
         /// <summary>
         /// Creates a passing unit test.
         /// <para lang="ja">
@@ -134,7 +129,7 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test FromResult(string name, bool isPassed, string message)
         {
-            var data = Enumerable.Empty<KeyValuePair<string, MarshalValue>>();
+            var data = Enumerable.Empty<KeyValuePair<string, object>>();
             return OfAssertion(name, new Assertion(isPassed, message, data));
         }
         #endregion
