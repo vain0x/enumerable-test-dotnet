@@ -9,8 +9,8 @@ module TestTest =
   let passedTest = Test.Pass("pass")
   let violatedTest = Test.FromResult("violate", false, "it violated")
 
-  let assertion1 = TrueAssertion.Instance
-  let assertion2 = CustomAssertion(false, "assertion2 violated", [||])
+  let assertion1 = Assertion.Pass
+  let assertion2 = Assertion(false, "assertion2 violated", [])
   let assertionTest1 = Test.OfAssertion("assertion1", assertion1)
   let assertionTest2 = Test.OfAssertion("assertion2", assertion2)
   let groupTest =

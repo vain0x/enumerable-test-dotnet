@@ -53,6 +53,22 @@ namespace EnumerableTest
             return new AssertionTest(name, result);
         }
 
+        static Test
+            OfAssertion(
+                string name,
+                bool isPassed,
+                string messageOrNull,
+                IEnumerable<KeyValuePair<string, object>> data
+            )
+        {
+            var marshalData =
+                (from kv in data
+                 let value = MarshalValue.FromObject(kv.Value, isPassed)
+                 select KeyValuePair.Create(kv.Key, value)
+                 ).ToArray();
+            return OfAssertion(name, new Assertion(isPassed, messageOrNull, marshalData));
+        }
+
         /// <summary>
         /// Creates a passing unit test.
         /// <para lang="ja">
@@ -63,7 +79,7 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test Pass(string name)
         {
-            return OfAssertion(name, TrueAssertion.Instance);
+            return OfAssertion(name, Assertion.Pass);
         }
 
         /// <summary>
@@ -85,7 +101,25 @@ namespace EnumerableTest
                 IEnumerable<KeyValuePair<string, object>> data
             )
         {
-            return OfAssertion(name, new CustomAssertion(isPassed, message, data));
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            return OfAssertion(name, isPassed, message, data);
+        }
+
+        /// <summary>
+        /// Creates a unit test.
+        /// <para lang="ja">
+        /// 単体テストの結果を生成する。
+        /// </para>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="isPassed"></param>
+        /// <param name="message"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static Test
+            FromResult(string name, bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
+        {
+            return OfAssertion(name, isPassed, null, data);
         }
 
         /// <summary>
@@ -100,8 +134,8 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test FromResult(string name, bool isPassed, string message)
         {
-            var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return FromResult(name, isPassed, message, data);
+            var data = Enumerable.Empty<KeyValuePair<string, MarshalValue>>();
+            return OfAssertion(name, new Assertion(isPassed, message, data));
         }
         #endregion
 
@@ -119,7 +153,14 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test Equal<X>(X expected, X actual, IEqualityComparer comparer)
         {
-            return OfAssertion(nameof(Equal), new EqualAssertion(actual, expected, comparer));
+            var isPassed = comparer.Equals(actual, expected);
+            var data =
+                new[]
+                {
+                    KeyValuePair.Create("Expected", (object)expected),
+                    KeyValuePair.Create("Actual", (object)actual),
+                };
+            return FromResult(nameof(Equal), isPassed, data);
         }
 
         /// <summary>
@@ -145,7 +186,14 @@ namespace EnumerableTest
         public static Test Satisfy<X>(X value, Expression<Func<X, bool>> predicate)
         {
             var isPassed = predicate.Compile().Invoke(value);
-            return OfAssertion(nameof(Satisfy), new SatisfyAssertion(value, predicate, isPassed));
+            var message = "A value should satisfy a predicate but didn't.";
+            var data =
+                new[]
+                {
+                    KeyValuePair.Create("Value", (object)value),
+                    KeyValuePair.Create("Predicate", (object)predicate),
+                };
+            return FromResult(nameof(Satisfy), isPassed, message, data);
         }
 
         /// <summary>
@@ -160,16 +208,24 @@ namespace EnumerableTest
         public static Test Catch<E>(Action f)
             where E : Exception
         {
-            var name = nameof(Catch);
+            var exceptionOrNull = default(Exception);
             try
             {
                 f();
-                return OfAssertion(name, new CatchAssertion(typeof(E), null));
             }
             catch (E exception)
             {
-                return OfAssertion(name, new CatchAssertion(typeof(E), exception));
+                exceptionOrNull = exception;
             }
+
+            var message = "An exception of a type should be thrown but didn't.";
+            var data =
+                new[]
+                {
+                    KeyValuePair.Create("Type", (object)typeof(E)),
+                    KeyValuePair.Create("ExceptionOrNull", (object)exceptionOrNull),
+                };
+            return FromResult(nameof(Catch), !ReferenceEquals(exceptionOrNull, null), message, data);
         }
 
         /// <summary>

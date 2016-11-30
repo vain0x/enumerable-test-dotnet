@@ -11,7 +11,7 @@ module AsserionCountTest =
     let passedCase =
       test {
         do!
-          TrueAssertion()
+          Assertion.Pass
           |> AssertionCount.ofAssertion
           |> assertEquals AssertionCount.onePassed
       }
@@ -19,7 +19,7 @@ module AsserionCountTest =
     let violatedCase =
       test {
         do!
-          CustomAssertion(false, "violated", Seq.empty)
+          Assertion(false, "violated", Seq.empty)
           |> AssertionCount.ofAssertion
           |> assertEquals AssertionCount.oneViolated
       }

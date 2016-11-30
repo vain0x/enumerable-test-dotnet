@@ -136,18 +136,16 @@
         </StackPanel>
     </DataTemplate>
 
-    <!-- Assertions-->
-    <DataTemplate DataType="{x:Type sdk:TrueAssertion}">
-        <TextBlock Text="Passed." />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type sdk:CustomAssertion}">
+    <DataTemplate DataType="{x:Type sdk:Assertion}">
         <StackPanel>
-            <TextBlock Text="{Binding Message}">
+            <TextBlock Text="{Binding MessageOrNull}">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStyle}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsPassed}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding MessageOrNull}" Value="{x:Null}">
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -156,60 +154,6 @@
             </TextBlock>
             <local:KeyValueGrid ItemsSource="{Binding Data}" />
         </StackPanel>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type sdk:EqualAssertion}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Expected}" />
-
-            <TextBlock Grid.Row="1" Text="Actual" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Actual}" />
-        </Grid>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type sdk:SatisfyAssertion}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="Value" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Value}" />
-
-            <TextBlock Grid.Row="1" Text="Predicate" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Predicate}" />
-        </Grid>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type sdk:CatchAssertion}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="Exception" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding ExceptionOrNull}" />
-        </Grid>
     </DataTemplate>
 
     <!-- MarshalValue -->
