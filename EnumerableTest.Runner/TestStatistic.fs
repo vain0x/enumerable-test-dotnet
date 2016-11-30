@@ -52,3 +52,6 @@ module TestStatistic =
       AssertionCount            = testMethod |> AssertionCount.ofTestMethod
       Duration                  = testMethod.Duration
     }
+
+  let isPassed (this: TestStatistic) =
+    this.AssertionCount |> AssertionCount.isPassed

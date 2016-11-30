@@ -51,7 +51,8 @@ type TestMethodNode(testMethodSchema: TestMethodSchema, cancelCommand: ICommand)
   override this.Children = children
 
   override val IsExpanded =
-    ReactiveProperty.create false :> IReadOnlyReactiveProperty<_>
+    testStatistic |> ReactiveProperty.map (TestStatistic.isPassed >> not)
+    :> IReadOnlyReactiveProperty<_>
 
   member this.UpdateSchema(_) =
     lastResult.Value <- None
