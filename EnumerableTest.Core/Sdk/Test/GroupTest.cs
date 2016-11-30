@@ -9,7 +9,6 @@ namespace EnumerableTest.Sdk
     /// <summary>
     /// Represents a unit test which consists of 0+ tests.
     /// </summary>
-    [Serializable]
     public sealed class GroupTest
         : Test
     {

@@ -9,7 +9,6 @@ namespace EnumerableTest.Sdk
     /// <summary>
     /// Represents a unit test which consists of a single assertion.
     /// </summary>
-    [Serializable]
     public sealed class AssertionTest
         : Test
     {

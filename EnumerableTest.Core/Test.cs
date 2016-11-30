@@ -15,7 +15,6 @@ namespace EnumerableTest
     /// 単体テストの結果を表す。
     /// </para>
     /// </summary>
-    [Serializable]
     public abstract class Test
     {
         /// <summary>

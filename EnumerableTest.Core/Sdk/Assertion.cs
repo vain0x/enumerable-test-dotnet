@@ -14,7 +14,6 @@ namespace EnumerableTest.Sdk
     /// 単体テストの表明を表す。
     /// </para>
     /// </summary>
-    [Serializable]
     public sealed class Assertion
     {
         /// <summary>
