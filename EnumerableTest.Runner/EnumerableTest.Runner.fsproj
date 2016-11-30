@@ -46,6 +46,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Utility.fs" />
     <Compile Include="GroupSig.fs" />
+    <Compile Include="SerializableTest.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="TestExtension.fs" />
     <Compile Include="TestMethod.fs" />
