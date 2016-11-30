@@ -26,6 +26,14 @@ namespace EnumerableTest.Sdk
         public abstract bool IsPassed { get; }
 
         /// <summary>
+        /// Gets the message related to the assertion.
+        /// <para lang="ja">
+        /// 表明に関連するメッセージを取得する。
+        /// </para>
+        /// </summary>
+        public virtual string MessageOrNull => null;
+
+        /// <summary>
         /// Gets the data related to the assertion.
         /// <para lang="ja">
         /// 表明に関連するデータを取得する。
@@ -82,6 +90,14 @@ namespace EnumerableTest.Sdk
         /// </para>
         /// </summary>
         public string Message { get; }
+
+        /// <summary>
+        /// Gets the message related to the assertion.
+        /// <para lang="ja">
+        /// 表明に関連するメッセージを取得する。
+        /// </para>
+        /// </summary>
+        public override string MessageOrNull => Message;
 
         readonly KeyValuePair<string, MarshalValue>[] data;
 
