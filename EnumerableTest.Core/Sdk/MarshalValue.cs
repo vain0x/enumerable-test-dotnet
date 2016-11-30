@@ -97,30 +97,6 @@ namespace EnumerableTest.Sdk
     }
 
     /// <summary>
-    /// Represents a marshal property.
-    /// </summary>
-    [Serializable]
-    public class MarshalProperty
-    {
-        /// <summary>
-        /// Gets the property name.
-        /// </summary>
-        public string Key { get; }
-
-        /// <summary>
-        /// Gets a value which represents the value of the property
-        /// or an exception thrown by the getter.
-        /// </summary>
-        public MarshalResult Value { get; }
-
-        internal MarshalProperty(string name, Func<MarshalValue> value)
-        {
-            Key = name;
-            Value = MarshalResult.Create(value);
-        }
-    }
-
-    /// <summary>
     /// Represents a marshal value.
     /// </summary>
     [Serializable]
@@ -139,7 +115,7 @@ namespace EnumerableTest.Sdk
         /// <summary>
         /// Gets the properties of the object.
         /// </summary>
-        public MarshalProperty[] Properties { get; }
+        public KeyValuePair<string, MarshalResult>[] Properties { get; }
 
         /// <summary>
         /// See <see cref="String"/>.
@@ -150,10 +126,15 @@ namespace EnumerableTest.Sdk
             return String;
         }
 
-        static MarshalProperty[] EmptyProperties { get; } =
-            new MarshalProperty[] { };
+        static KeyValuePair<string, MarshalResult>[] EmptyProperties { get; } =
+            new KeyValuePair<string, MarshalResult>[] { };
 
-        MarshalValue(string typeName, string @string, MarshalProperty[] properties)
+        static KeyValuePair<string, MarshalResult> CreateProperty(string name, Func<MarshalValue> get)
+        {
+            return new KeyValuePair<string, MarshalResult>(name, MarshalResult.Create(get));
+        }
+
+        MarshalValue(string typeName, string @string, KeyValuePair<string, MarshalResult>[] properties)
         {
             TypeName = typeName;
             String = @string;
@@ -182,12 +163,12 @@ namespace EnumerableTest.Sdk
             var enumerable = obj as IEnumerable;
             if (enumerable != null && !(obj is string))
             {
-                var items = new List<MarshalProperty>();
+                var items = new List<KeyValuePair<string, MarshalResult>>();
                 var i = 0;
                 foreach (var element in enumerable)
                 {
                     var propertyName = string.Concat("[", i, "]");
-                    items.Add(new MarshalProperty(propertyName, () => fromObject(element)));
+                    items.Add(CreateProperty(propertyName, () => fromObject(element)));
                     i++;
                 }
                 var join =
@@ -204,10 +185,10 @@ namespace EnumerableTest.Sdk
                 var properties =
                     type.GetProperties(bindingFlags)
                     .Where(pi => pi.GetMethod != null)
-                    .Select(pi => new MarshalProperty(pi.Name, () => fromObject(pi.GetValue(obj))));
+                    .Select(pi => CreateProperty(pi.Name, () => fromObject(pi.GetValue(obj))));
                 var fields =
                     type.GetFields(bindingFlags)
-                    .Select(fi => new MarshalProperty(fi.Name, () => fromObject(fi.GetValue(obj))));
+                    .Select(fi => CreateProperty(fi.Name, () => fromObject(fi.GetValue(obj))));
                 var items = properties.Concat(fields).ToArray();
                 return new MarshalValue(type.FullName, obj.ToString(), items);
             }
