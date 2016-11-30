@@ -24,6 +24,14 @@ namespace EnumerableTest.Sdk
         /// </para>
         /// </summary>
         public abstract bool IsPassed { get; }
+
+        /// <summary>
+        /// Gets the data related to the assertion.
+        /// <para lang="ja">
+        /// 表明に関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public abstract IEnumerable<KeyValuePair<string, MarshalValue>> Data { get; }
     }
 
     /// <summary>
@@ -43,6 +51,15 @@ namespace EnumerableTest.Sdk
         /// </para>
         /// </summary>
         public override bool IsPassed => true;
+
+        /// <summary>
+        /// Gets the data related to the assertion.
+        /// <para lang="ja">
+        /// 表明に関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public override IEnumerable<KeyValuePair<string, MarshalValue>> Data =>
+            Enumerable.Empty<KeyValuePair<string, MarshalValue>>();
 
         internal static Assertion Instance { get; } =
             new TrueAssertion();
@@ -66,13 +83,15 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public string Message { get; }
 
+        readonly KeyValuePair<string, MarshalValue>[] data;
+
         /// <summary>
         /// Gets the data related to the assertion.
         /// <para lang="ja">
         /// 表明に関連するデータを取得する。
         /// </para>
         /// </summary>
-        public KeyValuePair<string, MarshalValue>[] Data { get; }
+        public override IEnumerable<KeyValuePair<string, MarshalValue>> Data => data;
 
         /// <summary>
         /// Gets a value indicating whether the assertion was true.
@@ -86,10 +105,10 @@ namespace EnumerableTest.Sdk
         {
             IsPassed = isPassed;
             Message = message;
-            Data =
+            this.data =
                 (from kv in data
                  let value = MarshalValue.FromObject(kv.Value, IsPassed)
-                 select new KeyValuePair<string, MarshalValue>(kv.Key, value)
+                 select KeyValuePair.Create(kv.Key, value)
                 ).ToArray();
         }
     }
@@ -136,6 +155,19 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed { get; }
 
+        /// <summary>
+        /// Gets the data related to the assertion.
+        /// <para lang="ja">
+        /// 表明に関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public override IEnumerable<KeyValuePair<string, MarshalValue>> Data =>
+            new[]
+            {
+                KeyValuePair.Create("Expected", Expected),
+                KeyValuePair.Create("Actual", Actual),
+            };
+
         internal EqualAssertion(object actual, object expected, IEqualityComparer comparer)
         {
             IsPassed = comparer.Equals(actual, expected);
@@ -172,6 +204,19 @@ namespace EnumerableTest.Sdk
         /// </para>
         /// </summary>
         public override bool IsPassed { get; }
+
+        /// <summary>
+        /// Gets the data related to the assertion.
+        /// <para lang="ja">
+        /// 表明に関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public override IEnumerable<KeyValuePair<string, MarshalValue>> Data =>
+            new[]
+            {
+                KeyValuePair.Create("Value", Value),
+                KeyValuePair.Create("Predicate", MarshalValue.FromObject(Predicate, true)),
+            };
 
         internal SatisfyAssertion(object value, Expression predicate, bool isPassed)
         {
@@ -214,6 +259,19 @@ namespace EnumerableTest.Sdk
         /// </para>
         /// </summary>
         public override bool IsPassed => !ReferenceEquals(ExceptionOrNull, null);
+
+        /// <summary>
+        /// Gets the data related to the assertion.
+        /// <para lang="ja">
+        /// 表明に関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public override IEnumerable<KeyValuePair<string, MarshalValue>> Data =>
+            new[]
+            {
+                KeyValuePair.Create("Type", MarshalValue.FromObject(Type, true)),
+                KeyValuePair.Create("ExceptionOrNull", MarshalValue.FromObject(ExceptionOrNull, false)),
+            };
 
         internal CatchAssertion(Type type, Exception exceptionOrNull)
         {

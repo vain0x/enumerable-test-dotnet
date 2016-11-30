@@ -131,7 +131,7 @@ namespace EnumerableTest.Sdk
 
         static KeyValuePair<string, MarshalResult> CreateProperty(string name, Func<MarshalValue> get)
         {
-            return new KeyValuePair<string, MarshalResult>(name, MarshalResult.Create(get));
+            return KeyValuePair.Create(name, MarshalResult.Create(get));
         }
 
         MarshalValue(string typeName, string @string, KeyValuePair<string, MarshalResult>[] properties)
