@@ -48,7 +48,6 @@
     <Compile Include="GroupSig.fs" />
     <Compile Include="SerializableTest.fs" />
     <Compile Include="Types.fs" />
-    <Compile Include="TestExtension.fs" />
     <Compile Include="TestMethod.fs" />
     <Compile Include="TestClass.fs" />
     <Compile Include="AssertionCount.fs" />

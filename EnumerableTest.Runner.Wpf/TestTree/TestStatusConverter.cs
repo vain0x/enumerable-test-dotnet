@@ -26,7 +26,7 @@ namespace EnumerableTest.Runner.Wpf
                 return TestStatusModule.ofTestStatistic(statistic);
             }
 
-            var assertionTest = value as AssertionTest;
+            var assertionTest = value as SerializableAssertionTest;
             if (assertionTest != null)
             {
                 return TestStatusModule.ofAssertion(assertionTest.Assertion);

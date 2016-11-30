@@ -6,16 +6,16 @@ open EnumerableTest.Runner
 open EnumerableTest.Sdk
 
 [<Sealed>]
-type TestGroupNode(groupTest: GroupTest) =
+type TestGroupNode(groupTest: SerializableGroupTest) =
   inherit TestTreeNode()
 
   let children =
     groupTest.Tests
     |> Seq.choose
       (function
-        | :? GroupTest as groupTest ->
+        | GroupTest groupTest ->
           TestGroupNode(groupTest) :> TestTreeNode |> Some
-        | _ ->
+        | AssertionTest _ ->
           None
       )
     |> ObservableCollection

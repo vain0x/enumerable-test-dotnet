@@ -60,7 +60,7 @@
     </DataTemplate>
 
     <!-- Tests -->
-    <DataTemplate DataType="{x:Type sdk:AssertionTest}">
+    <DataTemplate DataType="{x:Type runner:SerializableAssertionTest}">
         <Expander>
             <Expander.Header>
                 <StackPanel Orientation="Horizontal">
@@ -82,7 +82,7 @@
         </Expander>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:GroupTest}">
+    <DataTemplate DataType="{x:Type runner:SerializableGroupTest}">
         <GroupBox Header="{Binding Name}">
             <StackPanel>
                 <ItemsControl ItemsSource="{Binding Tests}" />
@@ -136,7 +136,7 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:Assertion}">
+    <DataTemplate DataType="{x:Type runner:SerializableAssertion}">
         <StackPanel>
             <TextBlock Text="{Binding MessageOrNull}">
                 <TextBlock.Style>

@@ -12,7 +12,7 @@ type TestStatus =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestStatus =
-  let ofAssertion (assertion: Assertion) =
+  let ofAssertion (assertion: SerializableAssertion) =
     if assertion.IsPassed
       then Passed
       else Violated

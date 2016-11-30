@@ -88,7 +88,7 @@ module TestMethod =
 
   let ofInstantiationError (e: exn) =
     let name = "default constructor"
-    let result = new GroupTest(name, [||], e)
+    let result = SerializableGroupTest(name, [||], Some e)
     ofResult name result None TimeSpan.Zero
 
   /// Creates an instance of TestMethod
@@ -101,7 +101,11 @@ module TestMethod =
       tests.ToTestGroup(m.Name)
     let disposingError =
       Option.tryCatch (fun () -> instance |> Disposable.dispose)
-    ofResult m.Name groupTest disposingError stopwatch.Elapsed
+    let duration = stopwatch.Elapsed
+    // Convert the result to be serializable.
+    let groupTest =
+      groupTest |> SerializableTest.ofGroupTest
+    ofResult m.Name groupTest disposingError duration
 
   /// Builds computations to create TestMethod instance
   /// for each test method from a test class type.

@@ -27,7 +27,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
       do! printer.WriteLineAsync(string e)
     }
 
-  let printAssertionAsync i testName (result: Assertion) =
+  let printAssertionAsync i testName (result: SerializableAssertion) =
     async {
       let mark =
         if result.IsPassed
@@ -38,8 +38,10 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
       if result.IsPassed |> not then
         let message =
           seq {
-            if result.MessageOrNull |> isNull |> not then
-              yield result.MessageOrNull
+            match result.Message with
+            | Some message ->
+              yield message
+            | _ -> ()
             for KeyValue (key, value) in result.Data do
               yield sprintf "%s: %A" key value
           }
@@ -47,7 +49,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
         return! printer.WriteLineAsync(message)
     }
 
-  let rec printTestAsync i (test: Test) =
+  let rec printTestAsync i (test: SerializableTest) =
     async {
       match test with
       | AssertionTest test ->
