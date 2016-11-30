@@ -154,28 +154,7 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Data}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        CellStyle="{StaticResource DataGridCellStyle}"
-                        IsReadOnly="True"
-                        Header="Key"
-                        Binding="{Binding Key}"
-                        />
-                    <DataGridTemplateColumn
-                        CellStyle="{StaticResource DataGridCellStyle}"
-                        IsReadOnly="True"
-                        Width="*"
-                        Header="Value"
-                        >
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ContentPresenter Content="{Binding Value}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+            <local:KeyValueGrid ItemsSource="{Binding Data}" />
         </StackPanel>
     </DataTemplate>
 
@@ -252,31 +231,7 @@
                     </Style.Triggers>
                 </Style>
             </Expander.Style>
-            <DataGrid
-                AutoGenerateColumns="False"
-                ItemsSource="{Binding Properties}"
-                >
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Header="Key"
-                        Binding="{Binding Key}"
-                        CellStyle="{StaticResource DataGridCellStyle}"
-                        IsReadOnly="True"
-                        />
-                    <DataGridTemplateColumn
-                        Header="Value"
-                        Width="*"
-                        CellStyle="{StaticResource DataGridCellStyle}"
-                        IsReadOnly="True"
-                        >
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ContentPresenter Content="{Binding Value}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+            <local:KeyValueGrid ItemsSource="{Binding Properties}" />
         </Expander>
     </DataTemplate>
 

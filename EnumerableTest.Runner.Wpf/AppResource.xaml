@@ -137,4 +137,29 @@
     </Style>
 
     <Style x:Key="DefaultStackPanelStyle" TargetType="StackPanel" />
+
+    <Style x:Key="DefaultKeyValueGridStyle" TargetType="local:KeyValueGrid">
+        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <Setter Property="BorderBrush" Value="DimGray" />
+        <Setter Property="KeyItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border BorderThickness="1,1,0,0" BorderBrush="DimGray">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="{Binding}" />
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ValueItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border BorderThickness="1,1,0,0" BorderBrush="DimGray">
+                        <Label Content="{Binding}" />
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:KeyValueGrid" BasedOn="{StaticResource DefaultKeyValueGridStyle}" />
 </ResourceDictionary>
