@@ -47,7 +47,6 @@
     <Compile Include="Utility.fs" />
     <Compile Include="GroupSig.fs" />
     <Compile Include="Types.fs" />
-    <Compile Include="AssertionExtension.fs" />
     <Compile Include="TestExtension.fs" />
     <Compile Include="TestMethod.fs" />
     <Compile Include="TestClass.fs" />

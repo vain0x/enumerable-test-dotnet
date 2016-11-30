@@ -30,14 +30,20 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
   let printAssertionAsync i testName (result: Assertion) =
     async {
       let mark =
-        match result with
-        | Passed          -> "."
-        | Violated _      -> "*"
+        if result.IsPassed
+          then "."
+          else "*"
       do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark testName)
       use indenting = printer.AddIndent()
-      match result with
-      | Passed            -> ()
-      | Violated message  ->
+      if result.IsPassed |> not then
+        let message =
+          seq {
+            if result.MessageOrNull |> isNull |> not then
+              yield result.MessageOrNull
+            for KeyValue (key, value) in result.Data do
+              yield sprintf "%s: %A" key value
+          }
+          |> String.concat "\r\n"
         return! printer.WriteLineAsync(message)
     }
 

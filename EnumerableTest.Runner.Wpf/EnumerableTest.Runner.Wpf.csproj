@@ -63,6 +63,9 @@
     <Compile Include="TestTree\TestTreeView.xaml.cs">
       <DependentUpon>TestTreeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utility\KeyValueGrid.xaml.cs">
+      <DependentUpon>KeyValueGrid.xaml</DependentUpon>
+    </Compile>
     <Page Include="AppResource.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -88,6 +91,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TestTree\TestTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Utility\KeyValueGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

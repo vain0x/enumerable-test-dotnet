@@ -15,7 +15,7 @@ namespace EnumerableTest.Sdk
     /// </para>
     /// </summary>
     [Serializable]
-    public abstract class Assertion
+    public sealed class Assertion
     {
         /// <summary>
         /// Gets a value indicating whether the assertion was true.
@@ -23,48 +23,15 @@ namespace EnumerableTest.Sdk
         /// 表明が成立したかどうかを取得する。
         /// </para>
         /// </summary>
-        public abstract bool IsPassed { get; }
-    }
+        public bool IsPassed { get; }
 
-    /// <summary>
-    /// Represents a passed assertion.
-    /// <para lang="ja">
-    /// 成立する表明を表す。
-    /// </para>
-    /// </summary>
-    [Serializable]
-    public sealed class TrueAssertion
-        : Assertion
-    {
         /// <summary>
-        /// Gets a value indicating whether the assertion was true.
+        /// Gets the message related to the assertion.
         /// <para lang="ja">
-        /// 表明が成立したかどうかを取得する。
+        /// 表明に関連するメッセージを取得する。
         /// </para>
         /// </summary>
-        public override bool IsPassed => true;
-
-        internal static Assertion Instance { get; } =
-            new TrueAssertion();
-    }
-
-    /// <summary>
-    /// Represents a custom assertion.
-    /// <para lang="ja">
-    /// ユーザー定義の表明を表す。
-    /// </para>
-    /// </summary>
-    [Serializable]
-    public sealed class CustomAssertion
-        : Assertion
-    {
-        /// <summary>
-        /// Gets a message which describes why the assertion was violated, etc.
-        /// <para lang="ja">
-        /// 表明が不成立になった理由などを表すメッセージを取得する。
-        /// </para>
-        /// </summary>
-        public string Message { get; }
+        public string MessageOrNull { get; }
 
         /// <summary>
         /// Gets the data related to the assertion.
@@ -72,153 +39,21 @@ namespace EnumerableTest.Sdk
         /// 表明に関連するデータを取得する。
         /// </para>
         /// </summary>
-        public KeyValuePair<string, MarshalValue>[] Data { get; }
+        public IEnumerable<KeyValuePair<string, MarshalValue>> Data { get; }
 
-        /// <summary>
-        /// Gets a value indicating whether the assertion was true.
-        /// <para lang="ja">
-        /// 表明が成立したかどうかを取得する。
-        /// </para>
-        /// </summary>
-        public override bool IsPassed { get; }
-
-        internal CustomAssertion(bool isPassed, string message, IEnumerable<KeyValuePair<string, object>> data)
+        public Assertion(bool isPassed, string messageOrNull, IEnumerable<KeyValuePair<string, MarshalValue>> data)
         {
             IsPassed = isPassed;
-            Message = message;
-            Data =
-                (from kv in data
-                 let value = MarshalValue.FromObject(kv.Value, IsPassed)
-                 select new KeyValuePair<string, MarshalValue>(kv.Key, value)
-                ).ToArray();
+            MessageOrNull = MessageOrNull;
+            Data = data;
         }
-    }
 
-    /// <summary>
-    /// Represents an assertion which asserts an equality.
-    /// <para lang="ja">
-    /// 同値性の表明を表す。
-    /// </para>
-    /// </summary>
-    [Serializable]
-    public sealed class EqualAssertion
-        : Assertion
-    {
-        /// <summary>
-        /// Gets the value to be asserted an equality.
-        /// <para lang="ja">
-        /// 同値性を判定したい値を取得する。
-        /// </para>
-        /// </summary>
-        public MarshalValue Actual { get; }
-
-        /// <summary>
-        /// Gets the expected value.
-        /// <para lang="ja">
-        /// 期待される値を取得する。
-        /// </para>
-        /// </summary>
-        public MarshalValue Expected { get; }
-
-        /// <summary>
-        /// Gets a comparer to compare two values.
-        /// <para lang="ja">
-        /// 比較に使用する <see cref="IEqualityComparer"/> オブジェクトを取得する。
-        /// </para>
-        /// </summary>
-        public IEqualityComparer Comparer { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the assertion was true.
-        /// <para lang="ja">
-        /// 表明が成立したかどうかを取得する。
-        /// </para>
-        /// </summary>
-        public override bool IsPassed { get; }
-
-        internal EqualAssertion(object actual, object expected, IEqualityComparer comparer)
+        public Assertion(bool isPassed, IEnumerable<KeyValuePair<string, MarshalValue>> data)
+            : this(isPassed, null, data)
         {
-            IsPassed = comparer.Equals(actual, expected);
-            Actual = MarshalValue.FromObject(actual, IsPassed);
-            Expected = MarshalValue.FromObject(expected, IsPassed);
-            Comparer = comparer;
         }
-    }
 
-    /// <summary>
-    /// Represents an assertion which a value satisfies a condition.
-    /// <para lang="ja">
-    /// 値が条件を満たすことの表明を表す。
-    /// </para>
-    /// </summary>
-    [Serializable]
-    public sealed class SatisfyAssertion
-        : Assertion
-    {
-        /// <summary>
-        /// Gets the value.
-        /// </summary>
-        public MarshalValue Value { get; }
-
-        /// <summary>
-        /// Gets a string which represents the predicate.
-        /// </summary>
-        public string Predicate { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the assertion was true.
-        /// <para lang="ja">
-        /// 表明が成立したかどうかを取得する。
-        /// </para>
-        /// </summary>
-        public override bool IsPassed { get; }
-
-        internal SatisfyAssertion(object value, Expression predicate, bool isPassed)
-        {
-            IsPassed = isPassed;
-            Value = MarshalValue.FromObject(value, IsPassed);
-            Predicate = predicate.ToString();
-        }
-    }
-
-    /// <summary>
-    /// Represents an assertion which asserts that a function throw an exception.
-    /// <para lang="ja">
-    /// 関数が例外を送出することの表明を表す。
-    /// </para>
-    /// </summary>
-    [Serializable]
-    public sealed class CatchAssertion
-        : Assertion
-    {
-        /// <summary>
-        /// Gets the expected type of an exception.
-        /// <para lang="ja">
-        /// 期待される例外の型を取得する。
-        /// </para>
-        /// </summary>
-        public Type Type { get; }
-
-        /// <summary>
-        /// Gets the caught exception or null (if not thrown).
-        /// <para lang="ja">
-        /// 捕捉された例外を取得する。例外が送出されていなかったなら、null を取得する。
-        /// </para>
-        /// </summary>
-        public Exception ExceptionOrNull { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the assertion was true.
-        /// <para lang="ja">
-        /// 表明が成立したかどうかを取得する。
-        /// </para>
-        /// </summary>
-        public override bool IsPassed => !ReferenceEquals(ExceptionOrNull, null);
-
-        internal CatchAssertion(Type type, Exception exceptionOrNull)
-        {
-            Type = type;
-            ExceptionOrNull = exceptionOrNull;
-        }
+        public static Assertion Pass { get; } =
+            new Assertion(true, Enumerable.Empty<KeyValuePair<string, MarshalValue>>());
     }
 }
