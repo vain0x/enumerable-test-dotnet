@@ -23,8 +23,8 @@ type AssertionCounter() =
   member this.Current =
     !count
 
-  member this.IsAllGreen =
-    !count |> AssertionCount.isAllGreen
+  member this.IsPassed =
+    !count |> AssertionCount.isPassed
 
   interface IObserver<TestClass>  with
     override this.OnNext(testClass) =

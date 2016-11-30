@@ -33,7 +33,7 @@ module Program =
     results.Connect()
     results |> Observable.wait
     printer.PrintSummaryAsync(counter.Current) |> Async.RunSynchronously
-    counter.IsAllGreen
+    counter.IsPassed
 
   [<EntryPoint>]
   let main _ =

@@ -34,7 +34,7 @@ type FolderNode(name: string) =
     testStatistic |> ReactiveProperty.map
       (fun testStatistic ->
         testStatistic.AssertionCount
-        |> AssertionCount.isAllGreen
+        |> AssertionCount.isPassed
         |> not
       )
     :> IReadOnlyReactiveProperty<_>
