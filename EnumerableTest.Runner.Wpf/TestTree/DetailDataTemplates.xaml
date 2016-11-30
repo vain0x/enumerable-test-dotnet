@@ -258,8 +258,8 @@
                 >
                 <DataGrid.Columns>
                     <DataGridTextColumn
-                        Header="Name"
-                        Binding="{Binding Name}"
+                        Header="Key"
+                        Binding="{Binding Key}"
                         CellStyle="{StaticResource DataGridCellStyle}"
                         IsReadOnly="True"
                         />

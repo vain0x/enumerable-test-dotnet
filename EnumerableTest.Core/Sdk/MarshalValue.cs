@@ -103,9 +103,9 @@ namespace EnumerableTest.Sdk
     public class MarshalProperty
     {
         /// <summary>
-        /// Gets the name.
+        /// Gets the property name.
         /// </summary>
-        public string Name { get; }
+        public string Key { get; }
 
         /// <summary>
         /// Gets a value which represents the value of the property
@@ -115,7 +115,7 @@ namespace EnumerableTest.Sdk
 
         internal MarshalProperty(string name, Func<MarshalValue> value)
         {
-            Name = name;
+            Key = name;
             Value = MarshalResult.Create(value);
         }
     }
