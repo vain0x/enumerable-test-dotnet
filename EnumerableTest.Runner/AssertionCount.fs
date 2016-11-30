@@ -97,5 +97,5 @@ module AssertionCount =
       | None -> zero
       )
 
-  let isAllGreen (count: AssertionCount) =
+  let isPassed (count: AssertionCount) =
     count.ViolatedCount = 0 && count.ErrorCount = 0 && count.NotCompletedCount = 0

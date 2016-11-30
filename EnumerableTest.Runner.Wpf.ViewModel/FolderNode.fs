@@ -31,12 +31,7 @@ type FolderNode(name: string) =
   override this.TestStatistic = testStatistic
 
   override val IsExpanded =
-    testStatistic |> ReactiveProperty.map
-      (fun testStatistic ->
-        testStatistic.AssertionCount
-        |> AssertionCount.isAllGreen
-        |> not
-      )
+    testStatistic |> ReactiveProperty.map (TestStatistic.isPassed >> not)
     :> IReadOnlyReactiveProperty<_>
 
   member this.FindOrAddFolderNode(path: list<string>) =
