@@ -179,12 +179,8 @@
         </Expander>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type runner:MarshalResultException}">
-        <ContentPresenter Content="{Binding Exception}" />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type runner:MarshalResultValue}">
-        <ContentPresenter Content="{Binding MarshalValue}" />
+    <DataTemplate DataType="{x:Type runner:MarshalResult}">
+        <ContentPresenter Content="{Binding AsObject}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type system:Exception}">

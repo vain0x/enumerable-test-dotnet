@@ -2,34 +2,15 @@
 
 open System
 open System.Collections.Generic
+open Basis.Core
 
-type
-  [<Serializable>]
-  [<AbstractClass>]
-  MarshalResult() =
-  abstract Match<'x> : (MarshalValue -> 'x) * (exn -> 'x) -> 'x
-
-and
-  [<Serializable>]
-  [<Sealed>]
-  MarshalResultValue(marshalValue) =
-  inherit MarshalResult()
-
-  member this.MarshalValue = marshalValue
-
-  override this.Match(onValue, _) =
-    onValue this.MarshalValue
-
-and
-  [<Serializable>]
-  [<Sealed>]
-  MarshalResultException(``exception``) =
-  inherit MarshalResult()
-
-  member this.Exception = ``exception``
-
-  override this.Match(_, onException) =
-    onException this.Exception
+type MarshalResult =
+  | MarshalResult
+    of Result<MarshalValue, exn>
+with
+  member this.AsObject =
+    let (MarshalResult result) = this
+    result |> Result.toObj
 
 and MarshalProperty =
   KeyValuePair<string, MarshalResult>
