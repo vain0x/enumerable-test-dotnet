@@ -28,19 +28,10 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed => Assertion.IsPassed;
 
-        /// <summary>
-        /// Gets all assertions in the test.
-        /// <para lang="ja">
-        /// テスト内のすべての表明を取得する。
-        /// </para>
-        /// </summary>
-        public override Assertion[] Assertions { get; }
-
         internal AssertionTest(string name, Assertion assertion)
             : base(name)
         {
             Assertion = assertion;
-            Assertions = new[] { Assertion };
         }
     }
 }

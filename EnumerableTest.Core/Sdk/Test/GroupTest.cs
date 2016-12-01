@@ -37,21 +37,12 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed { get; }
 
-        /// <summary>
-        /// Gets all assertions in the test.
-        /// <para lang="ja">
-        /// テスト内のすべての表明を取得する。
-        /// </para>
-        /// </summary>
-        public override Assertion[] Assertions { get; }
-
         internal GroupTest(string name, Test[] tests, Exception exceptionOrNull)
             : base(name)
         {
             Tests = tests;
             ExceptionOrNull = exceptionOrNull;
             IsPassed = ExceptionOrNull == null && Tests.All(test => test.IsPassed);
-            Assertions = Tests.SelectMany(test => test.Assertions).ToArray();
         }
     }
 }

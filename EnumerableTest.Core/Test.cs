@@ -33,14 +33,6 @@ namespace EnumerableTest
         /// </summary>
         public abstract bool IsPassed { get; }
 
-        /// <summary>
-        /// Gets all assertions in the test.
-        /// <para lang="ja">
-        /// テスト内のすべての表明を取得する。
-        /// </para>
-        /// </summary>
-        public abstract Assertion[] Assertions { get; }
-
         internal Test(string name)
         {
             Name = name;

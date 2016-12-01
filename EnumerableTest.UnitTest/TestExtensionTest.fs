@@ -6,12 +6,12 @@ open EnumerableTest
 
 module TestExtensionTest =
   module ToTestGroupTest =
-    let body (name, isPassed, assertionsCondition, exceptionCondition) tests =
+    let body (name, isPassed, testsCondition, exceptionCondition) tests =
       test {
         let group = (tests :> seq<Test>).ToTestGroup(name)
         do! group.Name |> assertEquals name
         do! group.IsPassed |> assertEquals isPassed
-        do! group.Assertions |> assertSatisfies assertionsCondition
+        do! group.Tests |> assertSatisfies testsCondition
         do! group.ExceptionOrNull |> assertSatisfies exceptionCondition
       }
 

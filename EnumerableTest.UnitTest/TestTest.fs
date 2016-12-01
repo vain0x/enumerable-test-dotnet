@@ -31,12 +31,3 @@ module TestTest =
       do! emptyGroupTest |> assertSatisfies (fun t -> t.IsPassed)
       do! groupTest |> assertSatisfies (fun t -> t.IsPassed |> not)
     }
-
-  let ``test Assertions`` =
-    test {
-      do! passedTest.Assertions |> assertSatisfies (Seq.length >> (=) 1)
-      do! violatedTest.Assertions |> assertSatisfies (Seq.length >> (=) 1)
-      do! emptyGroupTest.Assertions |> assertSeqEquals []
-      do! groupTest.Assertions |> assertSeqEquals [assertion1; assertion2]
-      do! nestedGroupTest.Assertions |> assertSatisfies (Seq.length >> (=) 3)
-    }
