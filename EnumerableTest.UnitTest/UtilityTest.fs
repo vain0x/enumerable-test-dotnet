@@ -5,6 +5,24 @@ open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 
+module TypeTest =
+  open System
+  open System.Collections.Generic
+
+  let ``test prettyName`` =
+    let body (typ, expected) =
+      test {
+        do! typ |> Type.prettyName |> assertEquals expected
+      }
+    parameterize {
+      case (typeof<int>, "int")
+      case (typeof<string>, "string")
+      case (typeof<byte>, "Byte")
+      case (typeof<Tuple<int, string>>, "Tuple<int, string>")
+      case (typeof<Dictionary<int, Tuple<int, string>>>, "Dictionary<int, Tuple<int, string>>")
+      run body
+    }
+
 module ObservableTest =
   open System
   open System.Reactive.Linq

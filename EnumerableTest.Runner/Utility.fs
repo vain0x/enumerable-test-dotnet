@@ -189,6 +189,31 @@ module Disposable =
           x |> dispose
     }
 
+module Type =
+  open System
+  open System.Collections.Generic
+  open Basis.Core
+
+  let prettyName: Type -> string =
+    let abbreviations =
+      [
+        (typeof<int>, "int")
+        (typeof<int64>, "long")
+        (typeof<float>, "double")
+        (typeof<obj>, "object")
+        (typeof<string>, "string")
+      ] |> dict
+    let rec prettyName (this: Type) =
+      if this.IsGenericType then
+        let name = this.Name |> Str.takeWhile ((<>) '`')
+        let arguments = this.GenericTypeArguments |> Seq.map prettyName |> String.concat ", "
+        sprintf "%s<%s>" name arguments
+      else
+        match abbreviations.TryGetValue(this) with
+        | (true, name) -> name
+        | (false, _) -> this.Name
+    prettyName
+
 module FileSystemInfo =
   open System
   open System.IO
