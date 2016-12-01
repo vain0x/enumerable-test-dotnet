@@ -7,7 +7,27 @@ open EnumerableTest.Runner.Wpf
 
 module TypeTest =
   open System
+  open System.Collections
   open System.Collections.Generic
+
+  let ``test isCollectionType true`` =
+    let body (typ, expected) =
+      test {
+        do! typ |> assertSatisfies (Type.isCollectionType >> (=) expected)
+      }
+    parameterize {
+      case (typeof<ICollection>, true)
+      case (typeof<ICollection<int>>, true)
+      case (typeof<IReadOnlyList<int>>, true)
+      case (typeof<IList>, true)
+      case (typeof<ResizeArray<int>>, true)
+      case (typeof<IDictionary<int, string>>, true)
+      case (typeof<array<int>>, true)
+      case (typeof<IEnumerable>, false)
+      case (typeof<IEnumerable<int>>, false)
+      case (typeof<option<array<int>>>, false)
+      run body
+    }
 
   let ``test prettyName`` =
     let body (typ, expected) =

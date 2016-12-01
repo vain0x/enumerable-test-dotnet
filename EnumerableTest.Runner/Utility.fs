@@ -189,10 +189,39 @@ module Disposable =
           x |> dispose
     }
 
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Type =
   open System
+  open System.Collections
   open System.Collections.Generic
   open Basis.Core
+
+  let tryGetGenericTypeDefinition (this: Type) =
+    if this.IsGenericType
+      then this.GetGenericTypeDefinition() |> Some
+      else None
+
+  let interfaces (this: Type) =
+    seq {
+      if this.IsInterface then
+        yield this
+      yield! this.GetInterfaces()
+    }
+
+  let isCollectionType (this: Type) =
+    seq {
+      for ``interface`` in this |> interfaces do
+        if ``interface`` = typeof<ICollection> then
+          yield true
+        else
+          match ``interface`` |> tryGetGenericTypeDefinition with
+          | Some genericInterface ->
+            if genericInterface = typedefof<IReadOnlyCollection<_>>
+              || genericInterface = typedefof<ICollection<_>>
+              then yield true
+          | None -> ()
+    }
+    |> Seq.exists id
 
   let prettyName: Type -> string =
     let abbreviations =
