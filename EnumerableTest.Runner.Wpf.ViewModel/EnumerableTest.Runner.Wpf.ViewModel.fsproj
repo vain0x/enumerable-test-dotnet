@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Utility.fs" />
     <Compile Include="ObservableCommand.fs" />
     <Compile Include="UptodateCollection.fs" />
     <Compile Include="Types.fs" />
