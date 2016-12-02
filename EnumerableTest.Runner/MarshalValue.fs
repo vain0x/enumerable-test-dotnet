@@ -111,24 +111,18 @@ module MarshalValue =
         let result = result |> Result.map factory.Invoke
         yield KeyValuePair<_, _>(propertyInfo.Name, MarshalResult result)
     }
-
-  let private ofKeyedCollection (factory: Factory) source =
+  let private ofCollectionCore factory elementSelector showElement source =
     let typ = source.GetType()
     let collection = source |> Seq.cast
     let count = collection |> Seq.length
     let items =
-      seq {
-        for kv in collection do
-          let pairType = kv.GetType()
-          let key = pairType.GetProperty("Key").GetValue(kv)
-          let value = pairType.GetProperty("Value").GetValue(kv)
-          yield (key |> factory.Stringify, value |> factory.Invoke)
-      }
+      collection
+      |> Seq.mapi elementSelector
       |> Seq.cache
     let string =
       if count <= 10 then
         items
-        |> Seq.map (fun (key, value) -> sprintf "%s: %s" key value.String)
+        |> Seq.map showElement
         |> String.concat ", "
         |> sprintf "{%s}"
       else
@@ -143,32 +137,24 @@ module MarshalValue =
       }
     create factory typ string properties
 
+  let private ofKeyedCollection (factory: Factory) source =
+    ofCollectionCore
+      factory
+      (fun _ kv ->
+        let pairType = kv.GetType()
+        let key = pairType.GetProperty("Key").GetValue(kv)
+        let value = pairType.GetProperty("Value").GetValue(kv)
+        (key |> factory.Stringify, value |> factory.Invoke)
+      )
+      (fun (key, value) -> sprintf "%s: %s" key value.String)
+      source
+
   let private ofCollection (factory: Factory) source =
-    let typ = source.GetType()
-    let collection = source |> Seq.cast
-    let count = collection |> Seq.length
-    let items =
-      seq {
-        for (i, x) in collection |> Seq.indexed do
-          yield (i, x |> factory.Invoke)
-      } |> Seq.cache
-    let string =
-      if count <= 10 then
-         items
-         |> Seq.map (fun (_, x) -> x.String)
-         |> String.concat ", "
-         |> sprintf "{%s}"
-        else
-          sprintf "{Count = %d}" count
-    let properties =
-      seq {
-        yield! publicProperties factory source
-        for (i, x) in items do
-          let key = sprintf "[%d]" i 
-          let value = x |> Success |> MarshalResult
-          yield KeyValuePair<_, _>(key, value)
-      }
-    create factory typ string properties
+    ofCollectionCore
+      factory
+      (fun i x -> (string i, x |> factory.Invoke))
+      (fun (_, x) -> x.String)
+      source
 
   let private ofProperties factory (value: obj) =
     let typ = value.GetType()
