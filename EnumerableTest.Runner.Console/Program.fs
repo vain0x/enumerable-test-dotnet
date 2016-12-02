@@ -22,7 +22,7 @@ module Program =
       |> Seq.paritionMap Assembly.tryLoadFile
     let results =
       assemblies
-      |> Seq.collect (TestSuite.ofAssemblyAsync timeout)
+      |> Seq.collect (TestClassArray.ofAssemblyAsync timeout)
       |> Observable.ofParallel
     let printer =
       TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)

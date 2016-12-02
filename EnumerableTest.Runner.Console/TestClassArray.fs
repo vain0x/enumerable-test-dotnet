@@ -6,7 +6,7 @@ open EnumerableTest.Sdk
 open EnumerableTest.Runner
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestSuite =
+module TestClassArray =
   let ofAssemblyAsync timeout (assembly: Assembly) =
     assembly.GetTypes()
     |> Seq.filter (fun typ -> typ |> TestClassType.isTestClass)

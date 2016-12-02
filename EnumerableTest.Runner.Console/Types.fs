@@ -25,5 +25,5 @@ with
       | Recursion _ ->
         "Max nesting level for value serialization"
 
-type TestSuite =
+type TestClassArray =
   array<TestClass>
