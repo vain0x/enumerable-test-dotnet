@@ -76,6 +76,46 @@ module TestClassSchema =
         |> Seq.toArray
     }
 
+  let difference oldOne newOne =
+    let d =
+      ReadOnlyList.symmetricDifferenceBy
+        (fun node -> (node: TestMethodSchema).MethodName)
+        (fun node -> (node: TestMethodSchema).MethodName)
+        (oldOne: TestClassSchema).Methods
+        (newOne: TestClassSchema).Methods
+    let modified =
+      d.Intersect |> Seq.map
+        (fun (name, _, testMethodSchema) ->
+          (name, testMethodSchema)
+        )
+      |> Map.ofSeq
+    TestClassSchemaDifference.Create
+      ( d.Right
+      , d.Left
+      , modified
+      )
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
+module TestSuiteSchema =
+  let difference oldOne newOne =
+    let d =
+      ReadOnlyList.symmetricDifferenceBy
+        (fun node -> (node: TestClassSchema).TypeFullName)
+        (fun node -> (node: TestClassSchema).TypeFullName)
+        (oldOne: TestSuiteSchema)
+        (newOne: TestSuiteSchema)
+    let modified =
+      d.Intersect |> Seq.map
+        (fun (name, l, r) ->
+          (l.Path |> TestClassPath.fullPath, TestClassSchema.difference l r)
+        )
+      |> Map.ofSeq
+    TestSuiteSchemaDifference.Create
+      ( d.Right
+      , d.Left
+      , modified
+      )
+
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestMethod =
   let ofResult name result disposingError duration =

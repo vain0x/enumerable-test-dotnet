@@ -1,6 +1,7 @@
 ﻿namespace EnumerableTest.Runner
 
 open System
+open System.Collections.Generic
 open System.Reflection
 open Basis.Core
 open EnumerableTest.Sdk
@@ -34,6 +35,46 @@ type TestClassSchema =
 
 type TestSuiteSchema =
   array<TestClassSchema>
+
+type TestClassSchemaDifference =
+  {
+    Added:
+      IReadOnlyList<TestMethodSchema>
+    Removed:
+      IReadOnlyList<TestMethodSchema>
+    Modified:
+      Map<string, TestMethodSchema>
+  }
+with
+  static member Create(added, removed, modified) =
+    {
+      Added =
+        added
+      Removed =
+        removed
+      Modified =
+        modified
+    }
+
+type TestSuiteSchemaDifference =
+  {
+    Added:
+      IReadOnlyList<TestClassSchema>
+    Removed:
+      IReadOnlyList<TestClassSchema>
+    Modified:
+      Map<list<string>, TestClassSchemaDifference>
+  }
+with
+  static member Create(added, removed, modified) =
+    {
+      Added =
+        added
+      Removed =
+        removed
+      Modified =
+        modified
+    }
 
 type TestMethod =
   {
