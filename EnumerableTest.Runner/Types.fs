@@ -38,7 +38,7 @@ type TestSuiteSchema =
 type TestMethod =
   {
     MethodName                  : string
-    Result                      : GroupTest
+    Result                      : SerializableGroupTest
     DisposingError              : option<Exception>
     Duration                    : TimeSpan
   }

@@ -15,7 +15,6 @@ namespace EnumerableTest
     /// 単体テストの結果を表す。
     /// </para>
     /// </summary>
-    [Serializable]
     public abstract class Test
     {
         /// <summary>
@@ -33,14 +32,6 @@ namespace EnumerableTest
         /// </para>
         /// </summary>
         public abstract bool IsPassed { get; }
-
-        /// <summary>
-        /// Gets all assertions in the test.
-        /// <para lang="ja">
-        /// テスト内のすべての表明を取得する。
-        /// </para>
-        /// </summary>
-        public abstract Assertion[] Assertions { get; }
 
         internal Test(string name)
         {
@@ -61,14 +52,9 @@ namespace EnumerableTest
                 IEnumerable<KeyValuePair<string, object>> data
             )
         {
-            var marshalData =
-                (from kv in data
-                 let value = MarshalValue.FromObject(kv.Value, isPassed)
-                 select KeyValuePair.Create(kv.Key, value)
-                 ).ToArray();
-            return OfAssertion(name, new Assertion(isPassed, messageOrNull, marshalData));
+            return OfAssertion(name, new Assertion(isPassed, messageOrNull, data));
         }
-
+    
         /// <summary>
         /// Creates a passing unit test.
         /// <para lang="ja">
@@ -134,7 +120,7 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test FromResult(string name, bool isPassed, string message)
         {
-            var data = Enumerable.Empty<KeyValuePair<string, MarshalValue>>();
+            var data = Enumerable.Empty<KeyValuePair<string, object>>();
             return OfAssertion(name, new Assertion(isPassed, message, data));
         }
         #endregion

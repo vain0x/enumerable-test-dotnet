@@ -14,7 +14,6 @@ namespace EnumerableTest.Sdk
     /// 単体テストの表明を表す。
     /// </para>
     /// </summary>
-    [Serializable]
     public sealed class Assertion
     {
         /// <summary>
@@ -39,21 +38,21 @@ namespace EnumerableTest.Sdk
         /// 表明に関連するデータを取得する。
         /// </para>
         /// </summary>
-        public IEnumerable<KeyValuePair<string, MarshalValue>> Data { get; }
+        public IEnumerable<KeyValuePair<string, object>> Data { get; }
 
-        public Assertion(bool isPassed, string messageOrNull, IEnumerable<KeyValuePair<string, MarshalValue>> data)
+        public Assertion(bool isPassed, string messageOrNull, IEnumerable<KeyValuePair<string, object>> data)
         {
             IsPassed = isPassed;
             MessageOrNull = MessageOrNull;
             Data = data;
         }
 
-        public Assertion(bool isPassed, IEnumerable<KeyValuePair<string, MarshalValue>> data)
+        public Assertion(bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
             : this(isPassed, null, data)
         {
         }
 
         public static Assertion Pass { get; } =
-            new Assertion(true, Enumerable.Empty<KeyValuePair<string, MarshalValue>>());
+            new Assertion(true, Enumerable.Empty<KeyValuePair<string, object>>());
     }
 }

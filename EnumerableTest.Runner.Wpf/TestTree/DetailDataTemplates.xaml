@@ -60,7 +60,7 @@
     </DataTemplate>
 
     <!-- Tests -->
-    <DataTemplate DataType="{x:Type sdk:AssertionTest}">
+    <DataTemplate DataType="{x:Type runner:SerializableAssertionTest}">
         <Expander>
             <Expander.Header>
                 <StackPanel Orientation="Horizontal">
@@ -82,7 +82,7 @@
         </Expander>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:GroupTest}">
+    <DataTemplate DataType="{x:Type runner:SerializableGroupTest}">
         <GroupBox Header="{Binding Name}">
             <StackPanel>
                 <ItemsControl ItemsSource="{Binding Tests}" />
@@ -136,7 +136,7 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:Assertion}">
+    <DataTemplate DataType="{x:Type runner:SerializableAssertion}">
         <StackPanel>
             <TextBlock Text="{Binding MessageOrNull}">
                 <TextBlock.Style>
@@ -157,7 +157,7 @@
     </DataTemplate>
 
     <!-- MarshalValue -->
-    <DataTemplate DataType="{x:Type sdk:MarshalValue}">
+    <DataTemplate DataType="{x:Type runner:MarshalValue}">
         <Expander>
             <Expander.Header>
                 <TextBlock>
@@ -179,25 +179,19 @@
         </Expander>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:MarshalResultException}">
+    <DataTemplate DataType="{x:Type runner:MarshalResult}">
+        <ContentPresenter Content="{Binding AsObject}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type system:Exception}">
         <Expander>
             <Expander.Header>
                 <StackPanel Orientation="Horizontal">
                     <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
-                    <TextBlock Text="{Binding Exception.Message}" />
+                    <TextBlock Text="{Binding Message}" />
                 </StackPanel>
             </Expander.Header>
-            <ContentPresenter Content="{Binding Exception}" />
-        </Expander>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type sdk:MarshalResultValue}">
-        <ContentPresenter Content="{Binding MarshalValue}" />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type system:Exception}">
-        <Border Style="{StaticResource RoundBorderStyle}">
             <TextBlock TextWrapping="Wrap" Margin="10" Text="{Binding}" />
-        </Border>
+        </Expander>
     </DataTemplate>
 </ResourceDictionary>

@@ -32,7 +32,7 @@ module TestClass =
 
   let assertions (testClass: TestClass) =
     testClass.Result
-    |> Seq.collect (fun testMethod -> testMethod.Result.Assertions)
+    |> Seq.collect (fun testMethod -> testMethod.Result |> SerializableTest.assertions)
 
   let isPassed (testClass: TestClass) =
     testClass.InstantiationError.IsNone

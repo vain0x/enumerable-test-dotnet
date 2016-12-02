@@ -27,7 +27,19 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
       do! printer.WriteLineAsync(string e)
     }
 
-  let printAssertionAsync i testName (result: Assertion) =
+  let rec printMarshalPropertiesAsync properties =
+    async {
+      use indenting = printer.AddIndent()
+      for KeyValue (key, result) in properties do
+        match (result: MarshalResult).Unwrap() with
+        | Success value ->
+          do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
+          do! printMarshalPropertiesAsync value.Properties
+        | Failure (e: exn) ->
+          do! printer.WriteLineAsync(sprintf "%s (!): %s" key e.Message)
+    }
+
+  let printAssertionAsync i testName (result: SerializableAssertion) =
     async {
       let mark =
         if result.IsPassed
@@ -36,18 +48,16 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
       do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark testName)
       use indenting = printer.AddIndent()
       if result.IsPassed |> not then
-        let message =
-          seq {
-            if result.MessageOrNull |> isNull |> not then
-              yield result.MessageOrNull
-            for KeyValue (key, value) in result.Data do
-              yield sprintf "%s: %A" key value
-          }
-          |> String.concat "\r\n"
-        return! printer.WriteLineAsync(message)
+        match result.Message with
+        | Some message ->
+          do! printer.WriteLineAsync(message)
+        | None -> 
+        for KeyValue (key, value) in result.Data do
+          do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
+          do! printMarshalPropertiesAsync value.Properties
     }
 
-  let rec printTestAsync i (test: Test) =
+  let rec printTestAsync i (test: SerializableTest) =
     async {
       match test with
       | AssertionTest test ->

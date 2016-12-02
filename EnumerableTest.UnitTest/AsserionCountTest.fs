@@ -12,6 +12,7 @@ module AsserionCountTest =
       test {
         do!
           Assertion.Pass
+          |> SerializableAssertion.ofAssertion
           |> AssertionCount.ofAssertion
           |> assertEquals AssertionCount.onePassed
       }
@@ -20,6 +21,7 @@ module AsserionCountTest =
       test {
         do!
           Assertion(false, "violated", Seq.empty)
+          |> SerializableAssertion.ofAssertion
           |> AssertionCount.ofAssertion
           |> assertEquals AssertionCount.oneViolated
       }
@@ -32,6 +34,7 @@ module AsserionCountTest =
             (0).Is(0)
             (0).Is(1)
           |].ToTestGroup("normal-group")
+          |> SerializableTest.ofGroupTest
           |> AssertionCount.ofGroupTest
           |> assertEquals
             {
@@ -53,6 +56,7 @@ module AsserionCountTest =
             yield (0).Is(1)
             exn() |> raise
           }).ToTestGroup("exception-group")
+          |> SerializableTest.ofGroupTest
           |> AssertionCount.ofGroupTest
           |> assertEquals
             {

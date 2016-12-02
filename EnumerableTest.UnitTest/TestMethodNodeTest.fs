@@ -30,7 +30,7 @@ module TestMethodNodeTest =
       let testMethod =
         TestMethod.ofResult
           testMethodSchema.MethodName
-          ([| (0).Is(1) |].ToTestGroup("group"))
+          ([| (0).Is(1) |].ToTestGroup("group") |> SerializableTest.ofGroupTest)
           None
           duration
       node.UpdateResult(testMethod)
