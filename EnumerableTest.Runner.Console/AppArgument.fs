@@ -24,3 +24,6 @@ module AppArgument =
 #endif
     appConfig.GetResult(<@ AppArgument.Timeout @>, defaultValue = defaultTimeout)
     |> float |> TimeSpan.FromMilliseconds
+
+  let recursion =
+    appConfig.GetResult(<@ AppArgument.Recursion @>, defaultValue = 2)

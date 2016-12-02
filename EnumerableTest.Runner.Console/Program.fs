@@ -42,7 +42,7 @@ module Program =
       FileSystemInfo.getTestAssemblies thisFile
       |> Seq.append AppArgument.files
       |> Seq.distinctBy (fun file -> file.FullName)
-    MarshalValue.Recursion <- 2
+    MarshalValue.Recursion <- AppArgument.recursion
     let isPassed =
       run AppArgument.isVerbose AppArgument.timeout assemblyFiles
     let exitCode =
