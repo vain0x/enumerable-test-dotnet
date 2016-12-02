@@ -2,14 +2,6 @@
 
 open EnumerableTest.Sdk
 
-type AssertionCount =
-  {
-    TotalCount                  : int
-    ViolatedCount               : int
-    ErrorCount                  : int
-    NotCompletedCount           : int
-  }
-
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module AssertionCount =
   let zero =

@@ -2,12 +2,6 @@
 
 open System
 
-type TestStatistic =
-  {
-    AssertionCount              : AssertionCount
-    Duration                    : TimeSpan
-  }
-
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestStatistic =
   let zero =

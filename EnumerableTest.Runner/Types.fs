@@ -54,6 +54,26 @@ type TestClass =
     NotCompletedMethods         : array<TestMethodSchema>
   }
 
+type AssertionCount =
+  {
+    TotalCount:
+      int
+    ViolatedCount:
+      int
+    ErrorCount:
+      int
+    NotCompletedCount:
+      int
+  }
+
+type TestStatistic =
+  {
+    AssertionCount:
+      AssertionCount
+    Duration:
+      TimeSpan
+  }
+
 type TestStatus =
   | NotCompleted
   | Passed
