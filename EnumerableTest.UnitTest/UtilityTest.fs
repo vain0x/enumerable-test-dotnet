@@ -29,6 +29,35 @@ module TypeTest =
       run body
     }
 
+  let ``test isKeyValuePairType`` =
+    test {
+      do! typeof<int> |> assertSatisfies (Type.isKeyValuePairType >> not)
+      do! typeof<KeyValuePair<int, int>> |> assertSatisfies Type.isKeyValuePairType
+    }
+
+  let ``test tryMatchKeyedCollectionType`` =
+    let body (typ, expected) =
+      test {
+        do! typ |> Type.tryMatchKeyedCollectionType |> assertEquals expected
+      }
+    parameterize {
+      case
+        ( typeof<IReadOnlyCollection<KeyValuePair<string, int>>>
+        , Some (KeyValuePair(typeof<string>, typeof<int>))
+        )
+      case
+        ( typeof<ICollection<KeyValuePair<string, int>>>
+        , Some (KeyValuePair(typeof<string>, typeof<int>))
+        )
+      case
+        ( typeof<Dictionary<string, int>>
+        , Some (KeyValuePair(typeof<string>, typeof<int>))
+        )
+      case (typeof<ICollection>, None)
+      case (typeof<IEnumerable<KeyValuePair<string, int>>>, None)
+      run body
+    }
+
   let ``test prettyName`` =
     let body (typ, expected) =
       test {

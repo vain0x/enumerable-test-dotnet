@@ -223,6 +223,24 @@ module Type =
     }
     |> Seq.exists id
 
+  let isKeyValuePairType (this: Type) =
+    this |> tryGetGenericTypeDefinition |> Option.exists ((=) typedefof<KeyValuePair<_, _>>)
+
+  let tryMatchKeyedCollectionType (this: Type) =
+    query {
+      for ``interface`` in this |> interfaces do
+      where (``interface``.IsGenericType)
+      let genericInterface = ``interface``.GetGenericTypeDefinition()
+      where
+        (genericInterface = typedefof<IReadOnlyCollection<_>>
+        || genericInterface = typedefof<ICollection<_>>)
+      let elementType = ``interface``.GetGenericArguments().[0]
+      where (elementType |> isKeyValuePairType)
+      let types = elementType.GetGenericArguments()
+      select (KeyValuePair<_, _>(types.[0], types.[1]))
+    }
+    |> Seq.tryHead
+
   let prettyName: Type -> string =
     let abbreviations =
       [
