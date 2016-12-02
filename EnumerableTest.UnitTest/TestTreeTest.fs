@@ -39,7 +39,7 @@ module TestTreeTest =
       TestResultObserver:
         IObserver<TestResult>
       TestAssembly:
-        TestAssembly
+        PermanentTestAssembly
       Runner:
         PermanentTestRunner
       Tree:
@@ -52,7 +52,7 @@ module TestTreeTest =
     let testResults =
       new Subject<_>()
     let testAssembly =
-      { new TestAssembly() with
+      { new PermanentTestAssembly() with
           override this.SchemaUpdated =
             schemaUpdated :> _
           override this.TestResults =

@@ -27,7 +27,7 @@ module TestAssemblyModule =
       None
 
 [<AbstractClass>]
-type TestAssembly() =
+type PermanentTestAssembly() =
   abstract CancelCommand: ObservableCommand<unit>
 
   abstract SchemaUpdated: IObservable<TestSuiteSchemaDifference>
@@ -44,7 +44,7 @@ type TestAssembly() =
 
 [<Sealed>]
 type FileLoadingTestAssembly(file: FileInfo) =
-  inherit TestAssembly()
+  inherit PermanentTestAssembly()
 
   let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
 

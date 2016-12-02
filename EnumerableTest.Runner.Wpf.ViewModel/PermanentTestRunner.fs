@@ -7,7 +7,7 @@ open System.Reactive.Subjects
 
 [<AbstractClass>]
 type PermanentTestRunner() =
-  abstract AssemblyAdded: IObservable<TestAssembly>
+  abstract AssemblyAdded: IObservable<PermanentTestAssembly>
 
   abstract Dispose: unit -> unit
 
