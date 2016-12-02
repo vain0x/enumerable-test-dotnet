@@ -50,12 +50,12 @@
     <Compile Include="ObservableCommand.fs" />
     <Compile Include="SerializableTest.fs" />
     <Compile Include="Types.fs" />
-    <Compile Include="TestMethod.fs" />
-    <Compile Include="TestClass.fs" />
-    <Compile Include="TestSuite.fs" />
     <Compile Include="AssertionCount.fs" />
     <Compile Include="TestStatistic.fs" />
     <Compile Include="TestStatus.fs" />
+    <Compile Include="TestMethod.fs" />
+    <Compile Include="TestClass.fs" />
+    <Compile Include="TestSuite.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
