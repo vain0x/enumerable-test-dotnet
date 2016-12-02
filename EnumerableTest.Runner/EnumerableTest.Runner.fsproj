@@ -47,6 +47,7 @@
     <Compile Include="Utility.fs" />
     <Compile Include="GroupSig.fs" />
     <Compile Include="MarshalValue.fs" />
+    <Compile Include="ObservableCommand.fs" />
     <Compile Include="SerializableTest.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="TestMethod.fs" />
