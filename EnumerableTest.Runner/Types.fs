@@ -54,6 +54,18 @@ type TestClass =
     NotCompletedMethods         : array<TestMethodSchema>
   }
 
+type TestResult =
+  {
+    TypeFullName:
+      string
+    /// Represents completion of a test method or an instantiation error.
+    Result:
+      Result<TestMethod, exn>
+  }
+
+type TestSuite =
+  IObservable<TestResult>
+
 type AssertionCount =
   {
     TotalCount:

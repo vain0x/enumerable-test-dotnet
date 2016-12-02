@@ -1,11 +1,10 @@
-﻿namespace EnumerableTest.Runner.Wpf
+﻿namespace EnumerableTest.Runner
 
 open System
 open System.Reflection
 open System.Threading.Tasks
 open Basis.Core
 open EnumerableTest.Sdk
-open EnumerableTest.Runner
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestResult =

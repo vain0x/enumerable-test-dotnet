@@ -52,6 +52,7 @@
     <Compile Include="Types.fs" />
     <Compile Include="TestMethod.fs" />
     <Compile Include="TestClass.fs" />
+    <Compile Include="TestSuite.fs" />
     <Compile Include="AssertionCount.fs" />
     <Compile Include="TestStatistic.fs" />
     <Compile Include="TestStatus.fs" />
