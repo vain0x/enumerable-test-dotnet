@@ -28,19 +28,11 @@ module TestAssemblyModule =
 
 [<AbstractClass>]
 type PermanentTestAssembly() =
+  inherit TestAssembly()
+
   abstract CancelCommand: ObservableCommand<unit>
 
   abstract SchemaUpdated: IObservable<TestSuiteSchemaDifference>
-
-  abstract TestResults: IObservable<TestResult>
-
-  abstract Start: unit -> unit
-
-  abstract Dispose: unit -> unit
-
-  interface IDisposable with
-    override this.Dispose() =
-      this.Dispose()
 
 [<Sealed>]
 type FileLoadingTestAssembly(file: FileInfo) =

@@ -107,6 +107,18 @@ type TestResult =
 type TestSuite =
   IObservable<TestResult>
 
+[<AbstractClass>]
+type TestAssembly() =
+  abstract TestResults: IObservable<TestResult>
+
+  abstract Start: unit -> unit
+
+  abstract Dispose: unit -> unit
+
+  interface IDisposable with
+    override this.Dispose() =
+      this.Dispose()
+
 type AssertionCount =
   {
     TotalCount:
