@@ -60,7 +60,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
       <Name>EnumerableTest.Core</Name>
-      <Project>{2ea9e494-90a7-4b41-9e12-a8991a251bd4}</Project>
+      <Project>{5c3ad6a7-3e56-430b-95df-b4e85ad0b838}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
