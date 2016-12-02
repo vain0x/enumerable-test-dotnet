@@ -66,6 +66,15 @@ module Result =
     | _ ->
       None
 
+module Dictionary =
+  open System.Collections.Generic
+
+  let ofSeq kvs =
+    let this = Dictionary()
+    for (key, value) in kvs do
+      this.Add(key, value)
+    this
+
 module Observable =
   open System
   open System.Reactive.Subjects

@@ -1,5 +1,6 @@
 ﻿namespace EnumerableTest.UnitTest
 
+open System.Collections.Generic
 open Basis.Core
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
@@ -81,6 +82,26 @@ module MarshalValueTest =
             ("[0]", "0")
             ("[1]", "1")
             ("[2]", "2")
+          |]
+    }
+
+  let ``test keyed collection`` =
+    test {
+      let instance =
+        [("a", 0); ("b", 1); ("c", 2)] |> Dictionary.ofSeq
+      let it = instance |> MarshalValue.ofObjCore 1
+      do!
+        it.Properties
+        |> Array.map (fun (KeyValue (key, value)) -> (key, value.ValueOrThrow.String))
+        |> assertEquals
+          [|
+            ("Comparer", instance.Comparer |> string)
+            ("Count", instance.Count |> string)
+            ("Keys", "{a, b, c}")
+            ("Values", "{0, 1, 2}")
+            ("[a]", "0")
+            ("[b]", "1")
+            ("[c]", "2")
           |]
     }
 

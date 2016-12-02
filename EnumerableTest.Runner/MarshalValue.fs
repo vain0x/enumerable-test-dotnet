@@ -69,6 +69,12 @@ module MarshalValue =
         Invoke = f recursion
       }
 
+    member this.Flat =
+      { this with Recursion = -1 }
+
+    member this.Stringify(value) =
+      (value |> this.Flat.Invoke).String
+
   let private create (factory: Factory) typ string properties =
     {
       TypeName =
@@ -106,6 +112,37 @@ module MarshalValue =
         yield KeyValuePair<_, _>(propertyInfo.Name, MarshalResult result)
     }
 
+  let private ofKeyedCollection (factory: Factory) source =
+    let typ = source.GetType()
+    let collection = source |> Seq.cast
+    let count = collection |> Seq.length
+    let items =
+      seq {
+        for kv in collection do
+          let pairType = kv.GetType()
+          let key = pairType.GetProperty("Key").GetValue(kv)
+          let value = pairType.GetProperty("Value").GetValue(kv)
+          yield (key |> factory.Stringify, value |> factory.Invoke)
+      }
+      |> Seq.cache
+    let string =
+      if count <= 10 then
+        items
+        |> Seq.map (fun (key, value) -> sprintf "%s: %s" key value.String)
+        |> String.concat ", "
+        |> sprintf "{%s}"
+      else
+        sprintf "{Count = %d}" count
+    let properties =
+      seq {
+        yield! publicProperties factory source
+        for (key, value) in items do
+          let key = sprintf "[%s]" key
+          let value = value |> Success |> MarshalResult
+          yield KeyValuePair(key, value)
+      }
+    create factory typ string properties
+
   let private ofCollection (factory: Factory) source =
     let typ = source.GetType()
     let collection = source |> Seq.cast
@@ -138,6 +175,10 @@ module MarshalValue =
     let properties = publicProperties factory value
     create factory typ (value |> string) properties
 
+  let private (|KeyedCollection|_|) (value: obj) =
+    value.GetType() |> Type.tryMatchKeyedCollectionType |> Option.map
+      (fun kv -> value :?> IEnumerable)
+  
   let private (|Collection|_|) (value: obj) =
     if value.GetType() |> Type.isCollectionType
     then value :?> IEnumerable |> Some
@@ -149,6 +190,8 @@ module MarshalValue =
     match value with
     | null ->
       ofNull
+    | KeyedCollection value ->
+      value |> ofKeyedCollection factory
     | Collection value ->
       value |> ofCollection factory
     | value ->

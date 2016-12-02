@@ -122,6 +122,7 @@ namespace EnumerableTest.Sandbox
             var exception = new ArgumentOutOfRangeException("value");
             var value = new MyClass();
             yield return Test.Equal<object>(exception, value);
+            yield return (new Dictionary<string, int>() { { "a", 0 }, { "b", 1 }, { "c", 2 } }).Is(null);
         }
 
         public void Dispose()
