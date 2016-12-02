@@ -12,20 +12,6 @@ open Reactive.Bindings.Extensions
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
 
-module TestAssemblyModule =
-  let load (assemblyName: AssemblyName) observer =
-    MarshalValue.Recursion <- 3
-    try
-      let assembly = Assembly.Load(assemblyName)
-      let (schema, connectable) =
-        TestSuite.ofAssemblyAsObservable assembly
-      connectable.Subscribe(observer) |> ignore<IDisposable>
-      connectable.Connect()
-      schema |> Some
-    with
-    | _ ->
-      None
-
 [<AbstractClass>]
 type PermanentTestAssembly() =
   inherit TestAssembly()
