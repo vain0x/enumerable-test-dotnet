@@ -1,14 +1,7 @@
-﻿namespace EnumerableTest.Runner.Wpf
+﻿namespace EnumerableTest.Runner
 
 open Basis.Core
 open EnumerableTest.Sdk
-open EnumerableTest.Runner
-
-type TestStatus =
-  | NotCompleted
-  | Passed
-  | Violated
-  | Error
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestStatus =

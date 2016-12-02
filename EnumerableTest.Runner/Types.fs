@@ -53,3 +53,9 @@ type TestClass =
     Result                      : array<TestMethod>
     NotCompletedMethods         : array<TestMethodSchema>
   }
+
+type TestStatus =
+  | NotCompleted
+  | Passed
+  | Violated
+  | Error

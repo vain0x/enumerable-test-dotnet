@@ -4,10 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:runner="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner"
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner.Wpf.ViewModel"
     mc:Ignorable="d" 
-    d:DataContext="{x:Static model:TestStatus.NotCompleted}"
+    d:DataContext="{x:Static runner:TestStatus.NotCompleted}"
     >
     <Grid
         HorizontalAlignment="Left"
@@ -21,16 +22,16 @@
             <Ellipse.Style>
                 <Style TargetType="{x:Type Ellipse}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.NotCompleted}">
+                        <DataTrigger Binding="{Binding}" Value="{x:Static runner:TestStatus.NotCompleted}">
                             <Setter Property="Fill" Value="DimGray" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.Passed}">
+                        <DataTrigger Binding="{Binding}" Value="{x:Static runner:TestStatus.Passed}">
                             <Setter Property="Fill" Value="MediumBlue" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.Violated}">
+                        <DataTrigger Binding="{Binding}" Value="{x:Static runner:TestStatus.Violated}">
                             <Setter Property="Fill" Value="Goldenrod" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.Error}">
+                        <DataTrigger Binding="{Binding}" Value="{x:Static runner:TestStatus.Error}">
                             <Setter Property="Fill" Value="Red" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -48,16 +49,16 @@
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.NotCompleted}">
+                        <DataTrigger Binding="{Binding}" Value="{x:Static runner:TestStatus.NotCompleted}">
                             <Setter Property="Text" Value="？" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.Passed}">
+                        <DataTrigger Binding="{Binding}" Value="{x:Static runner:TestStatus.Passed}">
                             <Setter Property="Text" Value="✓" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.Violated}">
+                        <DataTrigger Binding="{Binding}" Value="{x:Static runner:TestStatus.Violated}">
                             <Setter Property="Text" Value="×" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding}" Value="{x:Static model:TestStatus.Error}">
+                        <DataTrigger Binding="{Binding}" Value="{x:Static runner:TestStatus.Error}">
                             <Setter Property="Text" Value="！" />
                         </DataTrigger>
                     </Style.Triggers>

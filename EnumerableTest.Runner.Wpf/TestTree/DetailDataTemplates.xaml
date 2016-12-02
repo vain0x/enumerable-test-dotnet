@@ -47,7 +47,7 @@
                 </StackPanel.Style>
                 <Separator />
                 <StackPanel Orientation="Horizontal">
-                    <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                    <local:TestStatusMark DataContext="{x:Static runner:TestStatus.Error}" />
                     <TextBlock Text="RUNTIME ERROR in Dispose" />
                 </StackPanel>
                 <Label Content="{Binding DisposingErrorOrNull}" />
@@ -101,7 +101,7 @@
                     </StackPanel.Style>
                     <Separator />
                     <StackPanel Orientation="Horizontal">
-                        <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                        <local:TestStatusMark DataContext="{x:Static runner:TestStatus.Error}" />
                         <TextBlock Text="RUNTIME ERROR" />
                     </StackPanel>
                     <Label Content="{Binding ExceptionOrNull}" />
@@ -113,7 +113,7 @@
     <!-- NotExecutedResult -->
     <DataTemplate DataType="{x:Type model:NotExecutedResult}">
         <StackPanel Orientation="Horizontal">
-            <local:TestStatusMark DataContext="{x:Static model:TestStatus.NotCompleted}" />
+            <local:TestStatusMark DataContext="{x:Static runner:TestStatus.NotCompleted}" />
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="This test has not completed yet." />
                 <TextBlock Text="このテストの実行はまだ完了していません。" />
@@ -187,7 +187,7 @@
         <Expander>
             <Expander.Header>
                 <StackPanel Orientation="Horizontal">
-                    <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                    <local:TestStatusMark DataContext="{x:Static runner:TestStatus.Error}" />
                     <TextBlock Text="{Binding Message}" />
                 </StackPanel>
             </Expander.Header>

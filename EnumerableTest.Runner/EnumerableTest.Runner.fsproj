@@ -54,6 +54,7 @@
     <Compile Include="TestClass.fs" />
     <Compile Include="AssertionCount.fs" />
     <Compile Include="TestStatistic.fs" />
+    <Compile Include="TestStatus.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
