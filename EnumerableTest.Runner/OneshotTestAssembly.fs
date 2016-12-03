@@ -13,8 +13,8 @@ module private OneshotTestAssemblyCore =
     Result.catch (fun () -> Assembly.Load(assemblyName))
     |> Result.map TestSuiteSchema.ofAssembly
 
-  let load (assemblyName: AssemblyName) observer =
-    MarshalValue.Recursion <- 3
+  let load (assemblyName: AssemblyName) marshalValueRecursion observer =
+    MarshalValue.Recursion <- marshalValueRecursion
     try
       let assembly = Assembly.Load(assemblyName)
       let connectable =
@@ -29,6 +29,9 @@ module private OneshotTestAssemblyCore =
 [<Sealed>]
 type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   inherit TestAssembly()
+
+  let marshalValueRecursion =
+    MarshalValue.Recursion
 
   let resource =
     new CompositeDisposable()
@@ -59,7 +62,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   let start () =
     let (result, connectable) =
       (domain: AppDomain.DisposableAppDomain).Value
-      |> AppDomain.runObservable (OneshotTestAssemblyCore.load assemblyName)
+      |> AppDomain.runObservable (OneshotTestAssemblyCore.load assemblyName marshalValueRecursion)
     match result with
     | Some ()->
       connectable.Subscribe(resultObserver) |> resource.Add
