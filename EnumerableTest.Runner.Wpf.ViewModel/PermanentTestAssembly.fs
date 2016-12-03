@@ -24,7 +24,7 @@ type PermanentTestAssembly() =
   abstract SchemaUpdated: IObservable<TestSuiteSchemaDifference>
 
 [<Sealed>]
-type FileLoadingTestAssembly(notifier: Notifier, file: FileInfo) =
+type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   inherit PermanentTestAssembly()
 
   let assemblyName =

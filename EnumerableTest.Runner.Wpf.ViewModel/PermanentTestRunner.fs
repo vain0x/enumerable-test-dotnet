@@ -32,7 +32,7 @@ type FileLoadingPermanentTestRunner(notifier: Notifier) =
 
   member this.LoadFile(file: FileInfo) =
     if fileNames.Add(file.FullName) then
-      let assembly = new FileLoadingTestAssembly(notifier, file)
+      let assembly = new FileLoadingPermanentTestAssembly(notifier, file)
       assemblies.Add(assembly)
       assemblyAdded.OnNext(assembly)
       assembly.Start()
