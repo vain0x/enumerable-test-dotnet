@@ -6,17 +6,22 @@ open System.Reactive.Disposables
 open System.Reactive.Subjects
 open System.Reflection
 open System.Threading.Tasks
+open Basis.Core
 
 module TestAssemblyModule =
+  let loadSchema (assemblyName: AssemblyName) () =
+    Result.catch (fun () -> Assembly.Load(assemblyName))
+    |> Result.map (TestSuite.ofAssemblyAsObservable >> fst)
+
   let load (assemblyName: AssemblyName) observer =
     MarshalValue.Recursion <- 3
     try
       let assembly = Assembly.Load(assemblyName)
-      let (schema, connectable) =
+      let (_, connectable) =
         TestSuite.ofAssemblyAsObservable assembly
       connectable.Subscribe(observer) |> ignore<IDisposable>
       connectable.Connect()
-      schema |> Some
+      () |> Some
     with
     | _ ->
       None
@@ -36,10 +41,6 @@ type OneshotTestAssembly(file: FileInfo) =
     |> AppDomain.create
     |> tap resource.Add
 
-  let schemaFuture =
-    new FutureSource<TestSuiteSchema>()
-    |> tap resource.Add
-
   let testResults =
     new Subject<TestResult>()
 
@@ -50,6 +51,15 @@ type OneshotTestAssembly(file: FileInfo) =
         testResults.Dispose()
       )
     |> resource.Add
+
+  let testSuiteSchema =
+    let result = 
+      domain.Value |> AppDomain.run (TestAssemblyModule.loadSchema assemblyName)
+    match result with
+    | Success schema ->
+      schema
+    | Failure e ->
+      todo ""
 
   let resultObserver =
     { new IObserver<_> with
@@ -62,12 +72,11 @@ type OneshotTestAssembly(file: FileInfo) =
     }
 
   let start () =
-    let (schema, connectable) =
+    let (result, connectable) =
       domain.Value
       |> AppDomain.runObservable (TestAssemblyModule.load assemblyName)
-    match schema with
-    | Some schema->
-      schemaFuture.Value <- schema
+    match result with
+    | Some ()->
       connectable.Subscribe(resultObserver) |> resource.Add
       connectable.Connect()
     | None ->
@@ -76,8 +85,8 @@ type OneshotTestAssembly(file: FileInfo) =
   member this.AssemblyName =
     assemblyName
 
-  member this.SchemaFuture =
-    schemaFuture :> IFuture<_>
+  member this.Schema =
+    testSuiteSchema
 
   override this.TestResults =
     testResults :> IObservable<_>
