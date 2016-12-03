@@ -27,13 +27,6 @@ type PermanentTestAssembly() =
 type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   inherit PermanentTestAssembly()
 
-  let assemblyName =
-    match Result.catch (fun () -> AssemblyName.GetAssemblyName(file.FullName)) with
-    | Success name ->
-      name
-    | Failure _ ->
-      todo ""
-
   let current =
     ReactiveProperty.create (None: option<OneshotTestAssembly>)
 
@@ -83,7 +76,7 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
       testAssembly.Start()
     | Failure e ->
       notifier.NotifyWarning
-        ( sprintf "Couldn't load an assembly '%s'." assemblyName.Name
+        ( sprintf "Couldn't load an assembly '%s'." file.Name
         , [| ("Exception", e :> obj) |]
         )
 
@@ -91,9 +84,6 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     load ()
     subscription.Disposable <-
       file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load
-
-  member this.AssemblyName =
-    assemblyName
 
   override this.CancelCommand =
     cancelCommand
