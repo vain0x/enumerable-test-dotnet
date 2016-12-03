@@ -17,6 +17,7 @@ module Assembly =
 
 module Program =
   let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
+    use notifier = new ConcreteNotifier()
     let printer =
         TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
     let counter = AssertionCounter()
@@ -32,6 +33,7 @@ module Program =
       testAssembly.Start()
       testAssembly.TestResults |> Observable.waitTimeout timeout |> ignore<bool>
       testClassNotifier.Complete()
+    printer.PrintWarningsAsync(notifier.Warnings) |> Async.RunSynchronously
     printer.PrintSummaryAsync(counter.Current) |> Async.RunSynchronously
     counter.IsPassed
 
