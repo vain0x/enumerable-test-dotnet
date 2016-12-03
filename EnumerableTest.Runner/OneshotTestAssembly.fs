@@ -36,8 +36,8 @@ type OneshotTestAssembly(file: FileInfo) =
     |> AppDomain.create
     |> tap resource.Add
 
-  let schemas =
-    new Subject<TestSuiteSchema>()
+  let schemaFuture =
+    new FutureSource<TestSuiteSchema>()
     |> tap resource.Add
 
   let testResults =
@@ -67,8 +67,7 @@ type OneshotTestAssembly(file: FileInfo) =
       |> AppDomain.runObservable (TestAssemblyModule.load assemblyName)
     match schema with
     | Some schema->
-      schemas.OnNext(schema)
-      schemas.OnCompleted()
+      schemaFuture.Value <- schema
       connectable.Subscribe(resultObserver) |> resource.Add
       connectable.Connect()
     | None ->
@@ -77,9 +76,8 @@ type OneshotTestAssembly(file: FileInfo) =
   member this.AssemblyName =
     assemblyName
 
-  /// Notifies up to one TestSuiteSchema object before any results.
-  member this.Schemas =
-    schemas :> IObservable<_>
+  member this.SchemaFuture =
+    schemaFuture :> IFuture<_>
 
   override this.TestResults =
     testResults :> IObservable<_>

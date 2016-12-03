@@ -65,7 +65,7 @@ type FileLoadingTestAssembly(file: FileInfo) =
     let unload () =
       subscriptions.Dispose()
       cancel()
-    testAssembly.Schemas |> Observable.subscribe
+    testAssembly.SchemaFuture |> Observable.subscribe
       (fun schema -> currentTestSchema.Value <- schema)
     |> subscriptions.Add
     testAssembly.TestResults.Subscribe
