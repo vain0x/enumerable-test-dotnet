@@ -11,7 +11,7 @@ module TestClassNotifierTest =
     let schema =
       TestSuiteSchema.ofTypes types
     let testResults =
-      TestSuite.ofTypesAsObservable types
+      TestSuite.ofTypes types
     let testAssembly =
       { new TestAssembly() with
           override this.Start() =

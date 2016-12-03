@@ -18,7 +18,7 @@ module TestAssemblyModule =
     try
       let assembly = Assembly.Load(assemblyName)
       let connectable =
-        TestSuite.ofAssemblyAsObservable assembly
+        TestSuite.ofAssembly assembly
       connectable.Subscribe(observer) |> ignore<IDisposable>
       connectable.Connect()
       () |> Some
