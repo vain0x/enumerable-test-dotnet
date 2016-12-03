@@ -2,6 +2,7 @@
 
 open System
 open System.Collections.Generic
+open System.IO
 open System.Reflection
 open Basis.Core
 open EnumerableTest.Sdk

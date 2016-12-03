@@ -2,6 +2,11 @@
 
 [<AutoOpen>]
 module Misc =
+  open System
+
+  let todo message =
+    NotImplementedException(message) |> raise
+
   let tap f x =
      f x
      x
@@ -68,6 +73,13 @@ module Result =
 
 module Dictionary =
   open System.Collections.Generic
+
+  let tryFind key (this: Dictionary<_, _>) =
+    match this.TryGetValue(key) with
+    | (true, value) ->
+      Some value
+    | (false, _) ->
+      None
 
   let ofSeq kvs =
     let this = Dictionary()
