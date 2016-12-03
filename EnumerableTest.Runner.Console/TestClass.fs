@@ -11,3 +11,15 @@ module TestClass =
     testClass.InstantiationError.IsNone
     && testClass.NotCompletedMethods |> Array.isEmpty
     && testClass.Result |> Seq.forall TestMethod.isPassed
+
+  let assertionCount (testClass: TestClass) =
+    seq {
+      match testClass.InstantiationError with
+      | Some e ->
+        yield AssertionCount.oneError
+      | None ->
+        for testMethod in testClass.Result do
+          yield AssertionCount.ofTestMethod testMethod
+        yield AssertionCount.ofNotCompleted (testClass.NotCompletedMethods |> Array.length)
+    }
+    |> Seq.fold AssertionCount.add AssertionCount.zero
