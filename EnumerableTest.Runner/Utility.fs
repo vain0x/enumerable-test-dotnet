@@ -374,7 +374,7 @@ module Observable =
           let! x = computation
           lock gate (fun () -> (subject :> IObserver<_>).OnNext(x))
           if Interlocked.Increment(&count) = computations.Length then
-            (subject :> IObserver<_>).OnCompleted()
+            lock gate (fun () -> (subject :> IObserver<_>).OnCompleted())
         } |> Async.Start
     { new IConnectableObservable<_> with
         override this.Connect() =
