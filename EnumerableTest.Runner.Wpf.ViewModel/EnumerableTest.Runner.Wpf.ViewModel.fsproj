@@ -47,7 +47,7 @@
     <Compile Include="UptodateCollection.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="AppArgument.fs" />
-    <Compile Include="TestAssembly.fs" />
+    <Compile Include="PermanentTestAssembly.fs" />
     <Compile Include="PermanentTestRunner.fs" />
     <Compile Include="TestTreeNode.fs" />
     <Compile Include="TestGroupNode.fs" />
