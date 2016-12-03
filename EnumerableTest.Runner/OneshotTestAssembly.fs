@@ -8,7 +8,7 @@ open System.Reflection
 open System.Threading.Tasks
 open Basis.Core
 
-module TestAssemblyModule =
+module private OneshotTestAssemblyCore =
   let loadSchema (assemblyName: AssemblyName) () =
     Result.catch (fun () -> Assembly.Load(assemblyName))
     |> Result.map TestSuiteSchema.ofAssembly
@@ -54,7 +54,7 @@ type OneshotTestAssembly(file: FileInfo) =
 
   let testSuiteSchema =
     let result = 
-      domain.Value |> AppDomain.run (TestAssemblyModule.loadSchema assemblyName)
+      domain.Value |> AppDomain.run (OneshotTestAssemblyCore.loadSchema assemblyName)
     match result with
     | Success schema ->
       schema
@@ -74,7 +74,7 @@ type OneshotTestAssembly(file: FileInfo) =
   let start () =
     let (result, connectable) =
       domain.Value
-      |> AppDomain.runObservable (TestAssemblyModule.load assemblyName)
+      |> AppDomain.runObservable (OneshotTestAssemblyCore.load assemblyName)
     match result with
     | Some ()->
       connectable.Subscribe(resultObserver) |> resource.Add
