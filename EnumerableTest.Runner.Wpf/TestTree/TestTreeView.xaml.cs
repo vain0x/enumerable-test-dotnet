@@ -12,8 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.IO;
-using System.Reflection;
 
 namespace EnumerableTest.Runner.Wpf
 {
@@ -22,36 +20,9 @@ namespace EnumerableTest.Runner.Wpf
     /// </summary>
     public partial class TestTreeView : UserControl
     {
-        readonly FileLoadingPermanentTestRunner runner = new FileLoadingPermanentTestRunner(new ConcreteNotifier());
-        readonly TestTree testTree;
-
-        IEnumerable<FileInfo> AssemblyFiles
-        {
-            get
-            {
-                var thisFile = new FileInfo(Assembly.GetExecutingAssembly().Location);
-                return FileSystemInfo.getTestAssemblies(thisFile).Concat(AppArgumentModule.files);
-            }
-        }
-
         public TestTreeView()
         {
             InitializeComponent();
-
-            testTree = new TestTree(runner);
-
-            foreach (var assemblyFile in AssemblyFiles)
-            {
-                runner.LoadFile(assemblyFile);
-            }
-
-            Unloaded += (sender, e) =>
-            {
-                runner.Dispose();
-                testTree.Dispose();
-            };
-
-            DataContext = testTree;
         }
     }
 }

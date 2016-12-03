@@ -23,6 +23,8 @@ namespace EnumerableTest.Runner.Wpf
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = new MainWindowViewModel();
         }
     }
 }
