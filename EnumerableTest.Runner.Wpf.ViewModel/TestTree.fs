@@ -3,7 +3,9 @@
 open System
 open System.Collections.ObjectModel
 open System.Linq
+open System.Reactive.Concurrency
 open System.Reactive.Disposables
+open System.Reactive.Linq
 open System.Windows.Input
 open Basis.Core
 open Reactive.Bindings
@@ -13,8 +15,7 @@ open EnumerableTest.Runner
 type TestTree(runner: PermanentTestRunner) =
   let root = FolderNode.CreateRoot()
 
-  let context = SynchronizationContext.capture ()
-  let send f x = context |> SynchronizationContext.send (fun () -> f x)
+  let scheduler = SynchronizationContextScheduler(SynchronizationContext.capture ())
 
   let updateSchema cancelCommand (difference: TestSuiteSchemaDifference) =
     for schema in difference.Removed do
@@ -67,12 +68,12 @@ type TestTree(runner: PermanentTestRunner) =
   do
     runner.AssemblyAdded |> Observable.subscribe
       (fun testAssembly ->
-        testAssembly.SchemaUpdated
-        |> Observable.subscribe (updateSchema testAssembly.CancelCommand |> send)
+        testAssembly.SchemaUpdated.ObserveOn(scheduler)
+        |> Observable.subscribe (updateSchema testAssembly.CancelCommand)
         |> subscriptions.Add
 
-        testAssembly.TestResults
-        |> Observable.subscribe (updateResult |> send)
+        testAssembly.TestResults.ObserveOn(scheduler)
+        |> Observable.subscribe updateResult
         |> subscriptions.Add
       )
     |> subscriptions.Add

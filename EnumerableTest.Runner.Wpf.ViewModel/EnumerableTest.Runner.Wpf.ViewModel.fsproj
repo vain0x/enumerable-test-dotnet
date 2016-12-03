@@ -44,15 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Utility.fs" />
-    <Compile Include="ObservableCommand.fs" />
     <Compile Include="UptodateCollection.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="AppArgument.fs" />
-    <Compile Include="TestStatus.fs" />
-    <Compile Include="TestSuite.fs" />
-    <Compile Include="TestSuiteSchema.fs" />
-    <Compile Include="TestAssembly.fs" />
+    <Compile Include="PermanentTestAssembly.fs" />
     <Compile Include="PermanentTestRunner.fs" />
     <Compile Include="TestTreeNode.fs" />
     <Compile Include="TestGroupNode.fs" />

@@ -13,5 +13,9 @@ namespace EnumerableTest.Runner.Wpf
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            MarshalValueModule.Recursion = 3;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace EnumerableTest.Runner.Wpf
+﻿namespace EnumerableTest.Runner
 
 open System
 open System.Windows.Input

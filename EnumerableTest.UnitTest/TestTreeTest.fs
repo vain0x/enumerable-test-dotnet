@@ -39,7 +39,7 @@ module TestTreeTest =
       TestResultObserver:
         IObserver<TestResult>
       TestAssembly:
-        TestAssembly
+        PermanentTestAssembly
       Runner:
         PermanentTestRunner
       Tree:
@@ -52,7 +52,7 @@ module TestTreeTest =
     let testResults =
       new Subject<_>()
     let testAssembly =
-      { new TestAssembly() with
+      { new PermanentTestAssembly() with
           override this.SchemaUpdated =
             schemaUpdated :> _
           override this.TestResults =
@@ -87,8 +87,11 @@ module TestTreeTest =
 
   let afterFirstSchemaUpdated () =
     let controlPanel = seed ()
-    let (schema, connectable) =
-      TestSuite.ofTypesAsObservable [typeof<TestClass1>]
+    let types = [typeof<TestClass1>]
+    let schema =
+      TestSuiteSchema.ofTypes types
+    let connectable =
+      TestSuite.ofTypes types
     controlPanel.SchemaUpdatedObserver.OnNext(TestSuiteSchema.difference [||] schema)
     let classNode =
       let path =

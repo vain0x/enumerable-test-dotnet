@@ -17,21 +17,21 @@ module Assembly =
 
 module Program =
   let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
-    let (assemblies, unloadedFiles) =
-      assemblyFiles
-      |> Seq.paritionMap Assembly.tryLoadFile
-    let results =
-      assemblies
-      |> Seq.collect (TestSuite.ofAssemblyAsync timeout)
-      |> Observable.ofParallel
     let printer =
-      TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
-      |> tap (fun p -> p.PrintUnloadedFiles(unloadedFiles))
+        TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
     let counter = AssertionCounter()
-    results.Subscribe(printer) |> ignore<IDisposable>
-    results.Subscribe(counter) |> ignore<IDisposable>
-    results.Connect()
-    results |> Observable.wait
+    for assemblyFile in assemblyFiles do
+      use testAssembly =
+        OneshotTestAssembly.ofFile(assemblyFile)
+      use testClassNotifier =
+        new TestClassNotifier(testAssembly.Schema, testAssembly)
+      use printerSubscription =
+        testClassNotifier.Subscribe(printer)
+      use counterSubscription =
+        testClassNotifier.Subscribe(counter)
+      testAssembly.Start()
+      testAssembly.TestResults |> Observable.waitTimeout timeout |> ignore<bool>
+      testClassNotifier.Complete()
     printer.PrintSummaryAsync(counter.Current) |> Async.RunSynchronously
     counter.IsPassed
 

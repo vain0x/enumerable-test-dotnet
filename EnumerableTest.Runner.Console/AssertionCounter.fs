@@ -6,18 +6,6 @@ open EnumerableTest.Runner
 open EnumerableTest.Sdk
 
 type AssertionCounter() =
-  let addTestClass (testClass: TestClass) count =
-    seq {
-      match testClass.InstantiationError with
-      | Some e ->
-        yield AssertionCount.oneError
-      | None ->
-        for testMethod in testClass.Result do
-          yield AssertionCount.ofTestMethod testMethod
-        yield AssertionCount.ofNotCompleted (testClass.NotCompletedMethods |> Array.length)
-    }
-    |> Seq.fold AssertionCount.add count
-
   let count = ref AssertionCount.zero
   
   member this.Current =
@@ -28,7 +16,7 @@ type AssertionCounter() =
 
   interface IObserver<TestClass>  with
     override this.OnNext(testClass) =
-      count := !count |> addTestClass testClass
+      count := AssertionCount.add (!count) (testClass |> TestClass.assertionCount)
 
     override this.OnError(_) = ()
 

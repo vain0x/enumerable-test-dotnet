@@ -47,12 +47,17 @@
     <Compile Include="Utility.fs" />
     <Compile Include="GroupSig.fs" />
     <Compile Include="MarshalValue.fs" />
+    <Compile Include="Future.fs" />
+    <Compile Include="ObservableCommand.fs" />
     <Compile Include="SerializableTest.fs" />
     <Compile Include="Types.fs" />
-    <Compile Include="TestMethod.fs" />
-    <Compile Include="TestClass.fs" />
     <Compile Include="AssertionCount.fs" />
     <Compile Include="TestStatistic.fs" />
+    <Compile Include="TestStatus.fs" />
+    <Compile Include="TestSuiteSchema.fs" />
+    <Compile Include="TestMethod.fs" />
+    <Compile Include="TestSuite.fs" />
+    <Compile Include="OneshotTestAssembly.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
