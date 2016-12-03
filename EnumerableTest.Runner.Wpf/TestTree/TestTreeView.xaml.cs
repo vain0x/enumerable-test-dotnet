@@ -22,7 +22,7 @@ namespace EnumerableTest.Runner.Wpf
     /// </summary>
     public partial class TestTreeView : UserControl
     {
-        readonly FileLoadingPermanentTestRunner runner = new FileLoadingPermanentTestRunner();
+        readonly FileLoadingPermanentTestRunner runner = new FileLoadingPermanentTestRunner(new ConcreteNotifier());
         readonly TestTree testTree;
 
         IEnumerable<FileInfo> AssemblyFiles

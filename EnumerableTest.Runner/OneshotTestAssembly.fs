@@ -88,16 +88,12 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
 module OneshotTestAssembly =
   let ofFile (file: FileInfo) =
-    let assemblyName =
-      AssemblyName.GetAssemblyName(file.FullName)
-    let domain =
-      sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
-      |> AppDomain.create
-    let schemaResult =
-      domain.Value
-      |> AppDomain.run (OneshotTestAssemblyCore.loadSchema assemblyName)
-    match schemaResult with
-    | Success schema ->
-      new OneshotTestAssembly(assemblyName, domain, schema)
-    | Failure e ->
-      todo e.Message
+    result {
+      let! assemblyName =
+        Result.catch (fun () -> AssemblyName.GetAssemblyName(file.FullName))
+      let domain =
+        sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
+        |> AppDomain.create
+      let! schema = domain.Value |> AppDomain.run (OneshotTestAssemblyCore.loadSchema assemblyName)
+      return new OneshotTestAssembly(assemblyName, domain, schema)
+    }

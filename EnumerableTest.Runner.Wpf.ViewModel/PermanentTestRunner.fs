@@ -4,6 +4,7 @@ open System
 open System.Collections.Generic
 open System.IO
 open System.Reactive.Subjects
+open EnumerableTest.Runner
 
 [<AbstractClass>]
 type PermanentTestRunner() =
@@ -16,7 +17,7 @@ type PermanentTestRunner() =
       this.Dispose()
 
 [<Sealed>]
-type FileLoadingPermanentTestRunner() =
+type FileLoadingPermanentTestRunner(notifier: Notifier) =
   inherit PermanentTestRunner()
 
   let fileNames = HashSet<_>()
@@ -31,7 +32,7 @@ type FileLoadingPermanentTestRunner() =
 
   member this.LoadFile(file: FileInfo) =
     if fileNames.Add(file.FullName) then
-      let assembly = new FileLoadingTestAssembly(file)
+      let assembly = new FileLoadingTestAssembly(notifier, file)
       assemblies.Add(assembly)
       assemblyAdded.OnNext(assembly)
       assembly.Start()

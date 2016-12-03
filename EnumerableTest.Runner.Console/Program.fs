@@ -22,17 +22,23 @@ module Program =
         TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
     let counter = AssertionCounter()
     for assemblyFile in assemblyFiles do
-      use testAssembly =
-        OneshotTestAssembly.ofFile(assemblyFile)
-      use testClassNotifier =
-        new TestClassNotifier(testAssembly.Schema, testAssembly)
-      use printerSubscription =
-        testClassNotifier.Subscribe(printer)
-      use counterSubscription =
-        testClassNotifier.Subscribe(counter)
-      testAssembly.Start()
-      testAssembly.TestResults |> Observable.waitTimeout timeout |> ignore<bool>
-      testClassNotifier.Complete()
+      match OneshotTestAssembly.ofFile(assemblyFile) with
+      | Success testAssembly ->
+        use testAssembly = testAssembly
+        use testClassNotifier =
+          new TestClassNotifier(testAssembly.Schema, testAssembly)
+        use printerSubscription =
+          testClassNotifier.Subscribe(printer)
+        use counterSubscription =
+          testClassNotifier.Subscribe(counter)
+        testAssembly.Start()
+        testAssembly.TestResults |> Observable.waitTimeout timeout |> ignore<bool>
+        testClassNotifier.Complete()
+      | Failure e ->
+        notifier.NotifyWarning
+          ( sprintf "Couldn't load an assembly '%s'." assemblyFile.Name
+          , [| ("Path", assemblyFile.FullName :> obj); ("Exception", e :> obj) |]
+          )
     printer.PrintWarningsAsync(notifier.Warnings) |> Async.RunSynchronously
     printer.PrintSummaryAsync(counter.Current) |> Async.RunSynchronously
     counter.IsPassed
