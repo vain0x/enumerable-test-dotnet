@@ -93,17 +93,6 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%d. %s" i schema.MethodName)
     }
 
-  member this.PrintUnloadedFiles(files: IReadOnlyList<FileInfo>) =
-    if files.Count > 0 then
-      async {
-        do! printHardSeparatorAsync ()
-        do! printer.WriteLineAsync("Unloaded files:")
-        use indenting = printer.AddIndent()
-        for (i, file) in files |> Seq.indexed do
-          do! printer.WriteLineAsync(sprintf "%d. %s" i file.FullName)
-      }
-      |> Async.RunSynchronously
-
   member this.PrintWarningsAsync(warnings: IReadOnlyList<Warning>) =
     async {
       if warnings.Count > 0 then
