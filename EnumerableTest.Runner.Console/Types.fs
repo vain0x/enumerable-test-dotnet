@@ -32,6 +32,3 @@ type TestClass =
     Result                      : array<TestMethod>
     NotCompletedMethods         : array<TestMethodSchema>
   }
-
-type TestClassArray =
-  array<TestClass>

@@ -53,7 +53,6 @@
     <Compile Include="AppArgument.fs" />
     <Compile Include="TestClass.fs" />
     <Compile Include="TestClassNotifier.fs" />
-    <Compile Include="TestClassArray.fs" />
     <Compile Include="AssertionCounter.fs" />
     <Compile Include="TestPrinter.fs" />
     <Compile Include="Program.fs" />

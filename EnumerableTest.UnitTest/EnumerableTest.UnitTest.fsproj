@@ -54,7 +54,6 @@
     <Compile Include="TestClassSchemaTest.fs" />
     <Compile Include="AsserionCountTest.fs" />
     <Compile Include="TestMethodTest.fs" />
-    <Compile Include="TestClassTest.fs" />
     <Compile Include="TestClassNotifierTest.fs" />
     <Compile Include="TestTreeNodeTest.fs" />
     <Compile Include="TestMethodNodeTest.fs" />
