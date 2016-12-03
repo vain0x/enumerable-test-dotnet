@@ -2,9 +2,11 @@
 
 open System
 open System.IO
+open System.Reactive.Concurrency
 open System.Reactive.Disposables
 open System.Reactive.Linq
 open System.Reactive.Subjects
+open System.Reactive.Threading.Tasks
 open System.Reflection
 open System.Windows.Input
 open Reactive.Bindings
@@ -26,21 +28,23 @@ type FileLoadingTestAssembly(file: FileInfo) =
 
   let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
 
-  let currentDomain = ReactiveProperty.create None
-
-  let currentTestSchema = ReactiveProperty.create [||]
+  let current =
+    ReactiveProperty.create (None: option<OneshotTestAssembly>)
 
   let cancel () =
-    match currentDomain.Value with
-    | Some domain ->
-      (domain: AppDomain.DisposableAppDomain).Dispose()
-      currentDomain.Value <- None
+    match current.Value with
+    | Some testAssembly ->
+      testAssembly.Dispose()
+      current.Value <- None
     | None -> ()
 
   let cancelCommand =
-    currentDomain
+    current
     |> ReactiveProperty.map Option.isSome
     |> ObservableCommand.ofFunc cancel
+
+  let currentTestSchema =
+    ReactiveProperty.create [||]
 
   let schemaUpdated =
     currentTestSchema.Pairwise().Select
@@ -49,39 +53,29 @@ type FileLoadingTestAssembly(file: FileInfo) =
       )
 
   let testResults =
-    new Subject<TestResult>()
-
-  let resultObserver =
-    { new IObserver<_> with
-        override this.OnNext(result) =
-          testResults.OnNext(result)
-        override this.OnError(_) =
-          cancel ()
-        override this.OnCompleted() =
-          cancel ()
-    }
-
-  let load () =
-    let domainName =
-      sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
-    let domain =
-      cancel ()
-      let domain = AppDomain.create domainName
-      currentDomain.Value <- Some domain
-      domain
-    let (schema, connectable) =
-      domain.Value
-      |> AppDomain.runObservable (TestAssemblyModule.load assemblyName)
-    match schema with
-    | Some schema->
-      currentTestSchema.Value <- schema
-      connectable.Subscribe(resultObserver) |> ignore<IDisposable>
-      connectable.Connect()
-    | None ->
-      cancel ()
+    new Subject<_>()
 
   let subscription =
     new SingleAssignmentDisposable()
+
+  let load () =
+    cancel ()
+    let testAssembly = new OneshotTestAssembly(file)
+    let subscriptions = new CompositeDisposable()
+    let unload () =
+      subscriptions.Dispose()
+      cancel()
+    testAssembly.Schemas |> Observable.subscribe
+      (fun schema -> currentTestSchema.Value <- schema)
+    |> subscriptions.Add
+    testAssembly.TestResults.Subscribe
+      ( testResults.OnNext
+      , ignore >> unload
+      , unload
+      )
+    |> subscriptions.Add
+    current.Value <- Some testAssembly
+    testAssembly.Start()
 
   let start () =
     load ()
