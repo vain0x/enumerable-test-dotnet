@@ -60,7 +60,7 @@ type FileLoadingTestAssembly(file: FileInfo) =
 
   let load () =
     cancel ()
-    let testAssembly = new OneshotTestAssembly(file)
+    let testAssembly = OneshotTestAssembly.ofFile file
     let subscriptions = new CompositeDisposable()
     let unload () =
       subscriptions.Dispose()

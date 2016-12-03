@@ -27,19 +27,13 @@ module private OneshotTestAssemblyCore =
       None
 
 [<Sealed>]
-type OneshotTestAssembly(file: FileInfo) =
+type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   inherit TestAssembly()
-
-  let assemblyName =
-    AssemblyName.GetAssemblyName(file.FullName)
 
   let resource =
     new CompositeDisposable()
 
-  let domain =
-    sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
-    |> AppDomain.create
-    |> tap resource.Add
+  do resource.Add(domain)
 
   let testResults =
     new Subject<TestResult>()
@@ -51,15 +45,6 @@ type OneshotTestAssembly(file: FileInfo) =
         testResults.Dispose()
       )
     |> resource.Add
-
-  let testSuiteSchema =
-    let result = 
-      domain.Value |> AppDomain.run (OneshotTestAssemblyCore.loadSchema assemblyName)
-    match result with
-    | Success schema ->
-      schema
-    | Failure e ->
-      todo ""
 
   let resultObserver =
     { new IObserver<_> with
@@ -73,7 +58,7 @@ type OneshotTestAssembly(file: FileInfo) =
 
   let start () =
     let (result, connectable) =
-      domain.Value
+      (domain: AppDomain.DisposableAppDomain).Value
       |> AppDomain.runObservable (OneshotTestAssemblyCore.load assemblyName)
     match result with
     | Some ()->
@@ -96,3 +81,20 @@ type OneshotTestAssembly(file: FileInfo) =
 
   override this.Dispose() =
     resource.Dispose()
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
+module OneshotTestAssembly =
+  let ofFile (file: FileInfo) =
+    let assemblyName =
+      AssemblyName.GetAssemblyName(file.FullName)
+    let domain =
+      sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
+      |> AppDomain.create
+    let schemaResult =
+      domain.Value
+      |> AppDomain.run (OneshotTestAssemblyCore.loadSchema assemblyName)
+    match schemaResult with
+    | Success schema ->
+      new OneshotTestAssembly(assemblyName, domain, schema)
+    | Failure e ->
+      todo e.Message
