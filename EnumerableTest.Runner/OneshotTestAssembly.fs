@@ -17,7 +17,7 @@ module TestAssemblyModule =
     MarshalValue.Recursion <- 3
     try
       let assembly = Assembly.Load(assemblyName)
-      let (_, connectable) =
+      let connectable =
         TestSuite.ofAssemblyAsObservable assembly
       connectable.Subscribe(observer) |> ignore<IDisposable>
       connectable.Connect()

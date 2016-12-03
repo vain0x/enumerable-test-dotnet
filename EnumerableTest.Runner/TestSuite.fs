@@ -27,20 +27,10 @@ module TestSuite =
       methods |> Array.map (snd >> Async.map (Success >> TestResult.create typ))
 
   let ofTypesAsObservable types =
-    let (types, asyncSeqSeq) =
-      types
-      |> Seq.filter (fun typ -> typ |> TestClassType.isTestClass)
-      |> Seq.map (fun typ -> (typ, typ |> executeType))
-      |> Seq.toArray
-      |> Array.unzip
-    let (schema: TestSuiteSchema) =
-      types
-      |> Array.map TestClassSchema.ofType
-    let observable =
-      asyncSeqSeq
-      |> Seq.collect id
-      |> Observable.startParallel
-    (schema, observable)
+    types
+    |> Seq.filter TestClassType.isTestClass
+    |> Seq.collect executeType
+    |> Observable.startParallel
 
   let ofAssemblyAsObservable (assembly: Assembly) =
     assembly.GetTypes()

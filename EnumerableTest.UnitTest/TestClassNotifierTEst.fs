@@ -8,7 +8,9 @@ open EnumerableTest.Runner.Console
 
 module TestClassNotifierTest =
   let seed types =
-    let (schema, testResults) =
+    let schema =
+      TestSuiteSchema.ofTypes types
+    let testResults =
       TestSuite.ofTypesAsObservable types
     let testAssembly =
       { new TestAssembly() with

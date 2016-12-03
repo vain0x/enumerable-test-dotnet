@@ -87,8 +87,11 @@ module TestTreeTest =
 
   let afterFirstSchemaUpdated () =
     let controlPanel = seed ()
-    let (schema, connectable) =
-      TestSuite.ofTypesAsObservable [typeof<TestClass1>]
+    let types = [typeof<TestClass1>]
+    let schema =
+      TestSuiteSchema.ofTypes types
+    let connectable =
+      TestSuite.ofTypesAsObservable types
     controlPanel.SchemaUpdatedObserver.OnNext(TestSuiteSchema.difference [||] schema)
     let classNode =
       let path =
