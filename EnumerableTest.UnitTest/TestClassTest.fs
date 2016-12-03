@@ -6,6 +6,7 @@ open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest
 open EnumerableTest.Runner
+open EnumerableTest.Runner.Console
 
 module TestClassTest =
   module test_create =

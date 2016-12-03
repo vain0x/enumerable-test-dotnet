@@ -1,8 +1,9 @@
-﻿namespace EnumerableTest.Runner
+﻿namespace EnumerableTest.Runner.Console
 
 open System
 open System.Collections.Concurrent
 open System.Reflection
+open EnumerableTest.Runner
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClass =

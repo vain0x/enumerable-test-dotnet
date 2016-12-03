@@ -51,6 +51,7 @@
     <Compile Include="StructuralTextWriter.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="AppArgument.fs" />
+    <Compile Include="TestClass.fs" />
     <Compile Include="TestClassNotifier.fs" />
     <Compile Include="TestClassArray.fs" />
     <Compile Include="AssertionCounter.fs" />

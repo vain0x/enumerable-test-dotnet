@@ -25,5 +25,13 @@ with
       | Recursion _ ->
         "Max nesting level for value serialization"
 
+type TestClass =
+  {
+    TypeFullName                : string
+    InstantiationError          : option<Exception>
+    Result                      : array<TestMethod>
+    NotCompletedMethods         : array<TestMethodSchema>
+  }
+
 type TestClassArray =
   array<TestClass>

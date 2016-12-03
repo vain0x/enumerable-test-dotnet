@@ -88,14 +88,6 @@ with
   member this.DisposingErrorOrNull =
     this.DisposingError |> Option.getOr null
 
-type TestClass =
-  {
-    TypeFullName                : string
-    InstantiationError          : option<Exception>
-    Result                      : array<TestMethod>
-    NotCompletedMethods         : array<TestMethodSchema>
-  }
-
 type TestResult =
   {
     TypeFullName:
