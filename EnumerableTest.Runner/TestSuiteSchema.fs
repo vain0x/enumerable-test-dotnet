@@ -94,6 +94,15 @@ module TestClassSchema =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
 module TestSuiteSchema =
+  let ofTypes types: TestSuiteSchema =
+    types
+    |> Seq.filter TestClassType.isTestClass
+    |> Seq.map TestClassSchema.ofType
+    |> Seq.toArray
+
+  let ofAssembly (assembly: Assembly) =
+    assembly.GetTypes() |> ofTypes
+
   let difference oldOne newOne =
     let d =
       ReadOnlyList.symmetricDifferenceBy

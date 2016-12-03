@@ -11,7 +11,7 @@ open Basis.Core
 module TestAssemblyModule =
   let loadSchema (assemblyName: AssemblyName) () =
     Result.catch (fun () -> Assembly.Load(assemblyName))
-    |> Result.map (TestSuite.ofAssemblyAsObservable >> fst)
+    |> Result.map TestSuiteSchema.ofAssembly
 
   let load (assemblyName: AssemblyName) observer =
     MarshalValue.Recursion <- 3
