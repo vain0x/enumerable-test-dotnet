@@ -24,7 +24,22 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
   let scheduler = SynchronizationContextScheduler(SynchronizationContext.capture ())
 
   let notifyWarning =
-    fun _ -> todo ""
+    function
+    | MissingNode (node, name, path) ->
+      let message =
+        sprintf "Node '%s' doesn't have a child node named '%s'." node.Name name
+      let data =
+        [|
+          ("Node", node :> obj)
+          ("Path", (name :: path |> List.toArray :> obj))
+        |]
+      notifier.NotifyWarning(message, data)
+    | NotTestMethodNode node ->
+      let message =
+        sprintf "Node '%s' isn't a test method node." node.Name
+      let data =
+        [| ("Node", node :> obj) |]
+      notifier.NotifyWarning(message, data)
 
   let tryRoute path (node: TestTreeNode) =
     match node.RouteOrFailure(path) with
