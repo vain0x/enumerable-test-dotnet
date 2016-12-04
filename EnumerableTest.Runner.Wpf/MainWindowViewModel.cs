@@ -13,6 +13,8 @@ namespace EnumerableTest.Runner.Wpf
     {
         public Notifier Notifier { get; }
 
+        LogFile LogFile { get; }
+
         FileLoadingPermanentTestRunner Runner { get; }
 
         public TestTree TestTree { get; }
@@ -28,6 +30,8 @@ namespace EnumerableTest.Runner.Wpf
 
         public void Dispose()
         {
+            Notifier.Dispose();
+            LogFile.Dispose();
             Runner.Dispose();
             TestTree.Dispose();
         }
@@ -35,8 +39,11 @@ namespace EnumerableTest.Runner.Wpf
         public MainWindowViewModel()
         {
             Notifier = new ConcreteNotifier();
+            LogFile = new LogFile();
             Runner = new FileLoadingPermanentTestRunner(Notifier);
             TestTree = new TestTree(Runner, Notifier);
+
+            LogFile.ObserveNotifications(Notifier);
 
             foreach (var assemblyFile in AssemblyFiles)
             {
