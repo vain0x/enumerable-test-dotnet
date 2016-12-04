@@ -64,12 +64,12 @@ module TestTreeNodeTest =
     let ``resolve no part of path`` =
       test {
         let! root = seed ()
-        do! root.RouteOrFailure(["c"]) |> assertEquals (Failure (root :> TestTreeNode, ["c"]))
+        do! root.RouteOrFailure(["c"]) |> assertEquals (Failure (root :> TestTreeNode, "c", []))
       }
 
     let ``resolve a part of path`` =
       test {
         let! root = seed ()
         let a = root.TryRoute(["a"]) |> Option.get
-        do! root.RouteOrFailure(["a"; "z"]) |> assertEquals (Failure (a, ["z"]))
+        do! root.RouteOrFailure(["a"; "z"]) |> assertEquals (Failure (a, "z", []))
       }
