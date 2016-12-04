@@ -10,5 +10,5 @@
     Width="768"
     Height="432"
     >
-    <local:TestTreeView />
+    <local:TestTreeView DataContext="{Binding TestTree}" />
 </Window>

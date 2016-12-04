@@ -27,7 +27,7 @@ type TestTreeNode() =
     |> Seq.tryFindIndex (fun ch -> ch.Name = name)
     |> Option.iter (fun index -> this.Children.RemoveAt(index))
 
-  member this.RouteOrFailure(path: list<string>): Result<TestTreeNode, TestTreeNode * list<string>> =
+  member this.RouteOrFailure(path: list<string>): Result<TestTreeNode, TestTreeNode * string * list<string>> =
     match path with
     | [] ->
       this |> Success
@@ -36,7 +36,7 @@ type TestTreeNode() =
       | Some node ->
         node.RouteOrFailure(path)
       | None ->
-        (this, name :: path) |> Failure
+        (this, name, path) |> Failure
 
     member this.TryRoute(path: list<string>) =
       this.RouteOrFailure(path) |> Result.toOption

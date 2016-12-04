@@ -38,7 +38,7 @@ type FolderNode(name: string) =
     match this.RouteOrFailure(path) with
     | Success node ->
       node
-    | Failure (parent, path) ->
+    | Failure (parent, name, path) ->
       let rec loop (parent: TestTreeNode) =
         function
         | [] ->
@@ -47,7 +47,7 @@ type FolderNode(name: string) =
           let node = FolderNode(name)
           parent.AddChild(node)
           loop node path
-      loop parent path
+      loop parent (name :: path)
 
   static member CreateRoot() =
     FolderNode("")

@@ -11,15 +11,58 @@ open Basis.Core
 open Reactive.Bindings
 open EnumerableTest.Runner
 
+type TestTreeUpdateWarning =
+  | MissingNode
+    of TestTreeNode * string * list<string>
+  | NotTestMethodNode
+    of TestTreeNode
+
 [<Sealed>]
-type TestTree(runner: PermanentTestRunner) =
+type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
   let root = FolderNode.CreateRoot()
 
   let scheduler = SynchronizationContextScheduler(SynchronizationContext.capture ())
 
+  let notifyWarning =
+    function
+    | MissingNode (node, name, path) ->
+      let message =
+        sprintf "Node '%s' doesn't have a child node named '%s'." node.Name name
+      let data =
+        [|
+          ("Node", node :> obj)
+          ("Path", (name :: path |> List.toArray :> obj))
+        |]
+      notifier.NotifyWarning(message, data)
+    | NotTestMethodNode node ->
+      let message =
+        sprintf "Node '%s' isn't a test method node." node.Name
+      let data =
+        [| ("Node", node :> obj) |]
+      notifier.NotifyWarning(message, data)
+
+  let tryRoute path (node: TestTreeNode) =
+    match node.RouteOrFailure(path) with
+    | Success node ->
+      Some node
+    | Failure (node, name, path) ->
+      notifyWarning (MissingNode (node, name, path))
+      None
+
+  let tryRouteTestMethodNode path (node: TestTreeNode) =
+    tryRoute path node |> Option.bind
+      (fun node ->
+        match node with
+        | :? TestMethodNode as node ->
+          Some node
+        | _ ->
+          notifyWarning (NotTestMethodNode node)
+          None
+      )
+
   let updateSchema cancelCommand (difference: TestSuiteSchemaDifference) =
     for schema in difference.Removed do
-      root.TryRoute(schema.Path |> TestClassPath.fullPath) |> Option.iter
+      root |> tryRoute (schema.Path |> TestClassPath.fullPath) |> Option.iter
         (fun node ->
           node.RemoveChild(schema.Path.Name)
         )
@@ -30,32 +73,33 @@ type TestTree(runner: PermanentTestRunner) =
         node.AddChild(TestMethodNode(schema, cancelCommand))
 
     for KeyValue (fullPath, difference) in difference.Modified do
-      root.TryRoute(fullPath) |> Option.iter
+      root |> tryRoute fullPath |> Option.iter
         (fun node ->
           for schema in difference.Removed do
             node.RemoveChild(schema.MethodName)
           for KeyValue (name, schema) in difference.Modified do
-            node.TryRoute([name]) |> Option.bind tryCast |> Option.iter
-              (fun node -> (node: TestMethodNode).UpdateSchema(schema))
+            node |> tryRouteTestMethodNode [name]  |> Option.iter
+              (fun node ->
+                node.UpdateSchema(schema)
+              )
           for schema in difference.Added do
             node.AddChild(TestMethodNode(schema, cancelCommand))
         )
 
   let updateResult (result: TestResult) =
     let path = result.TypeFullName |> TestClassPath.ofFullName |> TestClassPath.fullPath
-    root.TryRoute(path) |> Option.iter
+    root |> tryRoute path |> Option.iter
       (fun classNode ->
         match result.Result with
         | Success testMethod ->
-          classNode.Children
-          |> Seq.tryFind (fun n -> n.Name = testMethod.MethodName)
-          |> Option.bind tryCast
-          |> Option.iter
+          classNode |> tryRouteTestMethodNode [testMethod.MethodName] |> Option.iter
             (fun node ->
-              (node: TestMethodNode).UpdateResult(testMethod)
+              node.UpdateResult(testMethod)
             )
         | Failure e ->
           // Update one of test method nodes to show the error.
+          // It's no problem it has no test method nodes
+          // because no need to show the instantiation error in the case.
           classNode.Children |> Seq.tryPick tryCast |> Option.iter
             (fun node ->
               let testMethod = TestMethod.ofInstantiationError e

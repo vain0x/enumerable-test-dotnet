@@ -9,6 +9,7 @@ open System.Reactive.Subjects
 open System.Reactive.Threading.Tasks
 open System.Reflection
 open System.Windows.Input
+open Basis.Core
 open Reactive.Bindings
 open Reactive.Bindings.Extensions
 open EnumerableTest.Sdk
@@ -23,10 +24,8 @@ type PermanentTestAssembly() =
   abstract SchemaUpdated: IObservable<TestSuiteSchemaDifference>
 
 [<Sealed>]
-type FileLoadingTestAssembly(file: FileInfo) =
+type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   inherit PermanentTestAssembly()
-
-  let assemblyName = AssemblyName.GetAssemblyName(file.FullName)
 
   let current =
     ReactiveProperty.create (None: option<OneshotTestAssembly>)
@@ -60,28 +59,31 @@ type FileLoadingTestAssembly(file: FileInfo) =
 
   let load () =
     cancel ()
-    let testAssembly = OneshotTestAssembly.ofFile file
-    let subscriptions = new CompositeDisposable()
-    let unload () =
-      subscriptions.Dispose()
-      cancel()
-    currentTestSchema.Value <- testAssembly.Schema
-    testAssembly.TestResults.Subscribe
-      ( testResults.OnNext
-      , ignore >> unload
-      , unload
-      )
-    |> subscriptions.Add
-    current.Value <- Some testAssembly
-    testAssembly.Start()
+    match OneshotTestAssembly.ofFile file with
+    | Success testAssembly ->
+      let subscriptions = new CompositeDisposable()
+      let unload () =
+        subscriptions.Dispose()
+        cancel()
+      currentTestSchema.Value <- testAssembly.Schema
+      testAssembly.TestResults.Subscribe
+        ( testResults.OnNext
+        , ignore >> unload
+        , unload
+        )
+      |> subscriptions.Add
+      current.Value <- Some testAssembly
+      testAssembly.Start()
+    | Failure e ->
+      notifier.NotifyWarning
+        ( sprintf "Couldn't load an assembly '%s'." file.Name
+        , [| ("Exception", e :> obj) |]
+        )
 
   let start () =
     load ()
     subscription.Disposable <-
       file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load
-
-  member this.AssemblyName =
-    assemblyName
 
   override this.CancelCommand =
     cancelCommand

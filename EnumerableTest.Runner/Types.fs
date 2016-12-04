@@ -2,6 +2,7 @@
 
 open System
 open System.Collections.Generic
+open System.Collections.ObjectModel
 open System.IO
 open System.Reflection
 open Basis.Core
@@ -137,3 +138,37 @@ type TestStatus =
   | Passed
   | Violated
   | Error
+
+type Warning =
+  {
+    Message:
+      string
+    Data:
+      seq<KeyValuePair<string, obj>>
+  }
+
+type Notification =
+  | Info
+    of string
+  | Warning
+    of Warning
+
+[<AbstractClass>]
+type Notifier() =
+  abstract Warnings: ObservableCollection<Warning>
+
+  abstract NotifyInfo: string -> unit
+
+  abstract NotifyWarning: string * seq<string * obj> -> unit
+
+  abstract Subscribe: IObserver<Notification> -> IDisposable
+
+  abstract Dispose: unit -> unit
+
+  interface IObservable<Notification> with
+    override this.Subscribe(observer) =
+      this.Subscribe(observer)
+
+  interface IDisposable with
+    override this.Dispose() =
+      this.Dispose()
