@@ -36,7 +36,7 @@ namespace EnumerableTest.Runner.Wpf
         {
             Notifier = new ConcreteNotifier();
             Runner = new FileLoadingPermanentTestRunner(Notifier);
-            TestTree = new TestTree(Runner);
+            TestTree = new TestTree(Runner, Notifier);
 
             foreach (var assemblyFile in AssemblyFiles)
             {

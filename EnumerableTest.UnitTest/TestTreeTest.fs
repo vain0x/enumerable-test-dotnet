@@ -71,7 +71,7 @@ module TestTreeTest =
           override this.Dispose() = ()
       }
     let testTree =
-      new TestTree(runner)
+      new TestTree(runner, new NullNotifier())
     {
       SchemaUpdatedObserver =
         schemaUpdated :> IObserver<_>

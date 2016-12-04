@@ -12,7 +12,7 @@ open Reactive.Bindings
 open EnumerableTest.Runner
 
 [<Sealed>]
-type TestTree(runner: PermanentTestRunner) =
+type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
   let root = FolderNode.CreateRoot()
 
   let scheduler = SynchronizationContextScheduler(SynchronizationContext.capture ())
