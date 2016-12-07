@@ -9,6 +9,13 @@
     Title="EnumerableTest.Runner.Wpf"
     Width="768"
     Height="432"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextElement.FontWeight="Regular"
+    TextElement.FontSize="13"
+    TextOptions.TextFormattingMode="Ideal" 
+    TextOptions.TextRenderingMode="Auto"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{StaticResource MaterialDesignFont}"
     >
     <local:TestTreeView DataContext="{Binding TestTree}" />
 </Window>

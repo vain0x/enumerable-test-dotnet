@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:core="clr-namespace:EnumerableTest;assembly=EnumerableTest.Core"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:sdk="clr-namespace:EnumerableTest.Sdk;assembly=EnumerableTest.Core"
     xmlns:runner="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner"
     xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner.Wpf.ViewModel"
@@ -46,6 +47,7 @@
                             Foreground="Red"
                             FontSize="8"
                             Margin="10,0,0,0"
+                            Padding="0"
                             HorizontalAlignment="Right"
                             Visibility="{Binding CancelCommand.CanExecute.Value, Converter={StaticResource BooleanToVisibilityConverter}}"
                             Command="{Binding CancelCommand}"
@@ -63,7 +65,7 @@
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
-                <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
+                <Style TargetType="TreeViewItem" BasedOn="{StaticResource MaterialDesignTreeViewItem}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsExpanded.Value}" Value="True">
                             <Setter Property="IsExpanded" Value="True" />
