@@ -48,6 +48,18 @@
     <Style TargetType="Label" BasedOn="{StaticResource DefaultLabelStyle}" />
 
     <Style
+        x:Key="ReadOnlyTextBoxStyle"
+        TargetType="TextBox"
+        BasedOn="{StaticResource DefaultControlStyle}"
+        >
+        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="IsReadOnly" Value="True" />
+    </Style>
+
+    <Style
         x:Key="DefaultExpanderStyle"
         TargetType="Expander"
         BasedOn="{StaticResource DefaultControlStyle}"
