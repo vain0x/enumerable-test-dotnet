@@ -19,7 +19,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="80" />
-            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <TreeView x:Name="treeView" ItemsSource="{Binding Root.Children}">
@@ -78,7 +78,12 @@
                 </Style>
             </TreeView.Resources>
         </TreeView>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        <GridSplitter
+            Grid.Column="1"
+            Width="5"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            />
         <ScrollViewer
             Grid.Column="2"
             Content="{Binding ElementName=treeView, Path=SelectedItem}"
