@@ -39,19 +39,23 @@
                     ItemsSource="{Binding Children}"
                     >
                     <StackPanel Orientation="Horizontal">
-                        <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
-                        <TextBlock Text="{Binding Name}" />
                         <Button
-                            Grid.Column="1"
-                            Content="■"
-                            Foreground="Red"
-                            FontSize="8"
-                            Margin="10,0,0,0"
-                            Padding="0"
-                            HorizontalAlignment="Right"
+                            Style="{StaticResource DefaultControlStyle}"
+                            Margin="0,0,10,0"
+                            Padding="2"
                             Visibility="{Binding CancelCommand.CanExecute.Value, Converter={StaticResource BooleanToVisibilityConverter}}"
                             Command="{Binding CancelCommand}"
-                            />
+                            >
+                            <TextBlock
+                                Style="{StaticResource DefaultTextBlockStyle}"
+                                VerticalAlignment="Center"
+                                Foreground="Red"
+                                FontSize="8"
+                                Text="■"
+                                />
+                        </Button>
+                        <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
+                        <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
