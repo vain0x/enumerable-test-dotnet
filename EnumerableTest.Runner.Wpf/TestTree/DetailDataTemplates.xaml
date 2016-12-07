@@ -160,16 +160,10 @@
     <DataTemplate DataType="{x:Type runner:MarshalValue}">
         <Expander>
             <Expander.Header>
-                <StackPanel Orientation="Horizontal">
-                    <TextBox
-                        Style="{StaticResource ReadOnlyTextBoxStyle}"
-                        Text="{Binding String, Mode=OneTime}"
-                        />
-                    <TextBlock>
-                        :
-                        <Run Text="{Binding TypeName, Mode=OneTime}" />
-                    </TextBlock>
-                </StackPanel>
+                <TextBox
+                    Style="{StaticResource ReadOnlyTextBoxStyle}"
+                    Text="{Binding StringAndTypeName, Mode=OneTime}"
+                    />
             </Expander.Header>
             <Expander.Style>
                 <Style TargetType="Expander">
