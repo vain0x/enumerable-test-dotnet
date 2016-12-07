@@ -158,24 +158,45 @@
 
     <!-- MarshalValue -->
     <DataTemplate DataType="{x:Type runner:MarshalValue}">
-        <Expander>
-            <Expander.Header>
+        <Grid>
+            <!-- if Properties.Length = 0 then -->
+            <Grid>
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Properties.Length}" Value="0">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
                 <TextBox
                     Style="{StaticResource ReadOnlyTextBoxStyle}"
                     Text="{Binding StringAndTypeName, Mode=OneTime}"
                     />
-            </Expander.Header>
-            <Expander.Style>
-                <Style TargetType="Expander">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Properties.Length}" Value="0">
-                            <Setter Property="IsEnabled" Value="False" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Expander.Style>
-            <local:KeyValueGrid ItemsSource="{Binding Properties}" />
-        </Expander>
+            </Grid>
+            <!-- else -->
+            <Expander>
+                <Expander.Header>
+                    <TextBox
+                        Style="{StaticResource ReadOnlyTextBoxStyle}"
+                        Text="{Binding StringAndTypeName, Mode=OneTime}"
+                        />
+                </Expander.Header>
+                <Expander.Style>
+                    <Style TargetType="Expander">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Properties.Length}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+                <local:KeyValueGrid ItemsSource="{Binding Properties}" />
+            </Expander>
+            <!-- end if -->
+        </Grid>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type runner:MarshalResult}">
