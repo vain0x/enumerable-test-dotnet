@@ -38,6 +38,9 @@ with
   override this.ToString() =
     this.String
 
+  member this.StringAndTypeName =
+    sprintf "%s: %s" this.String this.TypeName
+
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module MarshalValue =
   let mutable Recursion = 0

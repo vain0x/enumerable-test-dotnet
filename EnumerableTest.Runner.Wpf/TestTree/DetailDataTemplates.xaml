@@ -138,9 +138,9 @@
 
     <DataTemplate DataType="{x:Type runner:SerializableAssertion}">
         <StackPanel>
-            <TextBlock Text="{Binding MessageOrNull}">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStyle}">
+            <TextBox Text="{Binding MessageOrNull, Mode=OneTime}">
+                <TextBox.Style>
+                    <Style TargetType="TextBox" BasedOn="{StaticResource ReadOnlyTextBoxStyle}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsPassed}" Value="True">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -150,33 +150,53 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </TextBlock.Style>
-            </TextBlock>
+                </TextBox.Style>
+            </TextBox>
             <local:KeyValueGrid ItemsSource="{Binding Data}" />
         </StackPanel>
     </DataTemplate>
 
     <!-- MarshalValue -->
     <DataTemplate DataType="{x:Type runner:MarshalValue}">
-        <Expander>
-            <Expander.Header>
-                <TextBlock>
-                    <Run Text="{Binding String, Mode=OneTime}" />
-                    :
-                    <Run Text="{Binding TypeName, Mode=OneTime}" />
-                </TextBlock>
-            </Expander.Header>
-            <Expander.Style>
-                <Style TargetType="Expander">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Properties.Length}" Value="0">
-                            <Setter Property="IsEnabled" Value="False" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Expander.Style>
-            <local:KeyValueGrid ItemsSource="{Binding Properties}" />
-        </Expander>
+        <Grid>
+            <!-- if Properties.Length = 0 then -->
+            <Grid>
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Properties.Length}" Value="0">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <TextBox
+                    Style="{StaticResource ReadOnlyTextBoxStyle}"
+                    Text="{Binding StringAndTypeName, Mode=OneTime}"
+                    />
+            </Grid>
+            <!-- else -->
+            <Expander>
+                <Expander.Header>
+                    <TextBox
+                        Style="{StaticResource ReadOnlyTextBoxStyle}"
+                        Text="{Binding StringAndTypeName, Mode=OneTime}"
+                        />
+                </Expander.Header>
+                <Expander.Style>
+                    <Style TargetType="Expander">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Properties.Length}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+                <local:KeyValueGrid ItemsSource="{Binding Properties}" />
+            </Expander>
+            <!-- end if -->
+        </Grid>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type runner:MarshalResult}">
@@ -188,10 +208,16 @@
             <Expander.Header>
                 <StackPanel Orientation="Horizontal">
                     <local:TestStatusMark DataContext="{x:Static runner:TestStatus.Error}" />
-                    <TextBlock Text="{Binding Message}" />
+                    <TextBox
+                        Style="{StaticResource ReadOnlyTextBoxStyle}"
+                        Text="{Binding Message, Mode=OneTime}"
+                        />
                 </StackPanel>
             </Expander.Header>
-            <TextBlock TextWrapping="Wrap" Margin="10" Text="{Binding}" />
+            <TextBox
+                Style="{StaticResource ReadOnlyTextBoxStyle}"
+                Text="{Binding Mode=OneTime}"
+                />
         </Expander>
     </DataTemplate>
 </ResourceDictionary>
