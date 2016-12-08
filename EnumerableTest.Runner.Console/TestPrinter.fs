@@ -93,7 +93,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%d. %s" i schema.MethodName)
     }
 
-  member this.PrintAsync(testClass: TestClass) =
+  let printAsync (testClass: TestClass) =
     async {
       if isVerbose || testClass |> TestClass.isPassed |> not then
         do! printHardSeparatorAsync ()
@@ -108,7 +108,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printNotCompletedMethodsAsync testClass.NotCompletedMethods
     }
 
-  member this.PrintWarningsAsync(warnings: IReadOnlyList<Warning>) =
+  let printWarningsAsync (warnings: IReadOnlyList<Warning>) =
     async {
       if warnings.Count > 0 then
         do! printHardSeparatorAsync ()
@@ -123,7 +123,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
               do! printer.WriteLineAsync(sprintf "%s: %A" key value)
     }
 
-  member this.PrintSummaryAsync(count: AssertionCount) =
+  let printSummaryAsync (count: AssertionCount) =
     async {
       do! printHardSeparatorAsync ()
       let message =
@@ -135,9 +135,15 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
       return! printer.WriteLineAsync(message)
     }
 
+  member this.PrintWarningsAsync(warnings) =
+    printWarningsAsync warnings
+
+  member this.PrintSummaryAsync(count: AssertionCount) =
+    printSummaryAsync count
+
   interface IObserver<TestClass> with
     override this.OnNext(testClass) =
-      this.PrintAsync(testClass) |> Async.RunSynchronously
+      printAsync testClass |> Async.RunSynchronously
 
     override this.OnError(_) = ()
 
