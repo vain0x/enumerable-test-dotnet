@@ -3,6 +3,9 @@
 open System
 open System.Collections.Generic
 open System.IO
+open System.Reactive.Concurrency
+open System.Threading
+open System.Threading.Tasks
 open EnumerableTest
 open EnumerableTest.Runner
 open EnumerableTest.Sdk
@@ -10,6 +13,8 @@ open Basis.Core
 
 type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
   let printer = StructuralTextWriter(writer)
+
+  let queue = ConcurrentActionQueue()
 
   let printSeparatorAsync c =
     printer.WriteLineAsync(String.replicate (width - printer.IndentLength) c)
@@ -136,14 +141,17 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
     }
 
   member this.PrintWarningsAsync(warnings) =
-    printWarningsAsync warnings
+    queue.Enqueue(printWarningsAsync warnings)
 
-  member this.PrintSummaryAsync(count: AssertionCount) =
-    printSummaryAsync count
+  member this.PrintSummaryAsync(count) =
+    queue.Enqueue(printSummaryAsync count)
+
+  member this.WaitUntilEmpty() =
+    queue.WaitUntilEmpty()
 
   interface IObserver<TestClass> with
     override this.OnNext(testClass) =
-      printAsync testClass |> Async.RunSynchronously
+      queue.Enqueue(printAsync testClass)
 
     override this.OnError(_) = ()
 

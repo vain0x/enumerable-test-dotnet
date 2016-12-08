@@ -42,8 +42,9 @@ module Program =
           ( sprintf "Couldn't load an assembly '%s'." assemblyFile.Name
           , [| ("Path", assemblyFile.FullName :> obj); ("Exception", e :> obj) |]
           )
-    printer.PrintWarningsAsync(notifier.Warnings) |> Async.RunSynchronously
-    printer.PrintSummaryAsync(counter.Current) |> Async.RunSynchronously
+    printer.PrintWarningsAsync(notifier.Warnings)
+    printer.PrintSummaryAsync(counter.Current)
+    printer.WaitUntilEmpty()
     counter.IsPassed
 
   [<EntryPoint>]
