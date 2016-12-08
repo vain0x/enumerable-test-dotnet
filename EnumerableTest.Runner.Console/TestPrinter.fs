@@ -44,7 +44,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
       let mark =
         if result.IsPassed
           then "."
-          else "*"
+          else "x"
       do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark testName)
       use indenting = printer.AddIndent()
       if result.IsPassed |> not then
