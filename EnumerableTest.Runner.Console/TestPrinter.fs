@@ -3,6 +3,9 @@
 open System
 open System.Collections.Generic
 open System.IO
+open System.Reactive.Concurrency
+open System.Threading
+open System.Threading.Tasks
 open EnumerableTest
 open EnumerableTest.Runner
 open EnumerableTest.Sdk
@@ -10,6 +13,8 @@ open Basis.Core
 
 type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
   let printer = StructuralTextWriter(writer)
+
+  let queue = ConcurrentActionQueue()
 
   let printSeparatorAsync c =
     printer.WriteLineAsync(String.replicate (width - printer.IndentLength) c)
@@ -93,34 +98,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%d. %s" i schema.MethodName)
     }
 
-  member this.PrintWarningsAsync(warnings: IReadOnlyList<Warning>) =
-    async {
-      if warnings.Count > 0 then
-        do! printHardSeparatorAsync ()
-        do! printer.WriteLineAsync("Warnings:")
-        use indenting = printer.AddIndent()
-        for (i, warning) in warnings |> Seq.indexed do
-          do! printSoftSeparatorAsync ()
-          do! printer.WriteLineAsync(sprintf "%d. %s" i warning.Message)
-          if isVerbose then
-            use indenting = printer.AddIndent()
-            for KeyValue (key, value) in warning.Data do
-              do! printer.WriteLineAsync(sprintf "%s: %A" key value)
-    }
-
-  member this.PrintSummaryAsync(count: AssertionCount) =
-    async {
-      do! printHardSeparatorAsync ()
-      let message =
-        sprintf "Total: %d, Violated: %d, Error: %d, Not completed: %d"
-          count.TotalCount
-          count.ViolatedCount
-          count.ErrorCount
-          count.NotCompletedCount
-      return! printer.WriteLineAsync(message)
-    }
-
-  member this.PrintAsync(testClass: TestClass) =
+  let printAsync (testClass: TestClass) =
     async {
       if isVerbose || testClass |> TestClass.isPassed |> not then
         do! printHardSeparatorAsync ()
@@ -135,9 +113,45 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printNotCompletedMethodsAsync testClass.NotCompletedMethods
     }
 
+  let printWarningsAsync (warnings: IReadOnlyList<Warning>) =
+    async {
+      if warnings.Count > 0 then
+        do! printHardSeparatorAsync ()
+        do! printer.WriteLineAsync("Warnings:")
+        use indenting = printer.AddIndent()
+        for (i, warning) in warnings |> Seq.indexed do
+          do! printSoftSeparatorAsync ()
+          do! printer.WriteLineAsync(sprintf "%d. %s" i warning.Message)
+          if isVerbose then
+            use indenting = printer.AddIndent()
+            for KeyValue (key, value) in warning.Data do
+              do! printer.WriteLineAsync(sprintf "%s: %A" key value)
+    }
+
+  let printSummaryAsync (count: AssertionCount) =
+    async {
+      do! printHardSeparatorAsync ()
+      let message =
+        sprintf "Total: %d, Violated: %d, Error: %d, Not completed: %d"
+          count.TotalCount
+          count.ViolatedCount
+          count.ErrorCount
+          count.NotCompletedCount
+      return! printer.WriteLineAsync(message)
+    }
+
+  member this.PrintWarningsAsync(warnings) =
+    queue.Enqueue(printWarningsAsync warnings)
+
+  member this.PrintSummaryAsync(count) =
+    queue.Enqueue(printSummaryAsync count)
+
+  member this.QueueGotEmpty =
+    queue.GotEmpty
+
   interface IObserver<TestClass> with
     override this.OnNext(testClass) =
-      this.PrintAsync(testClass) |> Async.RunSynchronously
+      queue.Enqueue(printAsync testClass)
 
     override this.OnError(_) = ()
 
