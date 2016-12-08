@@ -2,6 +2,7 @@
 
 open System
 open System.Collections.Concurrent
+open System.Reactive.Disposables
 open System.Reactive.Linq
 open System.Reactive.Subjects
 open System.Threading
@@ -41,6 +42,12 @@ type ConcurrentActionQueue() =
     queue.Enqueue(action)
     consume () |> Async.Start
 
-  member this.WaitUntilEmpty() =
-    if queue.IsEmpty |> not then
-      gotEmpty.FirstAsync().Wait()
+  member val GotEmpty =
+    Observable.Create
+      ( fun (observer: IObserver<_>) ->
+          if queue.IsEmpty then
+            observer.OnNext(())
+            Disposable.Empty
+          else
+            gotEmpty.Subscribe(observer)
+      )

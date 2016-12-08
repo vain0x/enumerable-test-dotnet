@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+open System.Reactive.Linq
 open System.Reflection
 open Argu
 open Basis.Core
@@ -44,7 +45,7 @@ module Program =
           )
     printer.PrintWarningsAsync(notifier.Warnings)
     printer.PrintSummaryAsync(counter.Current)
-    printer.WaitUntilEmpty()
+    printer.QueueGotEmpty.FirstAsync().Wait()
     counter.IsPassed
 
   [<EntryPoint>]
