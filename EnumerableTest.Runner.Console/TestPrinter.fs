@@ -93,6 +93,21 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%d. %s" i schema.MethodName)
     }
 
+  member this.PrintAsync(testClass: TestClass) =
+    async {
+      if isVerbose || testClass |> TestClass.isPassed |> not then
+        do! printHardSeparatorAsync ()
+        do! printer.WriteLineAsync(sprintf "Type: %s" testClass.TypeFullName)
+        use indenting = printer.AddIndent()
+        match testClass.InstantiationError with
+        | Some e ->
+          do! printExceptionAsync "constructor" e
+        | None ->
+          for (i, testMethod) in testClass.Result |> Seq.indexed do
+            do! testMethod |> printTestMethodAsync i
+          do! printNotCompletedMethodsAsync testClass.NotCompletedMethods
+    }
+
   member this.PrintWarningsAsync(warnings: IReadOnlyList<Warning>) =
     async {
       if warnings.Count > 0 then
@@ -118,21 +133,6 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           count.ErrorCount
           count.NotCompletedCount
       return! printer.WriteLineAsync(message)
-    }
-
-  member this.PrintAsync(testClass: TestClass) =
-    async {
-      if isVerbose || testClass |> TestClass.isPassed |> not then
-        do! printHardSeparatorAsync ()
-        do! printer.WriteLineAsync(sprintf "Type: %s" testClass.TypeFullName)
-        use indenting = printer.AddIndent()
-        match testClass.InstantiationError with
-        | Some e ->
-          do! printExceptionAsync "constructor" e
-        | None ->
-          for (i, testMethod) in testClass.Result |> Seq.indexed do
-            do! testMethod |> printTestMethodAsync i
-          do! printNotCompletedMethodsAsync testClass.NotCompletedMethods
     }
 
   interface IObserver<TestClass> with
