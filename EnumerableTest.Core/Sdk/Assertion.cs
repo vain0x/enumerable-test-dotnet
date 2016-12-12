@@ -40,19 +40,19 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public IEnumerable<KeyValuePair<string, object>> Data { get; }
 
-        public Assertion(bool isPassed, string messageOrNull, IEnumerable<KeyValuePair<string, object>> data)
+        internal Assertion(bool isPassed, string messageOrNull, IEnumerable<KeyValuePair<string, object>> data)
         {
             IsPassed = isPassed;
             MessageOrNull = MessageOrNull;
             Data = data;
         }
 
-        public Assertion(bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
+        internal Assertion(bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
             : this(isPassed, null, data)
         {
         }
 
-        public static Assertion Pass { get; } =
+        internal static Assertion Pass { get; } =
             new Assertion(true, Enumerable.Empty<KeyValuePair<string, object>>());
     }
 }
