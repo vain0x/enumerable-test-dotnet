@@ -99,7 +99,6 @@ namespace EnumerableTest
         /// </summary>
         /// <param name="name"></param>
         /// <param name="isPassed"></param>
-        /// <param name="message"></param>
         /// <param name="data"></param>
         /// <returns></returns>
         public static Test
@@ -151,7 +150,6 @@ namespace EnumerableTest
 
         /// <summary>
         /// Equivalent to <see cref="TestExtension.Is{X}(X, X)"/>.
-        /// </para>
         /// </summary>
         /// <typeparam name="X"></typeparam>
         /// <param name="expected"></param>

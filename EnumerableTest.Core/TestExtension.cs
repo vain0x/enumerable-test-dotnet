@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -47,6 +48,7 @@ namespace EnumerableTest
         /// <para lang="ja">
         /// <see cref="StructuralComparisons.StructuralEqualityComparer"/> を使用して、
         /// 2つの値が等しいことを検査する。
+        /// </para>
         /// </summary>
         /// <typeparam name="X"></typeparam>
         /// <param name="actual"></param>
