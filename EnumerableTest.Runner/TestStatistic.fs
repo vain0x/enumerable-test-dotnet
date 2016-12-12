@@ -2,12 +2,6 @@
 
 open System
 
-type TestStatistic =
-  {
-    AssertionCount              : AssertionCount
-    Duration                    : TimeSpan
-  }
-
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestStatistic =
   let zero =
@@ -41,8 +35,17 @@ module TestStatistic =
         override this.Divide(l, r) = subtract l r
     }
 
+  let ofGroupTest groupTest =
+    {
+      AssertionCount            = groupTest |> AssertionCount.ofGroupTest
+      Duration                  = TimeSpan.Zero
+    }
+
   let ofTestMethod testMethod =
     {
       AssertionCount            = testMethod |> AssertionCount.ofTestMethod
       Duration                  = testMethod.Duration
     }
+
+  let isPassed (this: TestStatistic) =
+    this.AssertionCount |> AssertionCount.isPassed

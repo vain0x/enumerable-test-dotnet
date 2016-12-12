@@ -9,8 +9,8 @@ module TestTest =
   let passedTest = Test.Pass("pass")
   let violatedTest = Test.FromResult("violate", false, "it violated")
 
-  let assertion1 = TrueAssertion.Instance
-  let assertion2 = CustomAssertion(false, "assertion2 violated", [||])
+  let assertion1 = Assertion.Pass
+  let assertion2 = Assertion(false, "assertion2 violated", [])
   let assertionTest1 = Test.OfAssertion("assertion1", assertion1)
   let assertionTest2 = Test.OfAssertion("assertion2", assertion2)
   let groupTest =
@@ -30,13 +30,4 @@ module TestTest =
       do! violatedTest |> assertSatisfies (fun t -> t.IsPassed |> not)
       do! emptyGroupTest |> assertSatisfies (fun t -> t.IsPassed)
       do! groupTest |> assertSatisfies (fun t -> t.IsPassed |> not)
-    }
-
-  let ``test Assertions`` =
-    test {
-      do! passedTest.Assertions |> assertSatisfies (Seq.length >> (=) 1)
-      do! violatedTest.Assertions |> assertSatisfies (Seq.length >> (=) 1)
-      do! emptyGroupTest.Assertions |> assertSeqEquals []
-      do! groupTest.Assertions |> assertSeqEquals [assertion1; assertion2]
-      do! nestedGroupTest.Assertions |> assertSatisfies (Seq.length >> (=) 3)
     }

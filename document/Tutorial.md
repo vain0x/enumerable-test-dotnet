@@ -70,6 +70,8 @@ And build the Test project. The test explorer automatically updates the content 
 ### Violation (表明違反)
 Next we show an example of a test which doesn't pass. Add the following method to the OperatorTest class.
 
+次に、通過しないテストの例を挙げましょう。次のメソッドを `OperatorTest` クラスに追加します。
+
 ```csharp
     public IEnumerable<Test> TestDecrement_Violated()
     {
@@ -94,11 +96,11 @@ The first assertion (``n == 1``) "is violated" and the second assertion (``n == 
 ### Assertion methods (表明メソッド)
 **EnumerableTest** provides three assertion methods for usual use and two for uncommon cases. Because we believe that the former three covers 99.9% of assertions, we explain only them here. The first one is `Is`, which has been already metioned above.
 
-**EnumerableTest** が提供する表明メソッドには、普段使用する3つのメソッドと、特殊な用途に用いる2つのメソッドを提供しています。99.9% の表明は前者でまかなえるはずですので、ここではそれらだけ説明しましょう。1つは、さきほど紹介した `Is` です。
+**EnumerableTest** が提供する表明メソッドには、普段使用する3つのメソッドと、特殊な用途に用いる2つのメソッドがあります。99.9% の表明は前者でまかなえるはずですので、ここではそれらだけ説明しましょう。1つは、さきほど紹介した `Is` です。
 
-The second is `Satisfies`, which is a generalized method of `Is`. It allows you to test *any* property of a value. The following code shows a test method that tests an array isn't empty.
+The second is `TestSatisfy`, which is a generalized method of `Is`. It allows you to test *any* property of a value. The following code shows a test method that tests an array isn't empty.
 
-2つ目の `Satisfies` は、`Is` を一般化したものです。これは、値の任意の性質をテストするのに使用できます。次のコードは、「配列の長さがゼロでない」ことをテストするテストメソッドです。
+2つ目の `TestSatisfy` は、`Is` を一般化したものです。これは、値の任意の性質をテストするのに使用できます。次のコードは、「配列の長さがゼロでない」ことをテストするテストメソッドです。
 
 ```csharp
     public int[] MakeArray()
@@ -108,7 +110,7 @@ The second is `Satisfies`, which is a generalized method of `Is`. It allows you 
 
     public IEnumerable<Test> test_MakeArray_returns_a_nonempty_array()
     {
-        yield return MakeArray().Satisfies(a => a.Length != 0);
+        yield return MakeArray().TestSatisfy(a => a.Length != 0);
     }
 ```
 
@@ -120,9 +122,10 @@ The third is ``Test.Catch``, which tries to catch an exception. You can use this
     public IEnumerable<Test> test_array_indexer_rejects_invalid_index()
     {
         var array = new[] { 0, 1, 2 };
-        Test.Catch(() =>
-        {
-            return array[3];
-        });
+        yield return
+            Test.Catch(() =>
+            {
+                return array[3];
+            });
     }
 ```

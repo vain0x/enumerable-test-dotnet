@@ -6,9 +6,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     mc:Ignorable="d"
+    x:Name="mainWindow"
     Title="EnumerableTest.Runner.Wpf"
-    Width="768"
-    Height="432"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextElement.FontWeight="Regular"
+    TextElement.FontSize="13"
+    TextOptions.TextFormattingMode="Ideal" 
+    TextOptions.TextRenderingMode="Auto"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{StaticResource MaterialDesignFont}"
+    Closing="mainWindow_Closing"
     >
-    <local:TestTreeView />
+    <local:TestTreeView DataContext="{Binding TestTree}" />
 </Window>

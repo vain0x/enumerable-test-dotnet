@@ -9,7 +9,6 @@ namespace EnumerableTest.Sdk
     /// <summary>
     /// Represents a unit test which consists of a single assertion.
     /// </summary>
-    [Serializable]
     public sealed class AssertionTest
         : Test
     {
@@ -29,19 +28,10 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed => Assertion.IsPassed;
 
-        /// <summary>
-        /// Gets all assertions in the test.
-        /// <para lang="ja">
-        /// テスト内のすべての表明を取得する。
-        /// </para>
-        /// </summary>
-        public override Assertion[] Assertions { get; }
-
         internal AssertionTest(string name, Assertion assertion)
             : base(name)
         {
             Assertion = assertion;
-            Assertions = new[] { Assertion };
         }
     }
 }

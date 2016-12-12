@@ -14,9 +14,9 @@ namespace EnumerableTest.Sandbox
         public IEnumerable<Test> test_increment()
         {
             var count = 0;
-            yield return Test.Equal(0, count);
+            yield return count.Is(0);
             count++;
-            yield return Test.Equal(1, count);
+            yield return count.Is(1);
         }
 
         public IEnumerable<Test> test_catch()
@@ -28,11 +28,11 @@ namespace EnumerableTest.Sandbox
         public IEnumerable<Test> failing_increment()
         {
             var count = 0;
-            yield return Test.Equal(0, count);
+            yield return count.Is(0);
             foreach (var i in Enumerable.Range(0, 10))
             {
                 count++;
-                yield return Test.Equal(-1, count);
+                yield return count.Is(-1);
             }
         }
 
@@ -49,21 +49,21 @@ namespace EnumerableTest.Sandbox
         public IEnumerable<Test> throwing_increment()
         {
             var count = 0;
-            yield return Test.Equal(0, count);
+            yield return count.Is(0);
             throw new Exception("custom error message");
         }
 
         public IEnumerable<Test> throwing_in_dispose()
         {
             disposingException = new Exception("disposing exception");
-            yield return Test.Equal(1, 1);
+            yield return 1.Is(1);
         }
 
         public IEnumerable<Test> test_all_zero(IEnumerable<int> list)
         {
             foreach (var x in list)
             {
-                yield return Test.Equal(0, x);
+                yield return x.Is(0);
             }
         }
 
@@ -75,8 +75,8 @@ namespace EnumerableTest.Sandbox
 
         public IEnumerable<Test> test_structural_equality()
         {
-            yield return Test.Equal(new[] { 0, 1, 2 }, new[] { 0, 1, 2 });
-            yield return Test.Equal(Tuple.Create(new[] { 0 }), Tuple.Create(new[] { 0 }));
+            yield return new[] { 0, 1, 2 }.Is(new[] { 0, 1, 2 });
+            yield return Tuple.Create(new[] { 0 }).Is(Tuple.Create(new[] { 0 }));
         }
 
         public IEnumerable<Test> test_Satisfy()
@@ -95,12 +95,12 @@ namespace EnumerableTest.Sandbox
 
         public IEnumerable<Test> New_test()
         {
-            yield return Test.Equal(1, 0);
+            yield return 0.Is(1);
         }
 
         public IEnumerable<Test> never()
         {
-            yield return Test.Equal(0, 0);
+            yield return 0.Is(0);
             //while (true) continue;
         }
 
@@ -122,6 +122,7 @@ namespace EnumerableTest.Sandbox
             var exception = new ArgumentOutOfRangeException("value");
             var value = new MyClass();
             yield return Test.Equal<object>(exception, value);
+            yield return (new Dictionary<string, int>() { { "a", 0 }, { "b", 1 }, { "c", 2 } }).Is(null);
         }
 
         public void Dispose()

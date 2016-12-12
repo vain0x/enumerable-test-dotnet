@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:core="clr-namespace:EnumerableTest;assembly=EnumerableTest.Core"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:sdk="clr-namespace:EnumerableTest.Sdk;assembly=EnumerableTest.Core"
     xmlns:runner="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner"
     xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner.Wpf.ViewModel"
@@ -18,60 +19,71 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="80" />
-            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TreeView x:Name="treeView" ItemsSource="{Binding Children}">
+        <TreeView x:Name="treeView" ItemsSource="{Binding Root.Children}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate
-                    DataType="{x:Type model:TestAssemblyNode}"
+                    DataType="{x:Type model:FolderNode}"
                     ItemsSource="{Binding Children}"
                     >
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
                         <TextBlock Text="{Binding Name}" />
-                        <Button
-                            Grid.Column="1"
-                            Content="■"
-                            Foreground="Red"
-                            FontSize="8"
-                            Margin="10,0,0,0"
-                            HorizontalAlignment="Right"
-                            Command="{Binding CancelCommand}"
-                            />
-                    </Grid>
+                    </StackPanel>
                 </HierarchicalDataTemplate>
-                
+
                 <HierarchicalDataTemplate
-                    DataType="{x:Type model:TestClassNode}"
+                    DataType="{x:Type model:TestMethodNode}"
                     ItemsSource="{Binding Children}"
                     >
                     <StackPanel Orientation="Horizontal">
-                        <local:TestStatusMark DataContext="{Binding TestStatus.Value}" />
+                        <Button
+                            Style="{StaticResource DefaultControlStyle}"
+                            Margin="0,0,10,0"
+                            Padding="2"
+                            Visibility="{Binding CancelCommand.CanExecute.Value, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Command="{Binding CancelCommand}"
+                            >
+                            <TextBlock
+                                Style="{StaticResource DefaultTextBlockStyle}"
+                                VerticalAlignment="Center"
+                                Foreground="Red"
+                                FontSize="8"
+                                Text="■"
+                                />
+                        </Button>
+                        <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
-                <HierarchicalDataTemplate DataType="{x:Type model:TestMethodNode}">
+                <HierarchicalDataTemplate
+                    DataType="{x:Type model:TestGroupNode}"
+                    ItemsSource="{Binding Children}"
+                    >
                     <StackPanel Orientation="Horizontal">
-                        <local:TestStatusMark DataContext="{Binding TestStatus.Value}" />
+                        <local:TestStatusMark DataContext="{Binding TestStatistic.Value}" />
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
-                <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
+                <Style TargetType="TreeViewItem" BasedOn="{StaticResource MaterialDesignTreeViewItem}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding (model:INodeViewModel.IsExpanded).Value}" Value="True">
+                        <DataTrigger Binding="{Binding IsExpanded.Value}" Value="True">
                             <Setter Property="IsExpanded" Value="True" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </TreeView.Resources>
         </TreeView>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        <GridSplitter
+            Grid.Column="1"
+            Width="5"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            />
         <ScrollViewer
             Grid.Column="2"
             Content="{Binding ElementName=treeView, Path=SelectedItem}"

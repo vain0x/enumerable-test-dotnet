@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+open System.Reactive.Linq
 open System.Reflection
 open Argu
 open Basis.Core
@@ -17,23 +18,35 @@ module Assembly =
 
 module Program =
   let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
-    let (assemblies, unloadedFiles) =
-      assemblyFiles
-      |> Seq.paritionMap Assembly.tryLoadFile
-    let results =
-      assemblies
-      |> Seq.collect (TestSuite.ofAssemblyAsync timeout)
-      |> Observable.ofParallel
+    use notifier = new ConcreteNotifier()
+    use logFile =
+      new LogFile() |> tap
+        (fun l -> l.ObserveNotifications(notifier))
     let printer =
-      TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
-      |> tap (fun p -> p.PrintUnloadedFiles(unloadedFiles))
+        TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
     let counter = AssertionCounter()
-    results.Subscribe(printer) |> ignore<IDisposable>
-    results.Subscribe(counter) |> ignore<IDisposable>
-    results.Connect()
-    results |> Observable.wait
-    printer.PrintSummaryAsync(counter.Current) |> Async.RunSynchronously
-    counter.IsAllGreen
+    for assemblyFile in assemblyFiles do
+      match OneshotTestAssembly.ofFile(assemblyFile) with
+      | Success testAssembly ->
+        use testAssembly = testAssembly
+        use testClassNotifier =
+          new TestClassNotifier(testAssembly.Schema, testAssembly)
+        use printerSubscription =
+          testClassNotifier.Subscribe(printer)
+        use counterSubscription =
+          testClassNotifier.Subscribe(counter)
+        testAssembly.Start()
+        testAssembly.TestResults |> Observable.waitTimeout timeout |> ignore<bool>
+        testClassNotifier.Complete()
+      | Failure e ->
+        notifier.NotifyWarning
+          ( sprintf "Couldn't load an assembly '%s'." assemblyFile.Name
+          , [| ("Path", assemblyFile.FullName :> obj); ("Exception", e :> obj) |]
+          )
+    printer.PrintWarningsAsync(notifier.Warnings)
+    printer.PrintSummaryAsync(counter.Current)
+    printer.QueueGotEmpty.FirstAsync().Wait()
+    counter.IsPassed
 
   [<EntryPoint>]
   let main _ =
@@ -42,6 +55,7 @@ module Program =
       FileSystemInfo.getTestAssemblies thisFile
       |> Seq.append AppArgument.files
       |> Seq.distinctBy (fun file -> file.FullName)
+    MarshalValue.Recursion <- AppArgument.recursion
     let isPassed =
       run AppArgument.isVerbose AppArgument.timeout assemblyFiles
     let exitCode =

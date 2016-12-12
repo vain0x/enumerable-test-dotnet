@@ -10,6 +10,8 @@ type AppArgument =
     Files of list<string>
   | Verbose
   | Timeout of int
+  | Recursion
+    of int
 with
   interface IArgParserTemplate with
     member this.Usage =
@@ -19,7 +21,14 @@ with
       | Verbose ->
         "Print debug outputs"
       | Timeout _ ->
-        "Timeout [ms] for a test class execution"
+        "Timeout [ms] for a test assembly execution"
+      | Recursion _ ->
+        "Max nesting level for value serialization"
 
-type TestSuite =
-  array<TestClass>
+type TestClass =
+  {
+    TypeFullName                : string
+    InstantiationError          : option<Exception>
+    Result                      : array<TestMethod>
+    NotCompletedMethods         : array<TestMethodSchema>
+  }

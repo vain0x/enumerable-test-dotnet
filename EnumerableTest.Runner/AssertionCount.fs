@@ -2,14 +2,6 @@
 
 open EnumerableTest.Sdk
 
-type AssertionCount =
-  {
-    TotalCount                  : int
-    ViolatedCount               : int
-    ErrorCount                  : int
-    NotCompletedCount           : int
-  }
-
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module AssertionCount =
   let zero =
@@ -75,16 +67,16 @@ module AssertionCount =
         override this.Divide(l, r) = subtract l r
     }
 
-  let ofAssertion (assertion: Assertion) =
+  let ofAssertion (assertion: SerializableAssertion) =
     if assertion.IsPassed
       then onePassed
       else oneViolated
 
-  let ofGroupTest (groupTest: GroupTest) =
+  let ofGroupTest (groupTest: SerializableGroupTest) =
     seq {
-      for assertion in groupTest.Assertions do
+      for assertion in groupTest |> SerializableTest.assertions do
         yield assertion |> ofAssertion
-      if groupTest.ExceptionOrNull |> isNull |> not then
+      if groupTest.Exception |> Option.isSome then
         yield oneError
     }
     |> Seq.fold add zero
@@ -97,5 +89,5 @@ module AssertionCount =
       | None -> zero
       )
 
-  let isAllGreen (count: AssertionCount) =
+  let isPassed (count: AssertionCount) =
     count.ViolatedCount = 0 && count.ErrorCount = 0 && count.NotCompletedCount = 0

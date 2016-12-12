@@ -1,18 +1,11 @@
-﻿namespace EnumerableTest.Runner.Wpf
+﻿namespace EnumerableTest.Runner
 
 open Basis.Core
 open EnumerableTest.Sdk
-open EnumerableTest.Runner
-
-type TestStatus =
-  | NotCompleted
-  | Passed
-  | Violated
-  | Error
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestStatus =
-  let ofAssertion (assertion: Assertion) =
+  let ofAssertion (assertion: SerializableAssertion) =
     if assertion.IsPassed
       then Passed
       else Violated
@@ -27,7 +20,3 @@ module TestStatus =
       NotCompleted
     else
       Passed
-
-type NotExecutedResult() =
-  static member val Instance =
-    new NotExecutedResult()

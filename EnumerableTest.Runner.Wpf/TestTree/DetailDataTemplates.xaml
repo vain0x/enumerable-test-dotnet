@@ -9,19 +9,11 @@
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     >
     <!-- Nodes -->
-    <DataTemplate DataType="{x:Type model:TestAssemblyNode}">
+    <DataTemplate DataType="{x:Type model:FolderNode}">
         <StackPanel>
             <TextBlock Text="{Binding Name}" />
             <Separator />
-            <Label Content="{Binding TestStatistic.Value}" />
-        </StackPanel>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type model:TestClassNode}">
-        <StackPanel>
-            <TextBlock Text="{Binding Name}" />
-            <Separator />
-            <Label Content="{Binding TestStatistic.Value}" />
+            <ContentPresenter Content="{Binding TestStatistic.Value}" />
         </StackPanel>
     </DataTemplate>
 
@@ -29,13 +21,17 @@
         <StackPanel>
             <TextBlock Text="{Binding Name}" />
             <Separator />
-            <Label Content="{Binding LastResult.Value}" />
+            <ContentPresenter Content="{Binding LastResult.Value}" />
         </StackPanel>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type model:TestGroupNode}">
+        <ContentPresenter Content="{Binding GroupTest}" />
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type runner:TestMethod}">
         <StackPanel>
-            <Label Content="{Binding Result}" />
+            <ContentPresenter Content="{Binding Result}" />
             <StackPanel>
                 <StackPanel.Style>
                     <Style
@@ -51,7 +47,7 @@
                 </StackPanel.Style>
                 <Separator />
                 <StackPanel Orientation="Horizontal">
-                    <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                    <local:TestStatusMark DataContext="{x:Static runner:TestStatus.Error}" />
                     <TextBlock Text="RUNTIME ERROR in Dispose" />
                 </StackPanel>
                 <Label Content="{Binding DisposingErrorOrNull}" />
@@ -64,7 +60,7 @@
     </DataTemplate>
 
     <!-- Tests -->
-    <DataTemplate DataType="{x:Type sdk:AssertionTest}">
+    <DataTemplate DataType="{x:Type runner:SerializableAssertionTest}">
         <Expander>
             <Expander.Header>
                 <StackPanel Orientation="Horizontal">
@@ -86,7 +82,7 @@
         </Expander>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:GroupTest}">
+    <DataTemplate DataType="{x:Type runner:SerializableGroupTest}">
         <GroupBox Header="{Binding Name}">
             <StackPanel>
                 <ItemsControl ItemsSource="{Binding Tests}" />
@@ -105,7 +101,7 @@
                     </StackPanel.Style>
                     <Separator />
                     <StackPanel Orientation="Horizontal">
-                        <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
+                        <local:TestStatusMark DataContext="{x:Static runner:TestStatus.Error}" />
                         <TextBlock Text="RUNTIME ERROR" />
                     </StackPanel>
                     <Label Content="{Binding ExceptionOrNull}" />
@@ -117,7 +113,7 @@
     <!-- NotExecutedResult -->
     <DataTemplate DataType="{x:Type model:NotExecutedResult}">
         <StackPanel Orientation="Horizontal">
-            <local:TestStatusMark DataContext="{x:Static model:TestStatus.NotCompleted}" />
+            <local:TestStatusMark DataContext="{x:Static runner:TestStatus.NotCompleted}" />
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="This test has not completed yet." />
                 <TextBlock Text="このテストの実行はまだ完了していません。" />
@@ -140,169 +136,88 @@
         </StackPanel>
     </DataTemplate>
 
-    <!-- Assertions-->
-    <DataTemplate DataType="{x:Type sdk:TrueAssertion}">
-        <TextBlock Text="Passed." />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type sdk:CustomAssertion}">
+    <DataTemplate DataType="{x:Type runner:SerializableAssertion}">
         <StackPanel>
-            <TextBlock Text="{Binding Message}">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBlockStyle}">
+            <TextBox Text="{Binding MessageOrNull, Mode=OneTime}">
+                <TextBox.Style>
+                    <Style TargetType="TextBox" BasedOn="{StaticResource ReadOnlyTextBoxStyle}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsPassed}" Value="True">
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding MessageOrNull}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </TextBlock.Style>
-            </TextBlock>
-            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Data}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        CellStyle="{StaticResource DataGridCellStyle}"
-                        IsReadOnly="True"
-                        Header="Key"
-                        Binding="{Binding Key}"
-                        />
-                    <DataGridTemplateColumn
-                        CellStyle="{StaticResource DataGridCellStyle}"
-                        IsReadOnly="True"
-                        Width="*"
-                        Header="Value"
-                        >
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Value}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                </TextBox.Style>
+            </TextBox>
+            <local:KeyValueGrid ItemsSource="{Binding Data}" />
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:EqualAssertion}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="Expected" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Expected}" />
-
-            <TextBlock Grid.Row="1" Text="Actual" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Actual}" />
-        </Grid>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type sdk:SatisfyAssertion}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="Value" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding Value}" />
-
-            <TextBlock Grid.Row="1" Text="Predicate" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Predicate}" />
-        </Grid>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type sdk:CatchAssertion}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="Exception" Style="{StaticResource LabelTextBlockStyle}" />
-            <Label Grid.Column="1" Content="{Binding ExceptionOrNull}" />
-        </Grid>
-    </DataTemplate>
-
     <!-- MarshalValue -->
-    <DataTemplate DataType="{x:Type sdk:MarshalValue}">
-        <Expander>
-            <Expander.Header>
-                <TextBlock>
-                    <Run Text="{Binding String, Mode=OneTime}" />
-                    :
-                    <Run Text="{Binding TypeName, Mode=OneTime}" />
-                </TextBlock>
-            </Expander.Header>
-            <Expander.Style>
-                <Style TargetType="Expander">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Properties.Length}" Value="0">
-                            <Setter Property="IsEnabled" Value="False" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Expander.Style>
-            <DataGrid
-                AutoGenerateColumns="False"
-                ItemsSource="{Binding Properties}"
-                >
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Header="Name"
-                        Binding="{Binding Name}"
-                        CellStyle="{StaticResource DataGridCellStyle}"
-                        IsReadOnly="True"
+    <DataTemplate DataType="{x:Type runner:MarshalValue}">
+        <Grid>
+            <!-- if Properties.Length = 0 then -->
+            <Grid>
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Properties.Length}" Value="0">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <TextBox
+                    Style="{StaticResource ReadOnlyTextBoxStyle}"
+                    Text="{Binding StringAndTypeName, Mode=OneTime}"
+                    />
+            </Grid>
+            <!-- else -->
+            <Expander>
+                <Expander.Header>
+                    <TextBox
+                        Style="{StaticResource ReadOnlyTextBoxStyle}"
+                        Text="{Binding StringAndTypeName, Mode=OneTime}"
                         />
-                    <DataGridTemplateColumn
-                        Header="Value"
-                        Width="*"
-                        CellStyle="{StaticResource DataGridCellStyle}"
-                        IsReadOnly="True"
-                        >
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Value}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Expander>
+                </Expander.Header>
+                <Expander.Style>
+                    <Style TargetType="Expander">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Properties.Length}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+                <local:KeyValueGrid ItemsSource="{Binding Properties}" />
+            </Expander>
+            <!-- end if -->
+        </Grid>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type sdk:MarshalResultException}">
-        <Expander>
-            <Expander.Header>
-                <StackPanel Orientation="Horizontal">
-                    <local:TestStatusMark DataContext="{x:Static model:TestStatus.Error}" />
-                    <TextBlock Text="{Binding Exception.Message}" />
-                </StackPanel>
-            </Expander.Header>
-            <Label Content="{Binding Exception}" />
-        </Expander>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type sdk:MarshalResultValue}">
-        <Label Content="{Binding MarshalValue}" />
+    <DataTemplate DataType="{x:Type runner:MarshalResult}">
+        <ContentPresenter Content="{Binding AsObject}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type system:Exception}">
-        <Border Style="{StaticResource RoundBorderStyle}">
-            <TextBlock TextWrapping="Wrap" Margin="10" Text="{Binding}" />
-        </Border>
+        <Expander>
+            <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <local:TestStatusMark DataContext="{x:Static runner:TestStatus.Error}" />
+                    <TextBox
+                        Style="{StaticResource ReadOnlyTextBoxStyle}"
+                        Text="{Binding Message, Mode=OneTime}"
+                        />
+                </StackPanel>
+            </Expander.Header>
+            <TextBox
+                Style="{StaticResource ReadOnlyTextBoxStyle}"
+                Text="{Binding Mode=OneTime}"
+                />
+        </Expander>
     </DataTemplate>
 </ResourceDictionary>
