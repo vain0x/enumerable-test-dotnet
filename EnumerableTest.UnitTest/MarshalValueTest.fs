@@ -120,3 +120,10 @@ module MarshalValueTest =
         |> Seq.toList
       do! q |> assertSatisfies (Seq.forall Seq.isEmpty)
     }
+
+  let ``test ofObjFlat`` =
+    test {
+      let it = [|"x"; "y"|] |> MarshalValue.ofObjFlat
+      do! it.String |> assertEquals "{x, y}"
+      do! it.Properties |> assertSatisfies Array.isEmpty
+    }
