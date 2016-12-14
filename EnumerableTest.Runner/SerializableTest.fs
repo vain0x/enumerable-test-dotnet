@@ -64,7 +64,11 @@ module SerializableAssertion =
       Data =
         [|
           for KeyValue (key, value) in assertion.Data do
-            yield KeyValuePair<_, _>(key, MarshalValue.ofObj value)
+            let marshalValue =
+              if assertion.IsPassed
+              then MarshalValue.ofObjFlat value
+              else MarshalValue.ofObj value
+            yield KeyValuePair<_, _>(key, marshalValue)
         |]
     }
 
