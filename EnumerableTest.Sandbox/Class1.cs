@@ -104,6 +104,11 @@ namespace EnumerableTest.Sandbox
             //while (true) continue;
         }
 
+        public IEnumerable<Test> test_in_case_of_a_test_method_node_has_too_long_name_like_this()
+        {
+            yield return 0.Is(0);
+        }
+
         sealed class MyClass
         {
             public int X
