@@ -145,11 +145,10 @@ namespace EnumerableTest
         {
             var isPassed = comparer.Equals(actual, expected);
             var data =
-                new[]
-                {
-                    KeyValuePair.Create("Expected", (object)expected),
-                    KeyValuePair.Create("Actual", (object)actual),
-                };
+                DictionaryTestData.Build()
+                .Add("Expected", expected)
+                .Add("Actual", actual)
+                .MakeReadOnly();
             return FromResult(nameof(Equal), isPassed, data);
         }
 
@@ -177,11 +176,10 @@ namespace EnumerableTest
             var isPassed = predicate.Compile().Invoke(value);
             var message = "A value should satisfy a predicate but didn't.";
             var data =
-                new[]
-                {
-                    KeyValuePair.Create("Value", (object)value),
-                    KeyValuePair.Create("Predicate", (object)predicate),
-                };
+                DictionaryTestData.Build()
+                .Add("Value", value)
+                .Add("Predicate", predicate)
+                .MakeReadOnly();
             return FromResult(nameof(Satisfy), isPassed, message, data);
         }
 
@@ -209,11 +207,10 @@ namespace EnumerableTest
 
             var message = "An exception of a type should be thrown but didn't.";
             var data =
-                new[]
-                {
-                    KeyValuePair.Create("Type", (object)typeof(E)),
-                    KeyValuePair.Create("ExceptionOrNull", (object)exceptionOrNull),
-                };
+                DictionaryTestData.Build()
+                .Add("Type", typeof(E))
+                .Add("ExceptionOrNull", exceptionOrNull)
+                .MakeReadOnly();
             return FromResult(nameof(Catch), !ReferenceEquals(exceptionOrNull, null), message, data);
         }
 
