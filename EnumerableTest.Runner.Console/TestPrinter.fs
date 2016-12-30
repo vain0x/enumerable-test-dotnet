@@ -75,6 +75,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
       | GroupTest test ->
         do! printer.WriteLineAsync(sprintf "Group: %s" test.Name)
         use indenting = printer.AddIndent()
+        do! test.Data |> printTestDataAsync
         for (i, test) in test.Tests |> Seq.indexed do
           do! printTestAsync i test
     }

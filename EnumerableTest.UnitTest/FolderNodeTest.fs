@@ -56,11 +56,15 @@ module FolderNodeTest =
                   TimeSpan.Zero
               }
         a.UpdateResult(
-          let groupTest = GroupTest("a", [| (0).Is(0) |], null) |> SerializableTest.ofGroupTest
+          let groupTest =
+            GroupTest("a", [| (0).Is(0) |], null, TestData.Empty)
+            |> SerializableTest.ofGroupTest
           in TestMethod.ofResult "a" groupTest None TimeSpan.Zero
           )
         b.UpdateResult(
-          let groupTest = GroupTest("b", [||], exn()) |> SerializableTest.ofGroupTest
+          let groupTest =
+            GroupTest("b", [||], exn(), TestData.Empty)
+            |> SerializableTest.ofGroupTest
           in TestMethod.ofResult "b" groupTest None TimeSpan.Zero
           )
         do! node.TestStatistic.Value |> assertEquals

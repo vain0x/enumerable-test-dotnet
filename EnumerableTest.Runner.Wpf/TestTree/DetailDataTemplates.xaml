@@ -85,6 +85,7 @@
     <DataTemplate DataType="{x:Type runner:SerializableGroupTest}">
         <GroupBox Header="{Binding Name}">
             <StackPanel>
+                <ContentPresenter Content="{Binding Data}" />
                 <ItemsControl ItemsSource="{Binding Tests}" />
                 <StackPanel>
                     <StackPanel.Style>

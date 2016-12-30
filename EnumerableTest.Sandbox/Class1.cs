@@ -131,6 +131,15 @@ namespace EnumerableTest.Sandbox
             yield return (new Dictionary<string, int>() { { "a", 0 }, { "b", 1 }, { "c", 2 } }).Is(null);
         }
 
+        public IEnumerable<Test> test_group()
+        {
+            var data =
+                DictionaryTestData.Build()
+                .Add("Value", new MyClass())
+                .MakeReadOnly();
+            yield return test_increment().ToTestGroup("group", data);
+        }
+
         public void Dispose()
         {
             if (disposingException != null)

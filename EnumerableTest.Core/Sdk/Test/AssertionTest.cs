@@ -20,24 +20,15 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed { get; }
 
-        /// <summary>
-        /// Gets the data related to the test.
-        /// <para lang="ja">
-        /// テストに関連するデータを取得する。
-        /// </para>
-        /// </summary>
-        public TestData Data { get; }
-
         internal
             AssertionTest(
                 string name,
                 bool isPassed,
                 TestData data
             )
-            : base(name)
+            : base(name, data)
         {
             IsPassed = isPassed;
-            Data = data;
         }
     }
 }

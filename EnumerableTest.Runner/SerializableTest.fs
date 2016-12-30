@@ -25,7 +25,7 @@ type SerializableAssertionTest(name, isPassed, data) =
 
 [<Serializable>]
 [<Sealed>]
-type SerializableGroupTest(name, tests, error) =
+type SerializableGroupTest(name, tests, error, data) =
   inherit SerializableTest(name)
 
   member this.Tests =
@@ -36,6 +36,9 @@ type SerializableGroupTest(name, tests, error) =
 
   member this.ExceptionOrNull =
     this.Exception |> Option.toObj
+
+  member this.Data: SerializableTestData =
+    data
 
   override val IsPassed =
     tests |> Array.forall (fun test -> (test: SerializableTest).IsPassed)
@@ -61,7 +64,8 @@ module SerializableTest =
   let rec ofGroupTest (test: GroupTest) =
     let tests = test.Tests |> Seq.map ofTest |> Seq.toArray
     let e = test.ExceptionOrNull |> Option.ofObj
-    SerializableGroupTest(test.Name, tests, e)
+    let data = test.Data |> SerializableTestData.ofTestData test.IsPassed
+    SerializableGroupTest(test.Name, tests, e, data)
 
   and ofTest (test: Test): SerializableTest =
     match test with

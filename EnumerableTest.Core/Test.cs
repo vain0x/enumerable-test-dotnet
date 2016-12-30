@@ -33,9 +33,18 @@ namespace EnumerableTest
         /// </summary>
         public abstract bool IsPassed { get; }
 
-        internal Test(string name)
+        /// <summary>
+        /// Gets the data related to the test.
+        /// <para lang="ja">
+        /// テストに関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public TestData Data { get; }
+
+        internal Test(string name, TestData data)
         {
             Name = name;
+            Data = data;
         }
 
         #region Factory
