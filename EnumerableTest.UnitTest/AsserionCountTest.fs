@@ -11,7 +11,7 @@ module AsserionCountTest =
     let passedCase =
       test {
         do!
-          AssertionTest("passed-test", true, null, Seq.empty)
+          AssertionTest("passed-test", true, null, TestData.Empty)
           |> SerializableTest.ofAssertionTest
           |> AssertionCount.ofAssertionTest
           |> assertEquals AssertionCount.onePassed
@@ -20,7 +20,7 @@ module AsserionCountTest =
     let violatedCase =
       test {
         do!
-          AssertionTest("violated-test", false, "violated", Seq.empty)
+          AssertionTest("violated-test", false, "violated", TestData.Empty)
           |> SerializableTest.ofAssertionTest
           |> AssertionCount.ofAssertionTest
           |> assertEquals AssertionCount.oneViolated

@@ -55,7 +55,7 @@ namespace EnumerableTest
                 string name,
                 bool isPassed,
                 string message,
-                IEnumerable<KeyValuePair<string, object>> data
+                TestData data
             )
         {
             if (message == null)
@@ -76,7 +76,7 @@ namespace EnumerableTest
         /// <param name="data"></param>
         /// <returns></returns>
         public static Test
-            FromResult(string name, bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
+            FromResult(string name, bool isPassed, TestData data)
         {
             return new AssertionTest(name, isPassed, null, data);
         }
@@ -97,8 +97,7 @@ namespace EnumerableTest
             {
                 throw new ArgumentNullException(nameof(message));
             }
-            var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return new AssertionTest(name, isPassed, message, data);
+            return new AssertionTest(name, isPassed, message, TestData.Empty);
         }
 
         /// <summary>
@@ -113,8 +112,7 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test FromResult(string name, bool isPassed)
         {
-            var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return new AssertionTest(name, isPassed, null, data);
+            return new AssertionTest(name, isPassed, null, TestData.Empty);
         }
         #endregion
 
@@ -145,11 +143,10 @@ namespace EnumerableTest
         {
             var isPassed = comparer.Equals(actual, expected);
             var data =
-                new[]
-                {
-                    KeyValuePair.Create("Expected", (object)expected),
-                    KeyValuePair.Create("Actual", (object)actual),
-                };
+                DictionaryTestData.Build()
+                .Add("Expected", expected)
+                .Add("Actual", actual)
+                .MakeReadOnly();
             return FromResult(nameof(Equal), isPassed, data);
         }
 
@@ -177,11 +174,10 @@ namespace EnumerableTest
             var isPassed = predicate.Compile().Invoke(value);
             var message = "A value should satisfy a predicate but didn't.";
             var data =
-                new[]
-                {
-                    KeyValuePair.Create("Value", (object)value),
-                    KeyValuePair.Create("Predicate", (object)predicate),
-                };
+                DictionaryTestData.Build()
+                .Add("Value", value)
+                .Add("Predicate", predicate)
+                .MakeReadOnly();
             return FromResult(nameof(Satisfy), isPassed, message, data);
         }
 
@@ -209,11 +205,10 @@ namespace EnumerableTest
 
             var message = "An exception of a type should be thrown but didn't.";
             var data =
-                new[]
-                {
-                    KeyValuePair.Create("Type", (object)typeof(E)),
-                    KeyValuePair.Create("ExceptionOrNull", (object)exceptionOrNull),
-                };
+                DictionaryTestData.Build()
+                .Add("Type", typeof(E))
+                .Add("ExceptionOrNull", exceptionOrNull)
+                .MakeReadOnly();
             return FromResult(nameof(Catch), !ReferenceEquals(exceptionOrNull, null), message, data);
         }
 

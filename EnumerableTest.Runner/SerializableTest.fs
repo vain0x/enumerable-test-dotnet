@@ -23,8 +23,8 @@ type SerializableAssertionTest(name, isPassed, message, data) =
   member this.MessageOrNull =
     this.Message |> Option.toObj
 
-  member this.Data =
-    (data: array<KeyValuePair<string, MarshalValue>>)
+  member this.Data: SerializableTestData =
+    data
 
   override this.IsPassed =
     isPassed
@@ -63,14 +63,7 @@ module SerializableTest =
     let message =
       test.MessageOrNull |> Option.ofObj
     let data =
-      [|
-        for KeyValue (key, value) in test.Data do
-          let marshalValue =
-            if test.IsPassed
-            then MarshalValue.ofObjFlat value
-            else MarshalValue.ofObj value
-          yield KeyValuePair<_, _>(key, marshalValue)
-      |]
+      SerializableTestData.ofTestData test.IsPassed test.Data
     SerializableAssertionTest(test.Name, test.IsPassed, message, data)
 
   let rec ofGroupTest (test: GroupTest) =

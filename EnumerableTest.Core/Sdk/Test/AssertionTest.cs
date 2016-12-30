@@ -34,14 +34,14 @@ namespace EnumerableTest.Sdk
         /// テストに関連するデータを取得する。
         /// </para>
         /// </summary>
-        public IEnumerable<KeyValuePair<string, object>> Data { get; }
+        public TestData Data { get; }
 
         internal
             AssertionTest(
                 string name,
                 bool isPassed,
                 string messageOrNull,
-                IEnumerable<KeyValuePair<string, object>> data
+                TestData data
             )
             : base(name)
         {

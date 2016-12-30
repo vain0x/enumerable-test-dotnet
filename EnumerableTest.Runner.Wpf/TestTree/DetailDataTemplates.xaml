@@ -93,7 +93,7 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
-                <local:KeyValueGrid ItemsSource="{Binding Data}" />
+                <ContentPresenter Content="{Binding Data}" />
             </StackPanel>
         </Expander>
     </DataTemplate>
@@ -150,6 +150,13 @@
                 Total duration: <Run Text="{Binding Duration, Mode=OneWay}" />
             </TextBlock>
         </StackPanel>
+    </DataTemplate>
+    
+    <!-- TestData -->
+    <DataTemplate DataType="{x:Type runner:SerializableEmptyTestData}" />
+
+    <DataTemplate DataType="{x:Type runner:SerializableDictionaryTestData}">
+        <local:KeyValueGrid ItemsSource="{Binding}" />
     </DataTemplate>
 
     <!-- MarshalValue -->

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EnumerableTest.Sdk;
 
 namespace EnumerableTest.Sandbox
 {
@@ -93,9 +94,9 @@ namespace EnumerableTest.Sandbox
             yield return a.IsNot(new[] { 0, 1 });
         }
 
-        public IEnumerable<Test> New_test()
+        public IEnumerable<Test> test_empty_data()
         {
-            yield return 0.Is(1);
+            yield return Test.FromResult("empty-data", false, TestData.Empty);
         }
 
         public IEnumerable<Test> never()
