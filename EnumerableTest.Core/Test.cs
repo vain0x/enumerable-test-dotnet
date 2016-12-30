@@ -39,17 +39,6 @@ namespace EnumerableTest
         }
 
         #region Factory
-        static Test
-            OfAssertion(
-                string name,
-                bool isPassed,
-                string messageOrNull,
-                IEnumerable<KeyValuePair<string, object>> data
-            )
-        {
-            return new AssertionTest(name, isPassed, messageOrNull, data);
-        }
-    
         /// <summary>
         /// Creates a passing unit test.
         /// <para lang="ja">
@@ -84,7 +73,7 @@ namespace EnumerableTest
             )
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            return OfAssertion(name, isPassed, message, data);
+            return new AssertionTest(name, isPassed, message, data);
         }
 
         /// <summary>
@@ -100,7 +89,7 @@ namespace EnumerableTest
         public static Test
             FromResult(string name, bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
         {
-            return OfAssertion(name, isPassed, null, data);
+            return new AssertionTest(name, isPassed, null, data);
         }
 
         /// <summary>
@@ -116,7 +105,7 @@ namespace EnumerableTest
         public static Test FromResult(string name, bool isPassed, string message)
         {
             var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return OfAssertion(name, isPassed, message, data);
+            return new AssertionTest(name, isPassed, message, data);
         }
         #endregion
 
