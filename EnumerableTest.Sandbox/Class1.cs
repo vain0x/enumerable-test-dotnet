@@ -140,21 +140,24 @@ namespace EnumerableTest.Sandbox
             yield return test_increment().ToTestGroup("group", data);
         }
 
-        public IEnumerable<Test> test_parameterized()
+        public IEnumerable<Test> test_double_negation()
         {
-            yield return
+            return
                 ParameterizedTestBuilder
                 .Case(true)
                 .Case(false)
-                .Run("operator !!", value => value.Is(!!value));
+                .Run(value => value.Is(!!value));
+        }
 
-            yield return
+        public IEnumerable<Test> test_operator_and()
+        {
+            return
                 ParameterizedTestBuilder
                 .Case(true, true, true)
                 .Case(true, false, false)
                 .Case(false, true, false)
                 .Case(false, false, false)
-                .Run("operator &&", (left, right, expected) =>
+                .Run((left, right, expected) =>
                     (left && right).Is(expected)
                 );
         }
