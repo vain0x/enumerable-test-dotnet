@@ -44,32 +44,38 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%s (!): %s" key e.Message)
     }
 
-  let printAssertionAsync i testName (result: SerializableAssertion) =
+  let printTestDataAsync =
+    function
+    | EmptyTestData ->
+      Async.result ()
+    | DictionaryTestData testData ->
+      async {
+        for KeyValue (key, value) in testData do
+          do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
+          do! printMarshalPropertiesAsync value.Properties
+      }
+
+  let printAssertionTestAsync i (result: SerializableAssertionTest) =
     async {
       let mark =
         if result.IsPassed
           then "."
           else "x"
-      do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark testName)
+      do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark result.Name)
       use indenting = printer.AddIndent()
       if result.IsPassed |> not then
-        match result.Message with
-        | Some message ->
-          do! printer.WriteLineAsync(message)
-        | None -> 
-        for KeyValue (key, value) in result.Data do
-          do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
-          do! printMarshalPropertiesAsync value.Properties
+        do! result.Data |> printTestDataAsync
     }
 
   let rec printTestAsync i (test: SerializableTest) =
     async {
       match test with
       | AssertionTest test ->
-        return! printAssertionAsync i test.Name test.Assertion
+        return! printAssertionTestAsync i test
       | GroupTest test ->
         do! printer.WriteLineAsync(sprintf "Group: %s" test.Name)
         use indenting = printer.AddIndent()
+        do! test.Data |> printTestDataAsync
         for (i, test) in test.Tests |> Seq.indexed do
           do! printTestAsync i test
     }

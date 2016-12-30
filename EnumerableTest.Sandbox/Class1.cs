@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EnumerableTest.Sdk;
 
 namespace EnumerableTest.Sandbox
 {
@@ -93,15 +94,20 @@ namespace EnumerableTest.Sandbox
             yield return a.IsNot(new[] { 0, 1 });
         }
 
-        public IEnumerable<Test> New_test()
+        public IEnumerable<Test> test_empty_data()
         {
-            yield return 0.Is(1);
+            yield return Test.FromResult("empty-data", false, TestData.Empty);
         }
 
         public IEnumerable<Test> never()
         {
             yield return 0.Is(0);
             //while (true) continue;
+        }
+
+        public IEnumerable<Test> test_in_case_of_a_test_method_node_has_too_long_name_like_this()
+        {
+            yield return 0.Is(0);
         }
 
         sealed class MyClass
@@ -123,6 +129,34 @@ namespace EnumerableTest.Sandbox
             var value = new MyClass();
             yield return Test.Equal<object>(exception, value);
             yield return (new Dictionary<string, int>() { { "a", 0 }, { "b", 1 }, { "c", 2 } }).Is(null);
+        }
+
+        public IEnumerable<Test> test_group()
+        {
+            var data =
+                DictionaryTestData.Build()
+                .Add("Value", new MyClass())
+                .MakeReadOnly();
+            yield return test_increment().ToTestGroup("group", data);
+        }
+
+        public IEnumerable<Test> test_parameterized()
+        {
+            yield return
+                ParameterizedTestBuilder
+                .Case(true)
+                .Case(false)
+                .Run("operator !!", value => value.Is(!!value));
+
+            yield return
+                ParameterizedTestBuilder
+                .Case(true, true, true)
+                .Case(true, false, false)
+                .Case(false, true, false)
+                .Case(false, false, false)
+                .Run("operator &&", (left, right, expected) =>
+                    (left && right).Is(expected)
+                );
         }
 
         public void Dispose()

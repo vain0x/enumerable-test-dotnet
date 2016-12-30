@@ -18,7 +18,7 @@ namespace EnumerableTest.Sdk
         /// 内部のテストを取得する。
         /// </para>
         /// </summary>
-        public Test[] Tests { get; }
+        public IReadOnlyList<Test> Tests { get; }
 
         /// <summary>
         /// Gets the exception thrown while executing the group or null.
@@ -37,8 +37,14 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed { get; }
 
-        internal GroupTest(string name, Test[] tests, Exception exceptionOrNull)
-            : base(name)
+        internal
+            GroupTest(
+                string name,
+                IReadOnlyList<Test> tests,
+                Exception exceptionOrNull,
+                TestData data
+            )
+            : base(name, data)
         {
             Tests = tests;
             ExceptionOrNull = exceptionOrNull;

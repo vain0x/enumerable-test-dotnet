@@ -5,8 +5,8 @@ open EnumerableTest.Sdk
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestStatus =
-  let ofAssertion (assertion: SerializableAssertion) =
-    if assertion.IsPassed
+  let ofTest (test: SerializableTest) =
+    if test.IsPassed
       then Passed
       else Violated
 

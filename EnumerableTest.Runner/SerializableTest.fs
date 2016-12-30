@@ -5,19 +5,6 @@ open System.Collections.Generic
 open EnumerableTest
 open EnumerableTest.Sdk
 
-type SerializableAssertion =
-  {
-    IsPassed:
-      bool
-    Message:
-      option<string>
-    Data:
-      array<KeyValuePair<string, MarshalValue>>
-  }
-with
-  member this.MessageOrNull =
-    this.Message |> Option.toObj
-
 [<Serializable>]
 [<AbstractClass>]
 type SerializableTest(name) =
@@ -27,18 +14,18 @@ type SerializableTest(name) =
 
 [<Serializable>]
 [<Sealed>]
-type SerializableAssertionTest(name, assertion: SerializableAssertion) =
+type SerializableAssertionTest(name, isPassed, data) =
   inherit SerializableTest(name)
 
-  member this.Assertion =
-    assertion
+  member this.Data: SerializableTestData =
+    data
 
   override this.IsPassed =
-    assertion.IsPassed
+    isPassed
 
 [<Serializable>]
 [<Sealed>]
-type SerializableGroupTest(name, tests, error) =
+type SerializableGroupTest(name, tests, error, data) =
   inherit SerializableTest(name)
 
   member this.Tests =
@@ -50,23 +37,11 @@ type SerializableGroupTest(name, tests, error) =
   member this.ExceptionOrNull =
     this.Exception |> Option.toObj
 
+  member this.Data: SerializableTestData =
+    data
+
   override val IsPassed =
     tests |> Array.forall (fun test -> (test: SerializableTest).IsPassed)
-
-[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module SerializableAssertion =
-  let ofAssertion (assertion: Assertion) =
-    {
-      IsPassed =
-        assertion.IsPassed
-      Message =
-        assertion.MessageOrNull |> Option.ofObj
-      Data =
-        [|
-          for KeyValue (key, value) in assertion.Data do
-            yield KeyValuePair<_, _>(key, MarshalValue.ofObj value)
-        |]
-    }
 
 [<AutoOpen>]
 module SerializableTestExtension =
@@ -82,13 +57,15 @@ module SerializableTestExtension =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module SerializableTest =
   let rec ofAssertionTest (test: AssertionTest) =
-    let assertion = test.Assertion |> SerializableAssertion.ofAssertion
-    SerializableAssertionTest(test.Name, assertion)
+    let data =
+      SerializableTestData.ofTestData test.IsPassed test.Data
+    SerializableAssertionTest(test.Name, test.IsPassed, data)
 
   let rec ofGroupTest (test: GroupTest) =
-    let tests = test.Tests |> Array.map ofTest
+    let tests = test.Tests |> Seq.map ofTest |> Seq.toArray
     let e = test.ExceptionOrNull |> Option.ofObj
-    SerializableGroupTest(test.Name, tests, e)
+    let data = test.Data |> SerializableTestData.ofTestData test.IsPassed
+    SerializableGroupTest(test.Name, tests, e, data)
 
   and ofTest (test: Test): SerializableTest =
     match test with
@@ -102,6 +79,6 @@ module SerializableTest =
   let rec assertions =
     function
     | AssertionTest test ->
-      test.Assertion |> Seq.singleton
+      test |> Seq.singleton
     | GroupTest test ->
       test.Tests |> Seq.collect assertions

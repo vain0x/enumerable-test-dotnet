@@ -186,5 +186,8 @@ module MarshalValue =
     | value ->
       value |> ofProperties factory
 
-  let rec ofObj value =
+  let ofObjFlat value =
+    value |> ofObjCore 0
+
+  let ofObj value =
     value |> ofObjCore Recursion

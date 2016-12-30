@@ -22,8 +22,10 @@ namespace EnumerableTest
         /// </summary>
         /// <param name="tests"></param>
         /// <param name="testName"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public static GroupTest ToTestGroup(this IEnumerable<Test> tests, string testName)
+        public static GroupTest
+            ToTestGroup(this IEnumerable<Test> tests, string testName, TestData data)
         {
             var testList = new List<Test>();
             var exceptionOrNull = default(Exception);
@@ -39,7 +41,22 @@ namespace EnumerableTest
                 exceptionOrNull = exception;
             }
 
-            return new GroupTest(testName, testList.ToArray(), exceptionOrNull);
+            return new GroupTest(testName, testList, exceptionOrNull, data);
+        }
+
+        /// <summary>
+        /// Groups tests.
+        /// <para lang="ja">
+        /// テストをグループ化する。
+        /// </para>
+        /// </summary>
+        /// <param name="tests"></param>
+        /// <param name="testName"></param>
+        /// <returns></returns>
+        public static GroupTest
+            ToTestGroup(this IEnumerable<Test> tests, string testName)
+        {
+            return tests.ToTestGroup(testName, TestData.Empty);
         }
 
         /// <summary>

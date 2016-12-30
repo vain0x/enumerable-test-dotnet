@@ -50,6 +50,7 @@
     <Compile Include="Future.fs" />
     <Compile Include="ObservableCommand.fs" />
     <Compile Include="ConcurrentActionQueue.fs" />
+    <Compile Include="SerializableTestData.fs" />
     <Compile Include="SerializableTest.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="ConcreteNotifier.fs" />

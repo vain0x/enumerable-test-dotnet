@@ -33,41 +33,21 @@ namespace EnumerableTest
         /// </summary>
         public abstract bool IsPassed { get; }
 
-        internal Test(string name)
+        /// <summary>
+        /// Gets the data related to the test.
+        /// <para lang="ja">
+        /// テストに関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public TestData Data { get; }
+
+        internal Test(string name, TestData data)
         {
             Name = name;
+            Data = data;
         }
 
         #region Factory
-        internal static Test OfAssertion(string name, Assertion result)
-        {
-            return new AssertionTest(name, result);
-        }
-
-        static Test
-            OfAssertion(
-                string name,
-                bool isPassed,
-                string messageOrNull,
-                IEnumerable<KeyValuePair<string, object>> data
-            )
-        {
-            return OfAssertion(name, new Assertion(isPassed, messageOrNull, data));
-        }
-    
-        /// <summary>
-        /// Creates a passing unit test.
-        /// <para lang="ja">
-        /// 「正常」を表す単体テストの結果を生成する。
-        /// </para>
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static Test Pass(string name)
-        {
-            return OfAssertion(name, Assertion.Pass);
-        }
-
         /// <summary>
         /// Creates a unit test.
         /// <para lang="ja">
@@ -76,19 +56,16 @@ namespace EnumerableTest
         /// </summary>
         /// <param name="name"></param>
         /// <param name="isPassed"></param>
-        /// <param name="message"></param>
         /// <param name="data"></param>
         /// <returns></returns>
         public static Test
             FromResult(
                 string name,
                 bool isPassed,
-                string message,
-                IEnumerable<KeyValuePair<string, object>> data
+                TestData data
             )
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-            return OfAssertion(name, isPassed, message, data);
+            return new AssertionTest(name, isPassed, data);
         }
 
         /// <summary>
@@ -99,32 +76,23 @@ namespace EnumerableTest
         /// </summary>
         /// <param name="name"></param>
         /// <param name="isPassed"></param>
-        /// <param name="data"></param>
         /// <returns></returns>
-        public static Test
-            FromResult(string name, bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
+        public static Test FromResult(string name, bool isPassed)
         {
-            return OfAssertion(name, isPassed, null, data);
-        }
-
-        /// <summary>
-        /// Creates a unit test.
-        /// <para lang="ja">
-        /// 単体テストの結果を生成する。
-        /// </para>
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="isPassed"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static Test FromResult(string name, bool isPassed, string message)
-        {
-            var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return OfAssertion(name, new Assertion(isPassed, message, data));
+            return new AssertionTest(name, isPassed, TestData.Empty);
         }
         #endregion
 
         #region Assertions
+        /// <summary>
+        /// Gets a unit test which is passed.
+        /// <para lang="ja">
+        /// 「正常」を表す単体テストの結果を取得する。
+        /// </para>
+        /// </summary>
+        public static Test Pass { get; } =
+            FromResult(nameof(Pass), true);
+
         /// <summary>
         /// Tests that two values are equal, using <paramref name="comparer"/>.
         /// <para lang="ja">
@@ -140,11 +108,10 @@ namespace EnumerableTest
         {
             var isPassed = comparer.Equals(actual, expected);
             var data =
-                new[]
-                {
-                    KeyValuePair.Create("Expected", (object)expected),
-                    KeyValuePair.Create("Actual", (object)actual),
-                };
+                DictionaryTestData.Build()
+                .Add("Expected", expected)
+                .Add("Actual", actual)
+                .MakeReadOnly();
             return FromResult(nameof(Equal), isPassed, data);
         }
 
@@ -170,14 +137,12 @@ namespace EnumerableTest
         public static Test Satisfy<X>(X value, Expression<Func<X, bool>> predicate)
         {
             var isPassed = predicate.Compile().Invoke(value);
-            var message = "A value should satisfy a predicate but didn't.";
             var data =
-                new[]
-                {
-                    KeyValuePair.Create("Value", (object)value),
-                    KeyValuePair.Create("Predicate", (object)predicate),
-                };
-            return FromResult(nameof(Satisfy), isPassed, message, data);
+                DictionaryTestData.Build()
+                .Add("Value", value)
+                .Add("Predicate", predicate)
+                .MakeReadOnly();
+            return FromResult(nameof(Satisfy), isPassed, data);
         }
 
         /// <summary>
@@ -202,14 +167,12 @@ namespace EnumerableTest
                 exceptionOrNull = exception;
             }
 
-            var message = "An exception of a type should be thrown but didn't.";
             var data =
-                new[]
-                {
-                    KeyValuePair.Create("Type", (object)typeof(E)),
-                    KeyValuePair.Create("ExceptionOrNull", (object)exceptionOrNull),
-                };
-            return FromResult(nameof(Catch), !ReferenceEquals(exceptionOrNull, null), message, data);
+                DictionaryTestData.Build()
+                .Add("Type", typeof(E))
+                .Add("ExceptionOrNull", exceptionOrNull)
+                .MakeReadOnly();
+            return FromResult(nameof(Catch), !ReferenceEquals(exceptionOrNull, null), data);
         }
 
         /// <summary>
