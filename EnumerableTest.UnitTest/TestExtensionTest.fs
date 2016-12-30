@@ -16,7 +16,7 @@ module TestExtensionTest =
       }
 
     let emptyCase =
-      Seq.empty |> body ("empty", true, Array.isEmpty, isNull)
+      Seq.empty |> body ("empty", true, Seq.isEmpty, isNull)
 
     let passingCase =
       seq {
@@ -27,7 +27,7 @@ module TestExtensionTest =
       |> body
         ( "passing"
         , true
-        , fun a -> a.Length = 3
+        , fun a -> a.Count = 3
         , isNull
         )
 
@@ -40,7 +40,7 @@ module TestExtensionTest =
       |> body
         ( "violated"
         , false
-        , fun a -> a.Length = 3
+        , fun a -> a.Count = 3
         , isNull
         )
 
@@ -54,7 +54,7 @@ module TestExtensionTest =
     |> body
       ( "passing-exception"
       , false
-      , fun a -> a.Length = 2
+      , fun a -> a.Count = 2
       , (=) e
       )
 
@@ -68,7 +68,7 @@ module TestExtensionTest =
     |> body
       ( "violated-exception"
       , false
-      , fun a -> a.Length = 2
+      , fun a -> a.Count = 2
       , (=) e
       )
 

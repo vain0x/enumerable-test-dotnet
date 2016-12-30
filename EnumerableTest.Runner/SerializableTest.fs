@@ -74,7 +74,7 @@ module SerializableTest =
     SerializableAssertionTest(test.Name, test.IsPassed, message, data)
 
   let rec ofGroupTest (test: GroupTest) =
-    let tests = test.Tests |> Array.map ofTest
+    let tests = test.Tests |> Seq.map ofTest |> Seq.toArray
     let e = test.ExceptionOrNull |> Option.ofObj
     SerializableGroupTest(test.Name, tests, e)
 
