@@ -44,6 +44,17 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%s (!): %s" key e.Message)
     }
 
+  let printTestDataAsync =
+    function
+    | EmptyTestData ->
+      Async.result ()
+    | DictionaryTestData testData ->
+      async {
+        for KeyValue (key, value) in testData do
+          do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
+          do! printMarshalPropertiesAsync value.Properties
+      }
+
   let printAssertionTestAsync i (result: SerializableAssertionTest) =
     async {
       let mark =
@@ -56,10 +67,8 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
         match result.Message with
         | Some message ->
           do! printer.WriteLineAsync(message)
-        | None -> 
-        for KeyValue (key, value) in result.Data do
-          do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
-          do! printMarshalPropertiesAsync value.Properties
+        | None -> ()
+        do! result.Data |> printTestDataAsync
     }
 
   let rec printTestAsync i (test: SerializableTest) =

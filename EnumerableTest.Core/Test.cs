@@ -55,7 +55,7 @@ namespace EnumerableTest
                 string name,
                 bool isPassed,
                 string message,
-                IEnumerable<KeyValuePair<string, object>> data
+                TestData data
             )
         {
             if (message == null)
@@ -76,7 +76,7 @@ namespace EnumerableTest
         /// <param name="data"></param>
         /// <returns></returns>
         public static Test
-            FromResult(string name, bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
+            FromResult(string name, bool isPassed, TestData data)
         {
             return new AssertionTest(name, isPassed, null, data);
         }
@@ -97,8 +97,7 @@ namespace EnumerableTest
             {
                 throw new ArgumentNullException(nameof(message));
             }
-            var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return new AssertionTest(name, isPassed, message, data);
+            return new AssertionTest(name, isPassed, message, TestData.Empty);
         }
 
         /// <summary>
@@ -113,8 +112,7 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test FromResult(string name, bool isPassed)
         {
-            var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return new AssertionTest(name, isPassed, null, data);
+            return new AssertionTest(name, isPassed, null, TestData.Empty);
         }
         #endregion
 
