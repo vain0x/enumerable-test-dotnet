@@ -129,3 +129,40 @@ The third is ``Test.Catch``, which tries to catch an exception. You can use this
             });
     }
 ```
+
+## 4. Parameterized Tests (パラメーター化されたテスト)
+Sometimes you want to write tests which take parameters, so-called *parameterized tests* or [Table Driven Tests](https://github.com/golang/go/wiki/TableDrivenTests). `ParameterizedTestBuilder` module helps you to write such a test.
+
+しばしば、引数を受け取るテストを書きたくなることがあります。そのようなテストは、パラメーター化されたテスト、あるいは [テーブル駆動テスト](https://github.com/golang/go/wiki/TableDrivenTests) と呼ばれます。これを書くときは、 `ParameterizedTestBuilder` モジュールが便利です。
+
+For example, let's test the `&&` operator, which takes two boolean values and calculates a boolean. Its operation table is:
+
+例として、2つの真理値を受け取って1つの真理値を計算する、`&&` 演算子をテストしてみましょう。演算表は以下の通りです:
+
+| Left  | Right | Expected Result |
+|:------|:------|:----------------|
+| true  | true  | true            |
+| true  | false | false           |
+| false | true  | false           |
+| false | false | false           |
+
+(左から、左辺、右辺、期待される結果。)
+
+And the test code is below. They looks like similar, no?
+
+そして、テストコードが次のようになります。そのまんまですね。
+
+```csharp
+public IEnumerable<Test> test_parameterized()
+{
+    yield return
+        ParameterizedTestBuilder
+        .Case(true, true, true)
+        .Case(true, false, false)
+        .Case(false, true, false)
+        .Case(false, false, false)
+        .Run("operator &&", (left, right, expected) =>
+            (left && right).Is(expected)
+        );
+}
+```
