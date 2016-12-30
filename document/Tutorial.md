@@ -153,16 +153,16 @@ And the test code is below. They looks like similar, no?
 そして、テストコードが次のようになります。そのまんまですね。
 
 ```csharp
-public IEnumerable<Test> test_operator_and()
-{
-    return
-        ParameterizedTestBuilder
-        .Case(true, true, true)
-        .Case(true, false, false)
-        .Case(false, true, false)
-        .Case(false, false, false)
-        .Run((left, right, expected) =>
-            (left && right).Is(expected)
-        );
-}
+    public IEnumerable<Test> test_operator_and()
+    {
+        return
+            ParameterizedTestBuilder
+            .Case(true, true, true)
+            .Case(true, false, false)
+            .Case(false, true, false)
+            .Case(false, false, false)
+            .Run((left, right, expected) =>
+                (left && right).Is(expected)
+            );
+    }
 ```
