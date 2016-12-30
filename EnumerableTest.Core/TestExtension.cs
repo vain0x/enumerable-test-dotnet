@@ -22,6 +22,7 @@ namespace EnumerableTest
         /// </summary>
         /// <param name="tests"></param>
         /// <param name="testName"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
         public static GroupTest
             ToTestGroup(this IEnumerable<Test> tests, string testName, TestData data)
