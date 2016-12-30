@@ -39,7 +39,15 @@ namespace EnumerableTest
             return this;
         }
 
-        IEnumerable<Test> RunCore(Func<TParameter, IEnumerable<Test>> run)
+        /// <summary>
+        /// Executes a parameterized test.
+        /// <para lang="ja">
+        /// パラメーター化されたテストを実行する。
+        /// </para>
+        /// </summary>
+        /// <param name="run"></param>
+        /// <returns></returns>
+        public IEnumerable<Test> Run(Func<TParameter, IEnumerable<Test>> run)
         {
             foreach (var parameter in Parameters)
             {
@@ -57,26 +65,11 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        /// <param name="testName"></param>
         /// <param name="run"></param>
         /// <returns></returns>
-        public Test Run(string testName, Func<TParameter, IEnumerable<Test>> run)
+        public IEnumerable<Test> Run(Func<TParameter, Test> run)
         {
-            return RunCore(run).ToTestGroup(testName);
-        }
-
-        /// <summary>
-        /// Executes a parameterized test.
-        /// <para lang="ja">
-        /// パラメーター化されたテストを実行する。
-        /// </para>
-        /// </summary>
-        /// <param name="testName"></param>
-        /// <param name="run"></param>
-        /// <returns></returns>
-        public Test Run(string testName, Func<TParameter, Test> run)
-        {
-            return Run(testName, x => new[] { run(x) });
+            return Run(x => new[] { run(x) });
         }
     }
 
@@ -131,10 +124,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<TS>(this ParameterizedTestBuilder<Tuple<TS>> @this, string testName, Func<TS, IEnumerable<Test>> run)
+        public static IEnumerable<Test>
+            Run<TS>(this ParameterizedTestBuilder<Tuple<TS>> @this, Func<TS, IEnumerable<Test>> run)
         {
-            return @this.Run(testName, t => run(IS));
+            return @this.Run(t => run(IS));
         }
 
         /// <summary>
@@ -143,10 +136,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<TS>(this ParameterizedTestBuilder<Tuple<TS>> @this, string testName, Func<TS, Test> run)
+        public static IEnumerable<Test>
+            Run<TS>(this ParameterizedTestBuilder<Tuple<TS>> @this, Func<TS, Test> run)
         {
-            return @this.Run(testName, t => run(IS));
+            return @this.Run(t => run(IS));
         }
         " .Replace("''", string '"')
           .Replace("TS", [for i in 0..(n - 1) -> sprintf "X%d" i] |> String.concat ", ")
@@ -187,10 +180,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1>(this ParameterizedTestBuilder<Tuple<X0, X1>> @this, string testName, Func<X0, X1, IEnumerable<Test>> run)
+        public static IEnumerable<Test>
+            Run<X0, X1>(this ParameterizedTestBuilder<Tuple<X0, X1>> @this, Func<X0, X1, IEnumerable<Test>> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2));
+            return @this.Run(t => run(t.Item1, t.Item2));
         }
 
         /// <summary>
@@ -199,10 +192,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1>(this ParameterizedTestBuilder<Tuple<X0, X1>> @this, string testName, Func<X0, X1, Test> run)
+        public static IEnumerable<Test>
+            Run<X0, X1>(this ParameterizedTestBuilder<Tuple<X0, X1>> @this, Func<X0, X1, Test> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2));
+            return @this.Run(t => run(t.Item1, t.Item2));
         }
 
         /// <summary>
@@ -235,10 +228,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2>(this ParameterizedTestBuilder<Tuple<X0, X1, X2>> @this, string testName, Func<X0, X1, X2, IEnumerable<Test>> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2>(this ParameterizedTestBuilder<Tuple<X0, X1, X2>> @this, Func<X0, X1, X2, IEnumerable<Test>> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3));
         }
 
         /// <summary>
@@ -247,10 +240,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2>(this ParameterizedTestBuilder<Tuple<X0, X1, X2>> @this, string testName, Func<X0, X1, X2, Test> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2>(this ParameterizedTestBuilder<Tuple<X0, X1, X2>> @this, Func<X0, X1, X2, Test> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3));
         }
 
         /// <summary>
@@ -283,10 +276,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2, X3>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>> @this, string testName, Func<X0, X1, X2, X3, IEnumerable<Test>> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2, X3>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>> @this, Func<X0, X1, X2, X3, IEnumerable<Test>> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3, t.Item4));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3, t.Item4));
         }
 
         /// <summary>
@@ -295,10 +288,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2, X3>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>> @this, string testName, Func<X0, X1, X2, X3, Test> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2, X3>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>> @this, Func<X0, X1, X2, X3, Test> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3, t.Item4));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3, t.Item4));
         }
 
         /// <summary>
@@ -331,10 +324,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2, X3, X4>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>> @this, string testName, Func<X0, X1, X2, X3, X4, IEnumerable<Test>> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2, X3, X4>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>> @this, Func<X0, X1, X2, X3, X4, IEnumerable<Test>> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5));
         }
 
         /// <summary>
@@ -343,10 +336,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2, X3, X4>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>> @this, string testName, Func<X0, X1, X2, X3, X4, Test> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2, X3, X4>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>> @this, Func<X0, X1, X2, X3, X4, Test> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5));
         }
 
         /// <summary>
@@ -379,10 +372,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2, X3, X4, X5>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>> @this, string testName, Func<X0, X1, X2, X3, X4, X5, IEnumerable<Test>> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2, X3, X4, X5>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>> @this, Func<X0, X1, X2, X3, X4, X5, IEnumerable<Test>> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5, t.Item6));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5, t.Item6));
         }
 
         /// <summary>
@@ -391,10 +384,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2, X3, X4, X5>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>> @this, string testName, Func<X0, X1, X2, X3, X4, X5, Test> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2, X3, X4, X5>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>> @this, Func<X0, X1, X2, X3, X4, X5, Test> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5, t.Item6));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5, t.Item6));
         }
 
         /// <summary>
@@ -427,10 +420,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2, X3, X4, X5, X6>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>> @this, string testName, Func<X0, X1, X2, X3, X4, X5, X6, IEnumerable<Test>> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2, X3, X4, X5, X6>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>> @this, Func<X0, X1, X2, X3, X4, X5, X6, IEnumerable<Test>> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5, t.Item6, t.Item7));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5, t.Item6, t.Item7));
         }
 
         /// <summary>
@@ -439,10 +432,10 @@ namespace EnumerableTest
         /// パラメーター化されたテストを実行する。
         /// </para>
         /// </summary>
-        public static Test
-            Run<X0, X1, X2, X3, X4, X5, X6>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>> @this, string testName, Func<X0, X1, X2, X3, X4, X5, X6, Test> run)
+        public static IEnumerable<Test>
+            Run<X0, X1, X2, X3, X4, X5, X6>(this ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>> @this, Func<X0, X1, X2, X3, X4, X5, X6, Test> run)
         {
-            return @this.Run(testName, t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5, t.Item6, t.Item7));
+            return @this.Run(t => run(t.Item1, t.Item2, t.Item3, t.Item4, t.Item5, t.Item6, t.Item7));
         }
     }
 }
