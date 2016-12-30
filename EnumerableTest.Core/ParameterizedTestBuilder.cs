@@ -39,18 +39,6 @@ namespace EnumerableTest
             return this;
         }
 
-        IEnumerable<Test> RunCore(Func<TParameter, IEnumerable<Test>> run)
-        {
-            foreach (var parameter in Parameters)
-            {
-                var data =
-                    DictionaryTestData.Build()
-                    .Add("Parameter", parameter)
-                    .MakeReadOnly();
-                yield return run(parameter).ToTestGroup(nameof(Case), data);
-            }
-        }
-
         /// <summary>
         /// Executes a parameterized test.
         /// <para lang="ja">
@@ -61,7 +49,14 @@ namespace EnumerableTest
         /// <returns></returns>
         public IEnumerable<Test> Run(Func<TParameter, IEnumerable<Test>> run)
         {
-            return RunCore(run);
+            foreach (var parameter in Parameters)
+            {
+                var data =
+                    DictionaryTestData.Build()
+                    .Add("Parameter", parameter)
+                    .MakeReadOnly();
+                yield return run(parameter).ToTestGroup(nameof(Case), data);
+            }
         }
 
         /// <summary>
