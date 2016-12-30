@@ -88,7 +88,7 @@ namespace EnumerableTest
     {
         /// <summary>
         /// Adds a test case.
-        /// <para lang=''ja''>
+        /// <para lang="ja">
         /// テストケースを追加する。
         /// </para>
         /// </summary>

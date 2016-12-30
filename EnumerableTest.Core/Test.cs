@@ -76,7 +76,6 @@ namespace EnumerableTest
         /// </summary>
         /// <param name="name"></param>
         /// <param name="isPassed"></param>
-        /// <param name="message"></param>
         /// <returns></returns>
         public static Test FromResult(string name, bool isPassed)
         {
@@ -91,8 +90,6 @@ namespace EnumerableTest
         /// 「正常」を表す単体テストの結果を取得する。
         /// </para>
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public static Test Pass { get; } =
             FromResult(nameof(Pass), true);
 
