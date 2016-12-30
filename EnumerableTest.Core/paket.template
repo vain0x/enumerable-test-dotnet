@@ -1,0 +1,9 @@
+type file
+id EnumerableTest.Core
+projectUrl https://github.com/vain0/EnumerableTest
+licenseUrl http://opensource.org/licenses/MIT
+authors vain0
+files
+    bin/Release ==> lib/netstandard10
+description
+    Provides definitions for test assemblies.
