@@ -114,6 +114,22 @@ namespace EnumerableTest
             var data = Enumerable.Empty<KeyValuePair<string, object>>();
             return new AssertionTest(name, isPassed, message, data);
         }
+
+        /// <summary>
+        /// Creates a unit test.
+        /// <para lang="ja">
+        /// 単体テストの結果を生成する。
+        /// </para>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="isPassed"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static Test FromResult(string name, bool isPassed)
+        {
+            var data = Enumerable.Empty<KeyValuePair<string, object>>();
+            return new AssertionTest(name, isPassed, null, data);
+        }
         #endregion
 
         #region Assertions
