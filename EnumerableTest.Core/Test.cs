@@ -72,7 +72,10 @@ namespace EnumerableTest
                 IEnumerable<KeyValuePair<string, object>> data
             )
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
             return new AssertionTest(name, isPassed, message, data);
         }
 
@@ -104,6 +107,10 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test FromResult(string name, bool isPassed, string message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
             var data = Enumerable.Empty<KeyValuePair<string, object>>();
             return new AssertionTest(name, isPassed, message, data);
         }
