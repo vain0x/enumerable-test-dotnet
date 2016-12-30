@@ -6,7 +6,7 @@ open EnumerableTest
 open EnumerableTest.Sdk
 
 module TestTest =
-  let passedTest = Test.Pass("pass")
+  let passedTest = Test.Pass
   let violatedTest = Test.FromResult("violate", false, "it violated")
 
   let assertionTest1 = Test.FromResult("assertion1", true, "assertion1 passed", Seq.empty)
@@ -20,7 +20,7 @@ module TestTest =
   let nestedGroupTest =
     let innerTest1 = (seq [assertionTest1]).ToTestGroup("inner group1") :> Test
     let innerTest2 = (seq [assertionTest2]).ToTestGroup("inner group2") :> Test
-    (seq [ innerTest1; innerTest2; Test.Pass("pass") ]).ToTestGroup("outer group")
+    (seq [ innerTest1; innerTest2; Test.Pass ]).ToTestGroup("outer group")
 
   let ``test IsPassed`` =
     test {

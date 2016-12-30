@@ -40,20 +40,6 @@ namespace EnumerableTest
 
         #region Factory
         /// <summary>
-        /// Creates a passing unit test.
-        /// <para lang="ja">
-        /// 「正常」を表す単体テストの結果を生成する。
-        /// </para>
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static Test Pass(string name)
-        {
-            var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return new AssertionTest(name, true, null, data);
-        }
-
-        /// <summary>
         /// Creates a unit test.
         /// <para lang="ja">
         /// 単体テストの結果を生成する。
@@ -133,6 +119,17 @@ namespace EnumerableTest
         #endregion
 
         #region Assertions
+        /// <summary>
+        /// Gets a unit test which is passed.
+        /// <para lang="ja">
+        /// 「正常」を表す単体テストの結果を取得する。
+        /// </para>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Test Pass { get; } =
+            FromResult(nameof(Pass), true);
+
         /// <summary>
         /// Tests that two values are equal, using <paramref name="comparer"/>.
         /// <para lang="ja">
