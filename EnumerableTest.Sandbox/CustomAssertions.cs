@@ -17,7 +17,7 @@ namespace EnumerableTest.Sandbox
                 DictionaryTestData.Build()
                 .Add("Value", actual)
                 .MakeReadOnly();
-            return Test.FromResult(name, isPassed, "Unexpected value.", data);
+            return Test.FromResult(name, isPassed, data);
         }
     }
 }

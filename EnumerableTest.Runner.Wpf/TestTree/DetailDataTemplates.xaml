@@ -78,23 +78,7 @@
                 </Style>
             </Expander.Style>
 
-            <StackPanel>
-                <TextBox Text="{Binding MessageOrNull, Mode=OneTime}">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox" BasedOn="{StaticResource ReadOnlyTextBoxStyle}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsPassed}" Value="True">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding MessageOrNull}" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-                <ContentPresenter Content="{Binding Data}" />
-            </StackPanel>
+            <ContentPresenter Content="{Binding Data}" />
         </Expander>
     </DataTemplate>
 

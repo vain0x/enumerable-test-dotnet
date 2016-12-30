@@ -14,14 +14,8 @@ type SerializableTest(name) =
 
 [<Serializable>]
 [<Sealed>]
-type SerializableAssertionTest(name, isPassed, message, data) =
+type SerializableAssertionTest(name, isPassed, data) =
   inherit SerializableTest(name)
-
-  member this.Message =
-    (message: option<string>)
-
-  member this.MessageOrNull =
-    this.Message |> Option.toObj
 
   member this.Data: SerializableTestData =
     data
@@ -60,11 +54,9 @@ module SerializableTestExtension =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module SerializableTest =
   let rec ofAssertionTest (test: AssertionTest) =
-    let message =
-      test.MessageOrNull |> Option.ofObj
     let data =
       SerializableTestData.ofTestData test.IsPassed test.Data
-    SerializableAssertionTest(test.Name, test.IsPassed, message, data)
+    SerializableAssertionTest(test.Name, test.IsPassed, data)
 
   let rec ofGroupTest (test: GroupTest) =
     let tests = test.Tests |> Seq.map ofTest |> Seq.toArray

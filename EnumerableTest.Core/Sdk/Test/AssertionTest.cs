@@ -21,14 +21,6 @@ namespace EnumerableTest.Sdk
         public override bool IsPassed { get; }
 
         /// <summary>
-        /// Gets the message related to the test.
-        /// <para lang="ja">
-        /// テストに関連するメッセージを取得する。
-        /// </para>
-        /// </summary>
-        public string MessageOrNull { get; }
-
-        /// <summary>
         /// Gets the data related to the test.
         /// <para lang="ja">
         /// テストに関連するデータを取得する。
@@ -40,13 +32,11 @@ namespace EnumerableTest.Sdk
             AssertionTest(
                 string name,
                 bool isPassed,
-                string messageOrNull,
                 TestData data
             )
             : base(name)
         {
             IsPassed = isPassed;
-            MessageOrNull = messageOrNull;
             Data = data;
         }
     }
