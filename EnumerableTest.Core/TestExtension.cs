@@ -39,7 +39,7 @@ namespace EnumerableTest
                 exceptionOrNull = exception;
             }
 
-            return new GroupTest(testName, testList.ToArray(), exceptionOrNull);
+            return new GroupTest(testName, testList, exceptionOrNull);
         }
 
         /// <summary>

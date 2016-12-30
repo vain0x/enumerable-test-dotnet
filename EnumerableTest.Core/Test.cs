@@ -39,35 +39,6 @@ namespace EnumerableTest
         }
 
         #region Factory
-        internal static Test OfAssertion(string name, Assertion result)
-        {
-            return new AssertionTest(name, result);
-        }
-
-        static Test
-            OfAssertion(
-                string name,
-                bool isPassed,
-                string messageOrNull,
-                IEnumerable<KeyValuePair<string, object>> data
-            )
-        {
-            return OfAssertion(name, new Assertion(isPassed, messageOrNull, data));
-        }
-    
-        /// <summary>
-        /// Creates a passing unit test.
-        /// <para lang="ja">
-        /// 「正常」を表す単体テストの結果を生成する。
-        /// </para>
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static Test Pass(string name)
-        {
-            return OfAssertion(name, Assertion.Pass);
-        }
-
         /// <summary>
         /// Creates a unit test.
         /// <para lang="ja">
@@ -87,8 +58,11 @@ namespace EnumerableTest
                 IEnumerable<KeyValuePair<string, object>> data
             )
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-            return OfAssertion(name, isPassed, message, data);
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+            return new AssertionTest(name, isPassed, message, data);
         }
 
         /// <summary>
@@ -104,7 +78,7 @@ namespace EnumerableTest
         public static Test
             FromResult(string name, bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
         {
-            return OfAssertion(name, isPassed, null, data);
+            return new AssertionTest(name, isPassed, null, data);
         }
 
         /// <summary>
@@ -119,12 +93,43 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test FromResult(string name, bool isPassed, string message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
             var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return OfAssertion(name, new Assertion(isPassed, message, data));
+            return new AssertionTest(name, isPassed, message, data);
+        }
+
+        /// <summary>
+        /// Creates a unit test.
+        /// <para lang="ja">
+        /// 単体テストの結果を生成する。
+        /// </para>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="isPassed"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static Test FromResult(string name, bool isPassed)
+        {
+            var data = Enumerable.Empty<KeyValuePair<string, object>>();
+            return new AssertionTest(name, isPassed, null, data);
         }
         #endregion
 
         #region Assertions
+        /// <summary>
+        /// Gets a unit test which is passed.
+        /// <para lang="ja">
+        /// 「正常」を表す単体テストの結果を取得する。
+        /// </para>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Test Pass { get; } =
+            FromResult(nameof(Pass), true);
+
         /// <summary>
         /// Tests that two values are equal, using <paramref name="comparer"/>.
         /// <para lang="ja">
