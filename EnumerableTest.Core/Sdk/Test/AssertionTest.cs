@@ -13,20 +13,12 @@ namespace EnumerableTest.Sdk
         : Test
     {
         /// <summary>
-        /// Gets the assertion.
-        /// <para lang="ja">
-        /// テスト内の唯一の表明を取得する。
-        /// </para>
-        /// </summary>
-        public Assertion Assertion { get; }
-
-        /// <summary>
         /// Gets a value indicating whether the test was passed.
         /// <para lang="ja">
         /// テストが成功したかどうかを取得する。
         /// </para>
         /// </summary>
-        public override bool IsPassed => Assertion.IsPassed;
+        public override bool IsPassed { get; }
 
         /// <summary>
         /// Gets the message related to the test.
@@ -53,7 +45,7 @@ namespace EnumerableTest.Sdk
             )
             : base(name)
         {
-            Assertion = new Assertion(isPassed);
+            IsPassed = isPassed;
             MessageOrNull = messageOrNull;
             Data = data;
         }
