@@ -33,9 +33,18 @@ namespace EnumerableTest
         /// </summary>
         public abstract bool IsPassed { get; }
 
-        internal Test(string name)
+        /// <summary>
+        /// Gets the data related to the test.
+        /// <para lang="ja">
+        /// テストに関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public TestData Data { get; }
+
+        internal Test(string name, TestData data)
         {
             Name = name;
+            Data = data;
         }
 
         #region Factory
@@ -47,57 +56,16 @@ namespace EnumerableTest
         /// </summary>
         /// <param name="name"></param>
         /// <param name="isPassed"></param>
-        /// <param name="message"></param>
         /// <param name="data"></param>
         /// <returns></returns>
         public static Test
             FromResult(
                 string name,
                 bool isPassed,
-                string message,
                 TestData data
             )
         {
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-            return new AssertionTest(name, isPassed, message, data);
-        }
-
-        /// <summary>
-        /// Creates a unit test.
-        /// <para lang="ja">
-        /// 単体テストの結果を生成する。
-        /// </para>
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="isPassed"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static Test
-            FromResult(string name, bool isPassed, TestData data)
-        {
-            return new AssertionTest(name, isPassed, null, data);
-        }
-
-        /// <summary>
-        /// Creates a unit test.
-        /// <para lang="ja">
-        /// 単体テストの結果を生成する。
-        /// </para>
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="isPassed"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static Test FromResult(string name, bool isPassed, string message)
-        {
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-            return new AssertionTest(name, isPassed, message, TestData.Empty);
+            return new AssertionTest(name, isPassed, data);
         }
 
         /// <summary>
@@ -112,7 +80,7 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test FromResult(string name, bool isPassed)
         {
-            return new AssertionTest(name, isPassed, null, TestData.Empty);
+            return new AssertionTest(name, isPassed, TestData.Empty);
         }
         #endregion
 
@@ -172,13 +140,12 @@ namespace EnumerableTest
         public static Test Satisfy<X>(X value, Expression<Func<X, bool>> predicate)
         {
             var isPassed = predicate.Compile().Invoke(value);
-            var message = "A value should satisfy a predicate but didn't.";
             var data =
                 DictionaryTestData.Build()
                 .Add("Value", value)
                 .Add("Predicate", predicate)
                 .MakeReadOnly();
-            return FromResult(nameof(Satisfy), isPassed, message, data);
+            return FromResult(nameof(Satisfy), isPassed, data);
         }
 
         /// <summary>
@@ -203,13 +170,12 @@ namespace EnumerableTest
                 exceptionOrNull = exception;
             }
 
-            var message = "An exception of a type should be thrown but didn't.";
             var data =
                 DictionaryTestData.Build()
                 .Add("Type", typeof(E))
                 .Add("ExceptionOrNull", exceptionOrNull)
                 .MakeReadOnly();
-            return FromResult(nameof(Catch), !ReferenceEquals(exceptionOrNull, null), message, data);
+            return FromResult(nameof(Catch), !ReferenceEquals(exceptionOrNull, null), data);
         }
 
         /// <summary>

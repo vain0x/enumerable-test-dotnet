@@ -37,8 +37,14 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed { get; }
 
-        internal GroupTest(string name, IReadOnlyList<Test> tests, Exception exceptionOrNull)
-            : base(name)
+        internal
+            GroupTest(
+                string name,
+                IReadOnlyList<Test> tests,
+                Exception exceptionOrNull,
+                TestData data
+            )
+            : base(name, data)
         {
             Tests = tests;
             ExceptionOrNull = exceptionOrNull;

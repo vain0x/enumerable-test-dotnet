@@ -64,10 +64,6 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
       do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark result.Name)
       use indenting = printer.AddIndent()
       if result.IsPassed |> not then
-        match result.Message with
-        | Some message ->
-          do! printer.WriteLineAsync(message)
-        | None -> ()
         do! result.Data |> printTestDataAsync
     }
 
@@ -79,6 +75,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
       | GroupTest test ->
         do! printer.WriteLineAsync(sprintf "Group: %s" test.Name)
         use indenting = printer.AddIndent()
+        do! test.Data |> printTestDataAsync
         for (i, test) in test.Tests |> Seq.indexed do
           do! printTestAsync i test
     }

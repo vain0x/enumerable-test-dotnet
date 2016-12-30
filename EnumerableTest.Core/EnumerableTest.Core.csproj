@@ -41,6 +41,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ParameterizedTestBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sdk\TestData.cs" />
     <Compile Include="Sdk\Test\AssertionTest.cs" />

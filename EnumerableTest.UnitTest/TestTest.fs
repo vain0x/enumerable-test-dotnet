@@ -7,10 +7,10 @@ open EnumerableTest.Sdk
 
 module TestTest =
   let passedTest = Test.Pass
-  let violatedTest = Test.FromResult("violate", false, "it violated")
+  let violatedTest = Test.FromResult("violate", false)
 
-  let assertionTest1 = Test.FromResult("assertion1", true, "assertion1 passed")
-  let assertionTest2 = Test.FromResult("assertion2", false, "assertion2 violated")
+  let assertionTest1 = Test.FromResult("assertion1", true)
+  let assertionTest2 = Test.FromResult("assertion2", false)
   let groupTest =
     (seq [assertionTest1; assertionTest2]).ToTestGroup("group1")
 

@@ -4,6 +4,7 @@ open System
 open System.Diagnostics
 open System.Reflection
 open EnumerableTest
+open EnumerableTest.Sdk
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestMethod =
@@ -17,7 +18,7 @@ module TestMethod =
 
   let ofInstantiationError (e: exn) =
     let name = "default constructor"
-    let result = SerializableGroupTest(name, [||], Some e)
+    let result = SerializableGroupTest(name, [||], Some e, SerializableEmptyTestData.Empty)
     ofResult name result None TimeSpan.Zero
 
   /// Creates an instance of TestMethod
