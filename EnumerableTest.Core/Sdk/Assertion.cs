@@ -24,35 +24,9 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public bool IsPassed { get; }
 
-        /// <summary>
-        /// Gets the message related to the assertion.
-        /// <para lang="ja">
-        /// 表明に関連するメッセージを取得する。
-        /// </para>
-        /// </summary>
-        public string MessageOrNull { get; }
-
-        /// <summary>
-        /// Gets the data related to the assertion.
-        /// <para lang="ja">
-        /// 表明に関連するデータを取得する。
-        /// </para>
-        /// </summary>
-        public IEnumerable<KeyValuePair<string, object>> Data { get; }
-
-        internal Assertion(bool isPassed, string messageOrNull, IEnumerable<KeyValuePair<string, object>> data)
+        internal Assertion(bool isPassed)
         {
             IsPassed = isPassed;
-            MessageOrNull = MessageOrNull;
-            Data = data;
         }
-
-        internal Assertion(bool isPassed, IEnumerable<KeyValuePair<string, object>> data)
-            : this(isPassed, null, data)
-        {
-        }
-
-        internal static Assertion Pass { get; } =
-            new Assertion(true, Enumerable.Empty<KeyValuePair<string, object>>());
     }
 }

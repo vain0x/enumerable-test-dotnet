@@ -39,11 +39,6 @@ namespace EnumerableTest
         }
 
         #region Factory
-        internal static Test OfAssertion(string name, Assertion result)
-        {
-            return new AssertionTest(name, result);
-        }
-
         static Test
             OfAssertion(
                 string name,
@@ -52,7 +47,7 @@ namespace EnumerableTest
                 IEnumerable<KeyValuePair<string, object>> data
             )
         {
-            return OfAssertion(name, new Assertion(isPassed, messageOrNull, data));
+            return new AssertionTest(name, isPassed, messageOrNull, data);
         }
     
         /// <summary>
@@ -65,7 +60,8 @@ namespace EnumerableTest
         /// <returns></returns>
         public static Test Pass(string name)
         {
-            return OfAssertion(name, Assertion.Pass);
+            var data = Enumerable.Empty<KeyValuePair<string, object>>();
+            return new AssertionTest(name, true, null, data);
         }
 
         /// <summary>
@@ -120,7 +116,7 @@ namespace EnumerableTest
         public static Test FromResult(string name, bool isPassed, string message)
         {
             var data = Enumerable.Empty<KeyValuePair<string, object>>();
-            return OfAssertion(name, new Assertion(isPassed, message, data));
+            return OfAssertion(name, isPassed, message, data);
         }
         #endregion
 

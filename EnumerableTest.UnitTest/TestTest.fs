@@ -9,10 +9,8 @@ module TestTest =
   let passedTest = Test.Pass("pass")
   let violatedTest = Test.FromResult("violate", false, "it violated")
 
-  let assertion1 = Assertion.Pass
-  let assertion2 = Assertion(false, "assertion2 violated", [])
-  let assertionTest1 = Test.OfAssertion("assertion1", assertion1)
-  let assertionTest2 = Test.OfAssertion("assertion2", assertion2)
+  let assertionTest1 = Test.FromResult("assertion1", true, "assertion1 passed", Seq.empty)
+  let assertionTest2 = Test.FromResult("assertion2", false, "assertion2 violated", Seq.empty)
   let groupTest =
     (seq [assertionTest1; assertionTest2]).ToTestGroup("group1")
 

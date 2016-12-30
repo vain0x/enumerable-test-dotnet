@@ -28,10 +28,34 @@ namespace EnumerableTest.Sdk
         /// </summary>
         public override bool IsPassed => Assertion.IsPassed;
 
-        internal AssertionTest(string name, Assertion assertion)
+        /// <summary>
+        /// Gets the message related to the test.
+        /// <para lang="ja">
+        /// テストに関連するメッセージを取得する。
+        /// </para>
+        /// </summary>
+        public string MessageOrNull { get; }
+
+        /// <summary>
+        /// Gets the data related to the test.
+        /// <para lang="ja">
+        /// テストに関連するデータを取得する。
+        /// </para>
+        /// </summary>
+        public IEnumerable<KeyValuePair<string, object>> Data { get; }
+
+        internal
+            AssertionTest(
+                string name,
+                bool isPassed,
+                string messageOrNull,
+                IEnumerable<KeyValuePair<string, object>> data
+            )
             : base(name)
         {
-            Assertion = assertion;
+            Assertion = new Assertion(isPassed);
+            MessageOrNull = messageOrNull;
+            Data = data;
         }
     }
 }

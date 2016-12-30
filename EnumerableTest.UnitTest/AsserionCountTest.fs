@@ -7,22 +7,22 @@ open EnumerableTest.Sdk
 open EnumerableTest.Runner
 
 module AsserionCountTest =
-  module test_ofAssertion =
+  module test_ofAssertionTest =
     let passedCase =
       test {
         do!
-          Assertion.Pass
-          |> SerializableAssertion.ofAssertion
-          |> AssertionCount.ofAssertion
+          AssertionTest("passed-test", true, null, Seq.empty)
+          |> SerializableTest.ofAssertionTest
+          |> AssertionCount.ofAssertionTest
           |> assertEquals AssertionCount.onePassed
       }
 
     let violatedCase =
       test {
         do!
-          Assertion(false, "violated", Seq.empty)
-          |> SerializableAssertion.ofAssertion
-          |> AssertionCount.ofAssertion
+          AssertionTest("violated-test", false, "violated", Seq.empty)
+          |> SerializableTest.ofAssertionTest
+          |> AssertionCount.ofAssertionTest
           |> assertEquals AssertionCount.oneViolated
       }
 

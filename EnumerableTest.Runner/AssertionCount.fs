@@ -67,15 +67,15 @@ module AssertionCount =
         override this.Divide(l, r) = subtract l r
     }
 
-  let ofAssertion (assertion: SerializableAssertion) =
-    if assertion.IsPassed
+  let ofAssertionTest (test: SerializableAssertionTest) =
+    if test.IsPassed
       then onePassed
       else oneViolated
 
   let ofGroupTest (groupTest: SerializableGroupTest) =
     seq {
-      for assertion in groupTest |> SerializableTest.assertions do
-        yield assertion |> ofAssertion
+      for assertionTest in groupTest |> SerializableTest.assertions do
+        yield assertionTest |> ofAssertionTest
       if groupTest.Exception |> Option.isSome then
         yield oneError
     }

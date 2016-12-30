@@ -26,10 +26,10 @@ namespace EnumerableTest.Runner.Wpf
                 return TestStatusModule.ofTestStatistic(statistic);
             }
 
-            var assertionTest = value as SerializableAssertionTest;
-            if (assertionTest != null)
+            var test = value as SerializableTest;
+            if (test != null)
             {
-                return TestStatusModule.ofAssertion(assertionTest.Assertion);
+                return TestStatusModule.ofTest(test);
             }
 
             return TestStatus.NotCompleted;

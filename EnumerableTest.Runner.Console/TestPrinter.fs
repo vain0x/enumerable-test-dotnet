@@ -44,13 +44,13 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%s (!): %s" key e.Message)
     }
 
-  let printAssertionAsync i testName (result: SerializableAssertion) =
+  let printAssertionTestAsync i (result: SerializableAssertionTest) =
     async {
       let mark =
         if result.IsPassed
           then "."
           else "x"
-      do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark testName)
+      do! printer.WriteLineAsync(sprintf "%d. %s %s" (i + 1) mark result.Name)
       use indenting = printer.AddIndent()
       if result.IsPassed |> not then
         match result.Message with
@@ -66,7 +66,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
     async {
       match test with
       | AssertionTest test ->
-        return! printAssertionAsync i test.Name test.Assertion
+        return! printAssertionTestAsync i test
       | GroupTest test ->
         do! printer.WriteLineAsync(sprintf "Group: %s" test.Name)
         use indenting = printer.AddIndent()
