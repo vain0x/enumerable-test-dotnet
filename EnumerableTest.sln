@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumerableTest.Runner.Wpf",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wpf", "Wpf", "{3CE1117C-621E-4726-A875-A96D358C0AD6}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "EnumerableTest.Runner.Wpf.ViewModel", "EnumerableTest.Runner.Wpf.ViewModel\EnumerableTest.Runner.Wpf.ViewModel.fsproj", "{367D4453-0649-48EA-9115-73EC9C8E98BA}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "EnumerableTest.Runner.Wpf.Core", "EnumerableTest.Runner.Wpf.Core\EnumerableTest.Runner.Wpf.Core.fsproj", "{367D4453-0649-48EA-9115-73EC9C8E98BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumerableTest.Core", "EnumerableTest.Core\EnumerableTest.Core.csproj", "{5C3AD6A7-3E56-430B-95DF-B4E85AD0B838}"
 EndProject

@@ -7,12 +7,12 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>367d4453-0649-48ea-9115-73ec9c8e98ba</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>EnumerableTest.Runner.Wpf.ViewModel</RootNamespace>
-    <AssemblyName>EnumerableTest.Runner.Wpf.ViewModel</AssemblyName>
+    <RootNamespace>EnumerableTest.Runner.Wpf.Core</RootNamespace>
+    <AssemblyName>EnumerableTest.Runner.Wpf.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>EnumerableTest.Runner.Wpf.ViewModel</Name>
+    <Name>EnumerableTest.Runner.Wpf.Core</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +22,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Debug\EnumerableTest.Runner.Wpf.ViewModel.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\EnumerableTest.Runner.Wpf.Core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\EnumerableTest.Runner.Wpf.ViewModel.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\EnumerableTest.Runner.Wpf.Core.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

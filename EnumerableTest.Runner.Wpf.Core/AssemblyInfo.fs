@@ -1,4 +1,4 @@
-﻿namespace EnumerableTest.Runner.Wpf.ViewModel.AssemblyInfo
+﻿namespace EnumerableTest.Runner.Wpf.Core.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // アセンブリに関する一般情報は、以下の属性セットによって
 // 制御されます。アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更します。
-[<assembly: AssemblyTitle("EnumerableTest.Runner.Wpf.ViewModel")>]
+[<assembly: AssemblyTitle("EnumerableTest.Runner.Wpf.Core")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("EnumerableTest.Runner.Wpf.ViewModel")>]
+[<assembly: AssemblyProduct("EnumerableTest.Runner.Wpf.Core")>]
 [<assembly: AssemblyCopyright("Copyright ©  2016")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]

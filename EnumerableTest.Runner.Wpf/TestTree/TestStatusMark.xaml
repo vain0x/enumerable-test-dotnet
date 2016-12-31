@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:runner="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner"
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
-    xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner.Wpf.ViewModel"
+    xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner.Wpf.Core"
     mc:Ignorable="d" 
     d:DataContext="{x:Static runner:TestStatus.NotCompleted}"
     >
