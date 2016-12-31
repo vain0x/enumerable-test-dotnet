@@ -44,6 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="UptodateCollectionTest.fs" />
+    <Compile Include="TestTreeNodeTest.fs" />
+    <Compile Include="TestMethodNodeTest.fs" />
+    <Compile Include="FolderNodeTest.fs" />
+    <Compile Include="TestTreeTest.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
@@ -59,6 +64,11 @@
     <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
       <Name>EnumerableTest.Runner</Name>
       <Project>{08b6b12c-8032-4641-a8f9-ce3a6a59c97a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EnumerableTest.UnitTest\EnumerableTest.UnitTest.fsproj">
+      <Name>EnumerableTest.UnitTest</Name>
+      <Project>{bf400546-8bcc-467f-908a-ec71f75e06a6}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
