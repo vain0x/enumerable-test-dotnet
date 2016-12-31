@@ -1,4 +1,4 @@
-﻿namespace EnumerableTest.Runner.Console
+﻿namespace EnumerableTest.Runner
 
 open System
 open System.Collections.Generic

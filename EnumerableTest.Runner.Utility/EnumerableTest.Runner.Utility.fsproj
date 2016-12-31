@@ -5,14 +5,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>08b6b12c-8032-4641-a8f9-ce3a6a59c97a</ProjectGuid>
+    <ProjectGuid>52d24413-0b04-4d44-9e0a-ccbb2674c54b</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>EnumerableTest.Runner</RootNamespace>
-    <AssemblyName>EnumerableTest.Runner</AssemblyName>
+    <RootNamespace>EnumerableTest.Runner.Utility</RootNamespace>
+    <AssemblyName>EnumerableTest.Runner.Utility</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>EnumerableTest.Runner</Name>
+    <Name>EnumerableTest.Runner.Utility</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +22,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Debug\EnumerableTest.Runner.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\EnumerableTest.Runner.Utility.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\EnumerableTest.Runner.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\EnumerableTest.Runner.Utility.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -44,32 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="SerializableTestData.fs" />
-    <Compile Include="SerializableTest.fs" />
-    <Compile Include="Types.fs" />
-    <Compile Include="ConcreteNotifier.fs" />
-    <Compile Include="AssertionCount.fs" />
-    <Compile Include="TestStatistic.fs" />
-    <Compile Include="TestStatus.fs" />
-    <Compile Include="TestSuiteSchema.fs" />
-    <Compile Include="TestMethod.fs" />
-    <Compile Include="TestSuite.fs" />
-    <Compile Include="OneshotTestAssembly.fs" />
-    <Compile Include="TestClass.fs" />
-    <Compile Include="TestClassNotifier.fs" />
-    <Compile Include="LogFile.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
-      <Name>EnumerableTest.Core</Name>
-      <Project>{5c3ad6a7-3e56-430b-95df-b4e85ad0b838}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\EnumerableTest.Runner.Utility\EnumerableTest.Runner.Utility.fsproj">
-      <Name>EnumerableTest.Runner.Utility</Name>
-      <Project>{52d24413-0b04-4d44-9e0a-ccbb2674c54b}</Project>
-      <Private>True</Private>
-    </ProjectReference>
+    <Compile Include="Utility.fs" />
+    <Compile Include="GroupSig.fs" />
+    <Compile Include="MarshalValue.fs" />
+    <Compile Include="Future.fs" />
+    <Compile Include="ObservableCommand.fs" />
+    <Compile Include="ConcurrentActionQueue.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

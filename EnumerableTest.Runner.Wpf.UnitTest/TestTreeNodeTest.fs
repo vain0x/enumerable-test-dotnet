@@ -1,9 +1,10 @@
-﻿namespace EnumerableTest.UnitTest
+﻿namespace EnumerableTest.Runner.Wpf.UnitTest
 
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open Basis.Core
 open EnumerableTest.Runner.Wpf
+open EnumerableTest.Runner.UnitTest
 
 module TestTreeNodeTest =
   let empty () =

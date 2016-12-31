@@ -1,9 +1,9 @@
 ﻿namespace global
   type GlobalClass() =
     member this.PassingTest() =
-      EnumerableTest.UnitTest.TestClass.passingTest
+      EnumerableTest.Runner.UnitTest.TestClass.passingTest
 
-namespace EnumerableTest.UnitTest
+namespace EnumerableTest.Runner.UnitTest
   open Persimmon
   open Persimmon.Syntax.UseTestNameByReflection
   open EnumerableTest
@@ -22,7 +22,7 @@ namespace EnumerableTest.UnitTest
       let nestedCase =
         test {
           let path = typeof<TestClass.Passing> |> TestClassPath.ofType 
-          do! path.NamespacePath |> assertEquals [| "EnumerableTest"; "UnitTest" |]
+          do! path.NamespacePath |> assertEquals [| "EnumerableTest"; "Runner"; "UnitTest" |]
           do! path.ClassPath |> assertEquals [| "TestClass" |]
           do! path.Name |> assertEquals "Passing"
         }

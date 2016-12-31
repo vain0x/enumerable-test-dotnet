@@ -1,4 +1,4 @@
-﻿namespace EnumerableTest.Runner.AssemblyInfo
+﻿namespace EnumerableTest.Runner.Wpf.Core.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // アセンブリに関する一般情報は、以下の属性セットによって
 // 制御されます。アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更します。
-[<assembly: AssemblyTitle("EnumerableTest.Runner")>]
+[<assembly: AssemblyTitle("EnumerableTest.Runner.Wpf.Core")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("EnumerableTest.Runner")>]
+[<assembly: AssemblyProduct("EnumerableTest.Runner.Wpf.Core")>]
 [<assembly: AssemblyCopyright("Copyright ©  2016")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
@@ -22,7 +22,7 @@ open System.Runtime.InteropServices
 [<assembly: ComVisible(false)>]
 
 // このプロジェクトが COM に公開される場合、次の GUID がタイプ ライブラリの ID になります
-[<assembly: Guid("08b6b12c-8032-4641-a8f9-ce3a6a59c97a")>]
+[<assembly: Guid("367d4453-0649-48ea-9115-73ec9c8e98ba")>]
 
 // アセンブリのバージョン情報は、以下の 4 つの値で構成されます。:
 // 
@@ -34,7 +34,7 @@ open System.Runtime.InteropServices
 // すべての値を指定するか、下に示すように '*' を使用してビルドおよびリビジョン番号を
 // 既定値にすることができます。:
 // [<assembly: AssemblyVersion("1.0.*")>]
-[<assembly: AssemblyVersion("1.0.0.0")>]
+[<assembly: AssemblyVersion("1.0.*")>]
 [<assembly: AssemblyFileVersion("1.0.0.0")>]
 
 do

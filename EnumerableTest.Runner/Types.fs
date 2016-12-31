@@ -98,6 +98,14 @@ type TestResult =
       Result<TestMethod, exn>
   }
 
+type TestClass =
+  {
+    TypeFullName                : string
+    InstantiationError          : option<Exception>
+    Result                      : array<TestMethod>
+    NotCompletedMethods         : array<TestMethodSchema>
+  }
+
 type TestSuite =
   IObservable<TestResult>
 

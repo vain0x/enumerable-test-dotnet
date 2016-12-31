@@ -1,10 +1,9 @@
-﻿namespace EnumerableTest.UnitTest
+﻿namespace EnumerableTest.Runner.UnitTest
 
 open System
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
-open EnumerableTest.Runner.Console
 
 module TestClassNotifierTest =
   let seed types =

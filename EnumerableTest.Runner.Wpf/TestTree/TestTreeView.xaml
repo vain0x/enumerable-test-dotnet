@@ -10,7 +10,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:sdk="clr-namespace:EnumerableTest.Sdk;assembly=EnumerableTest.Core"
     xmlns:runner="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner"
-    xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner.Wpf.ViewModel"
+    xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner.Wpf.Core"
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     mc:Ignorable="d" 
     d:DesignWidth="300"

@@ -1,4 +1,4 @@
-﻿namespace EnumerableTest.UnitTest
+﻿namespace EnumerableTest.Runner.Wpf.UnitTest
 
 open System
 open System.Collections.Generic
@@ -7,6 +7,7 @@ open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
+open EnumerableTest.Runner.UnitTest
 
 module TestTreeTest =
   type TestClass1() =
@@ -97,6 +98,8 @@ module TestTreeTest =
       let path =
         [
           "EnumerableTest"
+          "Runner"
+          "Wpf"
           "UnitTest"
           "TestTreeTest"
           "TestClass1"

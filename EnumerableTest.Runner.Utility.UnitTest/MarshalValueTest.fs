@@ -1,4 +1,4 @@
-﻿namespace EnumerableTest.UnitTest
+﻿namespace EnumerableTest.Runner.UnitTest
 
 open System.Collections.Generic
 open Basis.Core

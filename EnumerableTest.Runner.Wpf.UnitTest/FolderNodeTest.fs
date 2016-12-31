@@ -1,4 +1,4 @@
-﻿namespace EnumerableTest.UnitTest
+﻿namespace EnumerableTest.Runner.Wpf.UnitTest
 
 open System
 open Persimmon
@@ -7,6 +7,7 @@ open EnumerableTest
 open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 open EnumerableTest.Sdk
+open EnumerableTest.Runner.UnitTest
 
 module FolderNodeTest =
   module test_FindOrAddFolderNode =
@@ -57,13 +58,13 @@ module FolderNodeTest =
               }
         a.UpdateResult(
           let groupTest =
-            GroupTest("a", [| (0).Is(0) |], null, TestData.Empty)
+            [| (0).Is(0) |].ToTestGroup("a")
             |> SerializableTest.ofGroupTest
           in TestMethod.ofResult "a" groupTest None TimeSpan.Zero
           )
         b.UpdateResult(
           let groupTest =
-            GroupTest("b", [||], exn(), TestData.Empty)
+            (seq { do exn() |> raise }).ToTestGroup("b")
             |> SerializableTest.ofGroupTest
           in TestMethod.ofResult "b" groupTest None TimeSpan.Zero
           )

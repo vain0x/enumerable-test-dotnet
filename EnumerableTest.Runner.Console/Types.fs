@@ -24,11 +24,3 @@ with
         "Timeout [ms] for a test assembly execution"
       | Recursion _ ->
         "Max nesting level for value serialization"
-
-type TestClass =
-  {
-    TypeFullName                : string
-    InstantiationError          : option<Exception>
-    Result                      : array<TestMethod>
-    NotCompletedMethods         : array<TestMethodSchema>
-  }
