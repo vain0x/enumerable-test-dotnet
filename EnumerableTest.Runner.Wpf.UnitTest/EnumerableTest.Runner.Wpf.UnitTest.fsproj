@@ -5,14 +5,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>08b6b12c-8032-4641-a8f9-ce3a6a59c97a</ProjectGuid>
+    <ProjectGuid>40049cfb-7f3b-4e1c-b0bf-a3d25c74c338</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>EnumerableTest.Runner</RootNamespace>
-    <AssemblyName>EnumerableTest.Runner</AssemblyName>
+    <RootNamespace>EnumerableTest.Runner.Wpf.UnitTest</RootNamespace>
+    <AssemblyName>EnumerableTest.Runner.Wpf.UnitTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>EnumerableTest.Runner</Name>
+    <Name>EnumerableTest.Runner.Wpf.UnitTest</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +22,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Debug\EnumerableTest.Runner.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\EnumerableTest.Runner.Wpf.UnitTest.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\EnumerableTest.Runner.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\EnumerableTest.Runner.Wpf.UnitTest.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -44,29 +44,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Utility.fs" />
-    <Compile Include="GroupSig.fs" />
-    <Compile Include="MarshalValue.fs" />
-    <Compile Include="Future.fs" />
-    <Compile Include="ObservableCommand.fs" />
-    <Compile Include="ConcurrentActionQueue.fs" />
-    <Compile Include="SerializableTestData.fs" />
-    <Compile Include="SerializableTest.fs" />
-    <Compile Include="Types.fs" />
-    <Compile Include="ConcreteNotifier.fs" />
-    <Compile Include="AssertionCount.fs" />
-    <Compile Include="TestStatistic.fs" />
-    <Compile Include="TestStatus.fs" />
-    <Compile Include="TestSuiteSchema.fs" />
-    <Compile Include="TestMethod.fs" />
-    <Compile Include="TestSuite.fs" />
-    <Compile Include="OneshotTestAssembly.fs" />
-    <Compile Include="LogFile.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
       <Name>EnumerableTest.Core</Name>
       <Project>{5c3ad6a7-3e56-430b-95df-b4e85ad0b838}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EnumerableTest.Runner.Wpf.ViewModel\EnumerableTest.Runner.Wpf.ViewModel.fsproj">
+      <Name>EnumerableTest.Runner.Wpf.ViewModel</Name>
+      <Project>{367d4453-0649-48ea-9115-73ec9c8e98ba}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
+      <Name>EnumerableTest.Runner</Name>
+      <Project>{08b6b12c-8032-4641-a8f9-ce3a6a59c97a}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
@@ -105,6 +97,17 @@
           <Paket>True</Paket>
         </Reference>
         <Reference Include="System.Xml.Linq">
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5' Or $(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
+      <ItemGroup>
+        <Reference Include="Persimmon">
+          <HintPath>..\packages\Persimmon\lib\net20\Persimmon.dll</HintPath>
+          <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
