@@ -173,7 +173,7 @@ module MarshalValue =
     then value :?> IEnumerable |> Some
     else None
 
-  let rec internal ofObjCore recursion value =
+  let rec ofObjCore recursion value =
     let factory =
       Factory.Create(recursion - 1, ofObjCore)
     match value with

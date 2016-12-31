@@ -62,6 +62,11 @@
       <Project>{5c3ad6a7-3e56-430b-95df-b4e85ad0b838}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\EnumerableTest.Runner.Utility\EnumerableTest.Runner.Utility.fsproj">
+      <Name>EnumerableTest.Runner.Utility</Name>
+      <Project>{52d24413-0b04-4d44-9e0a-ccbb2674c54b}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
       <Name>EnumerableTest.Runner</Name>
       <Project>{08b6b12c-8032-4641-a8f9-ce3a6a59c97a}</Project>
