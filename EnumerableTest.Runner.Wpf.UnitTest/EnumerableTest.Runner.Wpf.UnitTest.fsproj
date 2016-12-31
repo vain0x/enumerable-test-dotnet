@@ -56,6 +56,11 @@
       <Project>{5c3ad6a7-3e56-430b-95df-b4e85ad0b838}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\EnumerableTest.Runner.UnitTest\EnumerableTest.Runner.UnitTest.fsproj">
+      <Name>EnumerableTest.Runner.UnitTest</Name>
+      <Project>{096b7f8b-99dd-4839-829c-326b3ac0e23a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\EnumerableTest.Runner.Wpf.ViewModel\EnumerableTest.Runner.Wpf.ViewModel.fsproj">
       <Name>EnumerableTest.Runner.Wpf.ViewModel</Name>
       <Project>{367d4453-0649-48ea-9115-73ec9c8e98ba}</Project>
@@ -64,11 +69,6 @@
     <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
       <Name>EnumerableTest.Runner</Name>
       <Project>{08b6b12c-8032-4641-a8f9-ce3a6a59c97a}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\EnumerableTest.UnitTest\EnumerableTest.UnitTest.fsproj">
-      <Name>EnumerableTest.UnitTest</Name>
-      <Project>{bf400546-8bcc-467f-908a-ec71f75e06a6}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

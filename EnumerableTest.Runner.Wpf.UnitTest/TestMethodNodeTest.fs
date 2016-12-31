@@ -6,7 +6,7 @@ open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest
 open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
-open EnumerableTest.UnitTest
+open EnumerableTest.Runner.UnitTest
 
 module TestMethodNodeTest =
   let testMethodSchema: TestMethodSchema =

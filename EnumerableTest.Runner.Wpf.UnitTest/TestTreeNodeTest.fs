@@ -4,7 +4,7 @@ open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open Basis.Core
 open EnumerableTest.Runner.Wpf
-open EnumerableTest.UnitTest
+open EnumerableTest.Runner.UnitTest
 
 module TestTreeNodeTest =
   let empty () =

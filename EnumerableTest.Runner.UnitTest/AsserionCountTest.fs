@@ -1,4 +1,4 @@
-﻿namespace EnumerableTest.UnitTest
+﻿namespace EnumerableTest.Runner.UnitTest
 
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
@@ -11,7 +11,7 @@ module AsserionCountTest =
     let passedCase =
       test {
         do!
-          AssertionTest("passed-test", true, TestData.Empty)
+          (Test.FromResult("passed-test", true) :?> AssertionTest)
           |> SerializableTest.ofAssertionTest
           |> AssertionCount.ofAssertionTest
           |> assertEquals AssertionCount.onePassed
@@ -20,7 +20,7 @@ module AsserionCountTest =
     let violatedCase =
       test {
         do!
-          AssertionTest("violated-test", false, TestData.Empty)
+          (Test.FromResult("violated-test", false) :?> AssertionTest)
           |> SerializableTest.ofAssertionTest
           |> AssertionCount.ofAssertionTest
           |> assertEquals AssertionCount.oneViolated

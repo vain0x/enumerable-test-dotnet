@@ -7,7 +7,7 @@ open EnumerableTest
 open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 open EnumerableTest.Sdk
-open EnumerableTest.UnitTest
+open EnumerableTest.Runner.UnitTest
 
 module FolderNodeTest =
   module test_FindOrAddFolderNode =

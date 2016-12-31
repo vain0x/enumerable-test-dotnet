@@ -7,7 +7,7 @@ open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
-open EnumerableTest.UnitTest
+open EnumerableTest.Runner.UnitTest
 
 module TestTreeTest =
   type TestClass1() =

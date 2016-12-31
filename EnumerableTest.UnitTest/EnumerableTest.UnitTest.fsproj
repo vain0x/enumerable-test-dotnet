@@ -44,16 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Utility.fs" />
-    <Compile Include="UtilityTest.fs" />
-    <Compile Include="MarshalValueTest.fs" />
-    <Compile Include="TestTest.fs" />
-    <Compile Include="TestExtensionTest.fs" />
-    <Compile Include="TestClass.fs" />
-    <Compile Include="TestClassTypeTest.fs" />
-    <Compile Include="TestClassSchemaTest.fs" />
-    <Compile Include="AsserionCountTest.fs" />
-    <Compile Include="TestMethodTest.fs" />
     <Compile Include="TestClassNotifierTest.fs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +55,11 @@
     <ProjectReference Include="..\EnumerableTest.Runner.Console\EnumerableTest.Runner.Console.fsproj">
       <Name>EnumerableTest.Runner.Console</Name>
       <Project>{5c6bb045-a91b-4a8f-94ee-c14b3f6b585f}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EnumerableTest.Runner.UnitTest\EnumerableTest.Runner.UnitTest.fsproj">
+      <Name>EnumerableTest.Runner.UnitTest</Name>
+      <Project>{096b7f8b-99dd-4839-829c-326b3ac0e23a}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\EnumerableTest.Runner\EnumerableTest.Runner.fsproj">
