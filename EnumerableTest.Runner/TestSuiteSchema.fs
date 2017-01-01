@@ -13,8 +13,8 @@ module TestClassType =
       (fun m ->
         not m.IsSpecialName
         && not m.IsGenericMethodDefinition
-        && (m.GetParameters() |> Array.isEmpty)
         && m.ReturnType = typeof<seq<Test>>
+        && (m.GetParameters() |> Array.isEmpty)
       )
 
   let isTestClass (typ: Type) =

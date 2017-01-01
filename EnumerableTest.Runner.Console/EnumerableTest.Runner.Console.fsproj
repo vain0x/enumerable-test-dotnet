@@ -50,9 +50,9 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="StructuralTextWriter.fs" />
     <Compile Include="Types.fs" />
-    <Compile Include="AppArgument.fs" />
     <Compile Include="AssertionCounter.fs" />
     <Compile Include="TestPrinter.fs" />
+    <Compile Include="AppArgument.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>
