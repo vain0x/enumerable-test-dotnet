@@ -56,7 +56,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="TestTree\TestStatusConverter.cs" />
     <Compile Include="TestTree\TestStatusMark.xaml.cs">
       <DependentUpon>TestStatusMark.xaml</DependentUpon>

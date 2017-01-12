@@ -54,6 +54,7 @@
     <Compile Include="FolderNode.fs" />
     <Compile Include="TestTree.fs" />
     <Compile Include="AppArgument.fs" />
+    <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
