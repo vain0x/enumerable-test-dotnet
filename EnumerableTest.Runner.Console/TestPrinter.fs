@@ -40,8 +40,9 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
         | Success value ->
           do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
           do! printMarshalPropertiesAsync value.Properties
-        | Failure (e: exn) ->
-          do! printer.WriteLineAsync(sprintf "%s (!): %s" key e.Message)
+        | Failure e ->
+          do! printer.WriteLineAsync(sprintf "%s (!): %s" key e.String)
+          do! printMarshalPropertiesAsync e.Properties
     }
 
   let rec printMarshalValueAsync key (value: MarshalValue) =

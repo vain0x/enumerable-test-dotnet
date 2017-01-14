@@ -8,7 +8,7 @@ open Basis.Core
 
 [<AbstractClass>]
 type MarshalResult() =
-  abstract ToResult: unit -> Result<MarshalValue, exn>
+  abstract ToResult: unit -> Result<MarshalValue, MarshalValue>
 
   member this.HasValue =
     this.ToResult() |> Result.isSuccess
@@ -38,7 +38,7 @@ and
 
 and
   [<Sealed>]
-  ErrorMarshalResult(error: exn) =
+  ErrorMarshalResult(error: MarshalValue) =
   inherit MarshalResult()
 
   let result =
@@ -143,7 +143,7 @@ module MarshalValue =
           | Success value ->
             ValueMarshalResult(factory.Invoke value) :> MarshalResult
           | Failure e ->
-            ErrorMarshalResult(e) :> MarshalResult
+            ErrorMarshalResult(factory.Invoke (e :> obj)) :> MarshalResult
         yield KeyValuePair<_, _>(propertyInfo.Name, result)
     }
   let private ofCollectionCore factory elementSelector showElement source =

@@ -188,8 +188,16 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type utility:MarshalResult}">
-        <ContentPresenter Content="{Binding AsObject}" />
+    <DataTemplate DataType="{x:Type utility:ValueMarshalResult}">
+        <ContentPresenter Content="{Binding ValueOrThrow}" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type utility:ErrorMarshalResult}">
+        <StackPanel Orientation="Horizontal">
+            <local:TestStatusMark DataContext="{x:Static runner:TestStatus.Error}" />
+            
+            <ContentPresenter Content="{Binding ErrorOrThrow}" />
+        </StackPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type system:Exception}">
