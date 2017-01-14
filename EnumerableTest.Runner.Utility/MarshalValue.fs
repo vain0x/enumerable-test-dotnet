@@ -159,10 +159,16 @@ module MarshalValue =
       (fun (_, x) -> x.String)
       source
 
-  let private ofProperties factory (value: obj) =
+  let private ofObject factory stringify value =
     let typ = value.GetType()
     let properties = publicProperties factory value
-    create factory typ (value |> string) properties
+    create factory typ (value |> stringify) properties
+
+  let private ofException (factory: Factory) (value: exn) =
+    ofObject factory (fun (e: exn) -> e.Message) value
+
+  let private ofProperties factory (value: obj) =
+    ofObject factory string value
 
   let private (|KeyedCollection|_|) (value: obj) =
     value.GetType() |> Type.tryMatchKeyedCollectionType |> Option.map
@@ -183,6 +189,8 @@ module MarshalValue =
       value |> ofKeyedCollection factory
     | Collection value ->
       value |> ofCollection factory
+    | :? exn as value ->
+      value |> ofException factory
     | value ->
       value |> ofProperties factory
 
