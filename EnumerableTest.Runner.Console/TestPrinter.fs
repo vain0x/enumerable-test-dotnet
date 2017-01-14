@@ -36,7 +36,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
     async {
       use indenting = printer.AddIndent()
       for KeyValue (key, result) in properties do
-        match (result: MarshalResult).Unwrap() with
+        match (result: MarshalResult).ToResult() with
         | Success value ->
           do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
           do! printMarshalPropertiesAsync value.Properties

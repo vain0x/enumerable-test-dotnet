@@ -8,22 +8,22 @@ open Basis.Core
 
 [<AbstractClass>]
 type MarshalResult() =
-  abstract Unwrap: unit -> Result<MarshalValue, exn>
+  abstract ToResult: unit -> Result<MarshalValue, exn>
 
   member this.HasValue =
-    this.Unwrap() |> Result.isSuccess
+    this.ToResult() |> Result.isSuccess
 
   member this.HasError =
     this.HasValue |> not
 
   member this.ValueOrThrow =
-    this.Unwrap() |> Result.get
+    this.ToResult() |> Result.get
 
   member this.ErrorOrThrow =
-    this.Unwrap() |> Result.getFailure
+    this.ToResult() |> Result.getFailure
 
   member this.AsObject =
-    this.Unwrap() |> Result.toObj
+    this.ToResult() |> Result.toObj
 
 and
   [<Sealed>]
@@ -33,7 +33,7 @@ and
   let result =
     Result.Success value
 
-  override this.Unwrap() =
+  override this.ToResult() =
     result
 
 and
@@ -44,7 +44,7 @@ and
   let result =
     Result.Failure error
 
-  override this.Unwrap() =
+  override this.ToResult() =
     result
 
 and MarshalProperty =

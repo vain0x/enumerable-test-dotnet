@@ -51,7 +51,7 @@ module MarshalValueTest =
         let instance = ThrowingPropertyClass()
         let it = instance |> MarshalValue.ofObjCore 1
         do! it.Properties |> assertSatisfies (Seq.length >> (=) 1)
-        let result = it.Properties.[0].Value.Unwrap()
+        let result = it.Properties.[0].Value.ToResult()
         do! result |> assertEquals (instance.Exception() |> Failure)
       }
 
