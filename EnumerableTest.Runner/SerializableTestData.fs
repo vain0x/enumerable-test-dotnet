@@ -54,11 +54,8 @@ module SerializableTestData =
       let pairs =
         [|
           for KeyValue (key, value) in testData do
-            let marshalValue =
-              if isFlat
-              then MarshalValue.ofObjFlat value
-              else MarshalValue.ofObjDeep value
-            yield KeyValuePair<_, _>(key, marshalValue)
+            let value = MarshalValue.ofObj isFlat value
+            yield KeyValuePair<_, _>(key, value)
         |]
       SerializableDictionaryTestData(pairs) :> SerializableTestData
     | _ ->

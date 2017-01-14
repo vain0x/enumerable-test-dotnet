@@ -199,3 +199,8 @@ module MarshalValue =
 
   let ofObjDeep value =
     value |> ofObjCore Recursion
+
+  let ofObj isFlat value =
+    if isFlat
+    then ofObjFlat value
+    else ofObjDeep value
