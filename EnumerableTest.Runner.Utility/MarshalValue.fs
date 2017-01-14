@@ -6,19 +6,46 @@ open System.Collections.Generic
 open System.Reflection
 open Basis.Core
 
-type MarshalResult =
-  | MarshalResult
-    of Result<MarshalValue, exn>
-with
-  member this.Unwrap() =
-    let (MarshalResult value) = this
-    value
+[<AbstractClass>]
+type MarshalResult() =
+  abstract Unwrap: unit -> Result<MarshalValue, exn>
+
+  member this.HasValue =
+    this.Unwrap() |> Result.isSuccess
+
+  member this.HasError =
+    this.HasValue |> not
+
+  member this.ValueOrThrow =
+    this.Unwrap() |> Result.get
+
+  member this.ErrorOrThrow =
+    this.Unwrap() |> Result.getFailure
 
   member this.AsObject =
     this.Unwrap() |> Result.toObj
 
-  member this.ValueOrThrow =
-    this.Unwrap() |> Result.get
+and
+  [<Sealed>]
+  ValueMarshalResult(value: MarshalValue) =
+  inherit MarshalResult()
+
+  let result =
+    Result.Success value
+
+  override this.Unwrap() =
+    result
+
+and
+  [<Sealed>]
+  ErrorMarshalResult(error: exn) =
+  inherit MarshalResult()
+
+  let result =
+    Result.Failure error
+
+  override this.Unwrap() =
+    result
 
 and MarshalProperty =
   KeyValuePair<string, MarshalResult>
@@ -111,8 +138,13 @@ module MarshalValue =
   let private publicProperties (factory: Factory) source =
     seq {
       for (propertyInfo, result) in source |> getPublicInstancePropertyValues do
-        let result = result |> Result.map factory.Invoke
-        yield KeyValuePair<_, _>(propertyInfo.Name, MarshalResult result)
+        let result =
+          match result with
+          | Success value ->
+            ValueMarshalResult(factory.Invoke value) :> MarshalResult
+          | Failure e ->
+            ErrorMarshalResult(e) :> MarshalResult
+        yield KeyValuePair<_, _>(propertyInfo.Name, result)
     }
   let private ofCollectionCore factory elementSelector showElement source =
     let typ = source.GetType()
@@ -135,7 +167,7 @@ module MarshalValue =
         yield! publicProperties factory source
         for (key, value) in items do
           let key = sprintf "[%s]" key
-          let value = value |> Success |> MarshalResult
+          let value = ValueMarshalResult(value) :> MarshalResult
           yield KeyValuePair(key, value)
       }
     create factory typ string properties
