@@ -18,6 +18,7 @@ module TestMethod =
 
   let ofInstantiationError (e: exn) =
     let name = "default constructor"
+    let e = e |> MarshalValue.ofObjDeep
     let result = SerializableGroupTest(name, [||], Some e, SerializableEmptyTestData.Empty)
     ofResult name result None TimeSpan.Zero
 
