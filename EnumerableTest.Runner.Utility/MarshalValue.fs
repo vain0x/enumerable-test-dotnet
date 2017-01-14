@@ -197,5 +197,5 @@ module MarshalValue =
   let ofObjFlat value =
     value |> ofObjCore 0
 
-  let ofObj value =
+  let ofObjDeep value =
     value |> ofObjCore Recursion
