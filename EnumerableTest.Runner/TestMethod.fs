@@ -32,6 +32,7 @@ module TestMethod =
       tests.ToTestGroup(m.Name)
     let disposingError =
       Option.tryCatch (fun () -> instance |> Disposable.dispose)
+      |> Option.map MarshalValue.ofObjDeep
     let duration = stopwatch.Elapsed
     // Convert the result to be serializable.
     let groupTest =

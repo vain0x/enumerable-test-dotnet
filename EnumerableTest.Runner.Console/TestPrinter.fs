@@ -44,6 +44,12 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%s (!): %s" key e.Message)
     }
 
+  let rec printMarshalValueAsync key (value: MarshalValue) =
+    async {
+      do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
+      do! printMarshalPropertiesAsync value.Properties
+    }
+
   let printTestDataAsync =
     function
     | EmptyTestData ->
@@ -51,8 +57,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
     | DictionaryTestData testData ->
       async {
         for KeyValue (key, value) in testData do
-          do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
-          do! printMarshalPropertiesAsync value.Properties
+          do! printMarshalValueAsync key value
       }
 
   let printAssertionTestAsync i (result: SerializableAssertionTest) =
@@ -90,7 +95,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printTestAsync i test
         match testMethod.DisposingError with
         | Some e ->
-          do! printExceptionAsync "Dispose" e
+          do! printMarshalValueAsync "RUNTIME ERROR in Dispose" e
         | None -> ()
     }
 
