@@ -101,7 +101,7 @@ module ``test TestTree`` =
           "Runner"
           "Wpf"
           "UnitTest"
-          "TestTreeTest"
+          "test TestTree"
           "TestClass1"
         ]
       controlPanel.Tree.Root.TryRoute(path)
