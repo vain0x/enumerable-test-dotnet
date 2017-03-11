@@ -8,33 +8,52 @@ module Type =
   open Basis.Core
 
   /// Represents a full name of a type.
-  /// Format: Namespace1.Namespace2.Type1+Type2+TypeName.
   type FullName =
-    private
-    | FullName of string
+    {
+      NamespacePath:
+        array<string>
+      TypePath:
+        array<string>
+      Name:
+        string
+    }
   with
-    member this.Raw =
-      let (FullName raw) = this
-      raw
+    member this.ToArray() =
+      [|
+        yield! this.NamespacePath
+        yield! this.TypePath
+        yield this.Name
+      |]
 
     override this.ToString() =
-      this.Raw
+      Array.append
+        this.NamespacePath
+        [|Array.append this.TypePath [|this.Name|] |> String.concat "+"|]
+      |> String.concat "."
 
-    static member Create(fullName) =
-      FullName fullName
+    static member Create(namespacePath, typePath, name) =
+      {
+        NamespacePath =
+          namespacePath
+        TypePath =
+          typePath
+        Name =
+          name
+      }
 
   [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
   module FullName =
-    let decompose (fullName: FullName) =
-      let fullName = fullName.Raw
+    /// Creates an instance of FullName from a string.
+    /// Format: Namespace1.Namespace2.Type1+Type2+TypeName.
+    let ofString (fullName: string) =
       let (namespacePath, nestedTypeName) =
         fullName |> Str.splitBy "." |> Array.decomposeLast
       let (typePath, name) =
         nestedTypeName |> Str.splitBy "+" |> Array.decomposeLast
-      (namespacePath, typePath, name)
+      FullName.Create(namespacePath, typePath, name)
 
   let fullName (typ: Type) =
-    FullName.Create(typ.FullName)
+    FullName.ofString typ.FullName
 
   let tryGetGenericTypeDefinition (this: Type) =
     if this.IsGenericType

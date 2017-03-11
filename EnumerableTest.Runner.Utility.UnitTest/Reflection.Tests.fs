@@ -8,10 +8,11 @@ module TypeTest =
   open System.Collections.Generic
 
   module ``test FullName`` =
-    let ``test decompose`` =
+    let ``test ofString`` =
       test {
         let assert' expected fullName =
-          Type.FullName.Create(fullName) |> Type.FullName.decompose
+          let fullName = Type.FullName.ofString fullName
+          (fullName.NamespacePath, fullName.TypePath, fullName.Name)
           |> assertEquals expected
         do!
           "globalType"

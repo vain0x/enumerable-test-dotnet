@@ -15,16 +15,7 @@ module TestMethodSchema =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassPath =
   let ofFullName (fullName: Type.FullName) =
-    let (namespacePath, typePath, name) =
-      fullName |> Type.FullName.decompose
-    {
-      NamespacePath =
-        namespacePath
-      TypePath =
-        typePath
-      Name =
-        name
-    }
+    fullName
 
   let ofType (typ: Type) =
     typ |> Type.fullName |> ofFullName

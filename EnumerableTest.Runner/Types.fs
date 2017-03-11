@@ -18,14 +18,7 @@ type TestMethodSchema =
   }
 
 type TestClassPath =
-  {
-    NamespacePath:
-      array<string>
-    TypePath:
-      array<string>
-    Name:
-      string
-  }
+  Type.FullName
 
 type TestClassSchema =
   {
