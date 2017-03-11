@@ -116,7 +116,7 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
         |> Observable.subscribe (updateSchema testAssembly.CancelCommand)
         |> subscriptions.Add
 
-        testAssembly.TestResults.ObserveOn(scheduler)
+        testAssembly.TestCompleted.ObserveOn(scheduler)
         |> Observable.subscribe updateResult
         |> subscriptions.Add
       )

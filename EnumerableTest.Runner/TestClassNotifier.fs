@@ -89,7 +89,7 @@ type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssem
         subject.OnCompleted()
 
   let subscription =
-    testAssembly.TestResults |> Observable.subscribe
+    testAssembly.TestCompleted |> Observable.subscribe
       (fun testResult ->
         let path = testResult.TypeFullName |> Type.FullName.fullPath
         lock gate

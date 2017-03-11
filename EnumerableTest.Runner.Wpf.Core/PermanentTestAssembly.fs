@@ -56,13 +56,13 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
         TestSuiteSchema.difference pair.OldItem pair.NewItem
       )
 
-  let testResults =
+  let testCompleted =
     currentTestAssembly
     |> Observable.map
       (fun testAssembly ->
         match testAssembly with
         | Some testAssembly ->
-          testAssembly.TestResults
+          testAssembly.TestCompleted
           |> fun o -> o.Finally(fun () -> cancel ())
         | None ->
           Observable.Empty()
@@ -98,8 +98,8 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   override this.SchemaUpdated =
     schemaUpdated
 
-  override this.TestResults =
-    testResults
+  override this.TestCompleted =
+    testCompleted
 
   override this.Start() =
     start ()

@@ -15,7 +15,7 @@ module ``test TestClassNotifier`` =
       { new TestAssembly() with
           override this.Start() =
             testResults.Connect() |> ignore
-          override this.TestResults =
+          override this.TestCompleted =
             testResults :> IObservable<_>
           override this.Dispose() = ()
       }

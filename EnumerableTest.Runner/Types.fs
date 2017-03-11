@@ -111,7 +111,7 @@ type TestSuite =
 
 [<AbstractClass>]
 type TestAssembly() =
-  abstract TestResults: IObservable<TestResult>
+  abstract TestCompleted: IObservable<TestResult>
 
   abstract Start: unit -> unit
 

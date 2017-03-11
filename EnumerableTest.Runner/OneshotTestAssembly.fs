@@ -76,7 +76,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   member this.Schema =
     testSuiteSchema
 
-  override this.TestResults =
+  override this.TestCompleted =
     testResults :> IObservable<_>
 
   override this.Start() =

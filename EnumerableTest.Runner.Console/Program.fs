@@ -36,7 +36,7 @@ module Program =
         use counterSubscription =
           testClassNotifier.Subscribe(counter)
         testAssembly.Start()
-        testAssembly.TestResults |> Observable.waitTimeout timeout |> ignore<bool>
+        testAssembly.TestCompleted |> Observable.waitTimeout timeout |> ignore<bool>
         testClassNotifier.Complete()
       | Failure e ->
         notifier.NotifyWarning

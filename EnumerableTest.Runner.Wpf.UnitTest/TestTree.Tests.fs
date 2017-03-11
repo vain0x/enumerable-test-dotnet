@@ -56,7 +56,7 @@ module ``test TestTree`` =
       { new PermanentTestAssembly() with
           override this.SchemaUpdated =
             schemaUpdated :> _
-          override this.TestResults =
+          override this.TestCompleted =
             testResults :> _
           override this.CancelCommand =
             ObservableCommand.never
