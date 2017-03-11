@@ -16,8 +16,6 @@ module TestMethodSchema =
 module TestClassSchema =
   let ofType (typ: Type): TestClassSchema =
     {
-      Path =
-        typ |> Type.fullName
       TypeFullName =
         typ |> Type.fullName
       Methods = 
@@ -69,7 +67,7 @@ module TestSuiteSchema =
     let modified =
       d.Intersect |> Seq.map
         (fun (name, l, r) ->
-          (l.Path |> Type.FullName.fullPath, TestClassSchema.difference l r)
+          (l.TypeFullName |> Type.FullName.fullPath, TestClassSchema.difference l r)
         )
       |> Map.ofSeq
     TestSuiteSchemaDifference.Create

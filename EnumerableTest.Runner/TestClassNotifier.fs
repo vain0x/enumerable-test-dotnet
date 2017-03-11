@@ -71,7 +71,7 @@ type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssem
     testSuiteSchema
     |> Seq.map
       (fun testClassSchema ->
-        let path = testClassSchema.Path |> Type.FullName.fullPath
+        let path = testClassSchema.TypeFullName |> Type.FullName.fullPath
         (path, MutableTestClassResult.FromSchema(testClassSchema))
       )
     |> Dictionary.ofSeq

@@ -17,13 +17,8 @@ type TestMethodSchema =
     MethodName: string
   }
 
-type TestClassPath =
-  Type.FullName
-
 type TestClassSchema =
   {
-    Path:
-      TestClassPath
     TypeFullName:
       Type.FullName
     Methods:
