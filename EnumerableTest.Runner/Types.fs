@@ -101,7 +101,7 @@ type TestResult =
   {
     TypeFullName:
       string
-    /// Represents completion of a test method or an instantiation error.
+    /// Represents a test method result or an instantiation error.
     Result:
       Result<TestMethodResult, exn>
   }
