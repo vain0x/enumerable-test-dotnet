@@ -6,8 +6,8 @@ open EnumerableTest
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
 
-module AsserionCountTest =
-  module test_ofAssertionTest =
+module ``test AsserionCount`` =
+  module ``test ofAssertionTest`` =
     let passedCase =
       test {
         do!
@@ -26,7 +26,7 @@ module AsserionCountTest =
           |> assertEquals AssertionCount.oneViolated
       }
 
-  module test_ofGroupTest =
+  module ``test ofGroupTest`` =
     let normalCase =
       test {
         do!

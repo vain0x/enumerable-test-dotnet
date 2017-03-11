@@ -44,11 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="UptodateCollectionTest.fs" />
-    <Compile Include="TestTreeNodeTest.fs" />
-    <Compile Include="TestMethodNodeTest.fs" />
-    <Compile Include="FolderNodeTest.fs" />
-    <Compile Include="TestTreeTest.fs" />
+    <Compile Include="UptodateCollection.Tests.fs" />
+    <Compile Include="TestTreeNode.Tests.fs" />
+    <Compile Include="TestMethodNode.Tests.fs" />
+    <Compile Include="FolderNode.Tests.fs" />
+    <Compile Include="TestTree.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">

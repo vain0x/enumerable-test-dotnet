@@ -5,7 +5,7 @@ open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest
 open EnumerableTest.Sdk
 
-module TestTest =
+module ``test Test`` =
   let passedTest = Test.Pass
   let violatedTest = Test.FromResult("violate", false)
 

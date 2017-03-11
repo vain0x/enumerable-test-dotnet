@@ -9,7 +9,7 @@ open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 open EnumerableTest.Runner.UnitTest
 
-module TestTreeTest =
+module ``test TestTree`` =
   type TestClass1() =
     member this.PassingTest() =
       TestClasses.passingTest

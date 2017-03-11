@@ -5,7 +5,7 @@ open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 
-module TestClassNotifierTest =
+module ``test TestClassNotifier`` =
   let seed types =
     let schema =
       TestSuiteSchema.ofTypes types

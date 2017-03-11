@@ -8,7 +8,7 @@ open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 open EnumerableTest.Runner.UnitTest
 
-module TestMethodNodeTest =
+module ``test TestMethodNode`` =
   let testMethodSchema: TestMethodSchema =
     {
       MethodName =

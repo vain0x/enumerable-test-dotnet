@@ -9,8 +9,8 @@ open EnumerableTest.Runner.Wpf
 open EnumerableTest.Sdk
 open EnumerableTest.Runner.UnitTest
 
-module FolderNodeTest =
-  module test_FindOrAddFolderNode =
+module ``test FolderNode`` =
+  module ``test FindOrAddFolderNode`` =
     let empty () =
       FolderNode.CreateRoot()
 
@@ -41,7 +41,7 @@ module FolderNodeTest =
         do! a.Children |> assertSatisfies (Seq.contains ay)
       }
 
-  module test_TestStatistic =
+  module ``test TestStatistic`` =
     let ``test updating`` =
       test {
         let node = FolderNode("folderNode")

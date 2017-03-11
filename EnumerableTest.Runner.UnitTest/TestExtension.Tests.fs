@@ -4,8 +4,8 @@ open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest
 
-module TestExtensionTest =
-  module ToTestGroupTest =
+module ``test TestExtension`` =
+  module ``test ToTestGroup`` =
     let body (name, isPassed, testsCondition, exceptionCondition) tests =
       test {
         let group = (tests :> seq<Test>).ToTestGroup(name)
