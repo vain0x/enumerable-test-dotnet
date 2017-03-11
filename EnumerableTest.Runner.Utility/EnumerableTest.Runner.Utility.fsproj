@@ -44,7 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Utility.fs" />
+    <Compile Include="Misc.fs" />
+    <Compile Include="ErrorHandling.fs" />
+    <Compile Include="Collections.fs" />
+    <Compile Include="IO.fs" />
+    <Compile Include="Reactive.fs" />
+    <Compile Include="Reactive.Bindings.fs" />
+    <Compile Include="Reflection.fs" />
+    <Compile Include="Threading.fs" />
+    <Compile Include="Misc.AppDomain.fs" />
     <Compile Include="GroupSig.fs" />
     <Compile Include="MarshalValue.fs" />
     <Compile Include="Future.fs" />

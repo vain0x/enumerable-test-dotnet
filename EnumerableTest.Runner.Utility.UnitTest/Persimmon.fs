@@ -1,6 +1,4 @@
-﻿namespace EnumerableTest.Runner.UnitTest
-
-open Persimmon
+﻿namespace Persimmon
 
 [<AutoOpen>]
 module Assertions =

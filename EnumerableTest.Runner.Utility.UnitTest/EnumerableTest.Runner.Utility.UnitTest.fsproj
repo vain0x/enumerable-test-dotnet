@@ -44,8 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Utility.fs" />
-    <Compile Include="UtilityTest.fs" />
+    <Compile Include="Persimmon.fs" />
+    <Compile Include="Misc.Tests.fs" />
+    <Compile Include="Reactive.Tests.fs" />
+    <Compile Include="Collections.Tests.fs" />
+    <Compile Include="Reflection.Tests.fs" />
     <Compile Include="MarshalValueTest.fs" />
   </ItemGroup>
   <ItemGroup>
