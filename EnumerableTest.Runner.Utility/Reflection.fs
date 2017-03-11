@@ -7,6 +7,35 @@ module Type =
   open System.Collections.Generic
   open Basis.Core
 
+  /// Represents a full name of a type.
+  /// Format: Namespace1.Namespace2.Type1+Type2+TypeName.
+  type FullName =
+    private
+    | FullName of string
+  with
+    member this.Raw =
+      let (FullName raw) = this
+      raw
+
+    override this.ToString() =
+      this.Raw
+
+    static member Create(fullName) =
+      FullName fullName
+
+  [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+  module FullName =
+    let decompose (fullName: FullName) =
+      let fullName = fullName.Raw
+      let (namespacePath, nestedTypeName) =
+        fullName |> Str.splitBy "." |> Array.decomposeLast
+      let (typePath, name) =
+        nestedTypeName |> Str.splitBy "+" |> Array.decomposeLast
+      (namespacePath, typePath, name)
+
+  let fullName (typ: Type) =
+    FullName.Create(typ.FullName)
+
   let tryGetGenericTypeDefinition (this: Type) =
     if this.IsGenericType
       then this.GetGenericTypeDefinition() |> Some

@@ -20,6 +20,17 @@ module Seq =
         seconds.Add(x)
     (firsts :> IReadOnlyList<_>, seconds :> IReadOnlyList<_>)
 
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+[<RequireQualifiedAccess>]
+module Array =
+  open System
+
+  let decomposeLast (array: array<_>) =
+    if array.Length = 0 then
+      ArgumentException() |> raise
+    else
+      (array.[0..(array.Length - 2)], array.[array.Length - 1])
+
 module Dictionary =
   open System.Collections.Generic
 

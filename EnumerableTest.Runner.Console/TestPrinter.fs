@@ -114,7 +114,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
     async {
       if isVerbose || testClassResult |> TestClassResult.isPassed |> not then
         do! printHardSeparatorAsync ()
-        do! printer.WriteLineAsync(sprintf "Type: %s" testClassResult.TypeFullName)
+        do! printer.WriteLineAsync(sprintf "Type: %s" testClassResult.TypeFullName.Raw)
         use indenting = printer.AddIndent()
         match testClassResult.InstantiationError with
         | Some e ->

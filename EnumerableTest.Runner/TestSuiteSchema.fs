@@ -35,22 +35,20 @@ module TestMethodSchema =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassPath =
-  let ofFullName fullName =
-    let namespacePath =
-      fullName |> Str.splitBy "."
-    let classPath =
-      fullName |> Str.splitBy "." |> Seq.last |> Str.splitBy "+"
+  let ofFullName (fullName: Type.FullName) =
+    let (namespacePath, typePath, name) =
+      fullName |> Type.FullName.decompose
     {
       NamespacePath =
-        namespacePath.[0..(namespacePath.Length - 2)]
+        namespacePath
       ClassPath =
-        classPath.[0..(classPath.Length - 2)]
+        typePath
       Name =
-        classPath.[classPath.Length - 1]
+        name
     }
 
   let ofType (typ: Type) =
-    typ.FullName |> ofFullName
+    typ |> Type.fullName |> ofFullName
 
   let fullPath (this: TestClassPath) =
     [
@@ -66,7 +64,7 @@ module TestClassSchema =
       Path =
         typ |> TestClassPath.ofType
       TypeFullName =
-        typ.FullName
+        typ |> Type.fullName
       Methods = 
         typ
         |> TestClassType.testMethodInfos

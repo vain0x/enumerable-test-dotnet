@@ -1,5 +1,4 @@
 ﻿namespace EnumerableTest.Runner
-
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 
@@ -7,6 +6,23 @@ module TypeTest =
   open System
   open System.Collections
   open System.Collections.Generic
+
+  module ``test FullName`` =
+    let ``test decompose`` =
+      test {
+        let assert' expected fullName =
+          Type.FullName.Create(fullName) |> Type.FullName.decompose
+          |> assertEquals expected
+        do!
+          "globalType"
+          |> assert' ([||], [||], "globalType")
+        do!
+          "Foo.nonnestedType"
+          |> assert' ([|"Foo"|], [||], "nonnestedType")
+        do!
+          "Foo.Collection+Enumerator"
+          |> assert' ([|"Foo"|], [|"Collection"|], "Enumerator")
+      }
 
   let ``test isCollectionType true`` =
     let body (typ, expected) =

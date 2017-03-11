@@ -11,7 +11,7 @@ module TestResult =
   let create typ result: TestResult =
     {
       TypeFullName =
-        (typ: Type).FullName
+        typ |> Type.fullName
       Result =
         result
     }

@@ -3,6 +3,17 @@
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 
+module ``test Array`` =
+  open System
+
+  let ``test decomposeLast`` =
+    test {
+      do! [|0; 1; 2|] |> Array.decomposeLast |> assertEquals ([|0; 1|], 2)
+
+      let! e = trap { it ([||] |> Array.decomposeLast) }
+      return ()
+    }
+
 module ReadOnlyListTest =
   open System.Collections.Generic
 

@@ -138,7 +138,7 @@ module TestTreeTest =
   let afterSecondSchemaUpdated () =
     let (controlPanel, classNode) = afterFirstExecution ()
     let fullPath =
-      typeof<TestClass1>.FullName |> TestClassPath.ofFullName |> TestClassPath.fullPath
+      typeof<TestClass1> |> TestClassPath.ofType |> TestClassPath.fullPath
     let difference: TestSuiteSchemaDifference =
       let classDifference =
         TestClassSchema.difference

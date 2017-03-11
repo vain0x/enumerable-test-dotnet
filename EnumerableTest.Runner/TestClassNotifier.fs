@@ -10,7 +10,7 @@ open EnumerableTest.Runner
 type internal MutableTestClassResult =
   {
     TypeFullName:
-      string
+      Type.FullName
     mutable InstantiationError:
       option<exn>
     Result:

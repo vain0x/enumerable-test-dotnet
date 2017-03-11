@@ -32,7 +32,7 @@ type TestClassSchema =
     Path:
       TestClassPath
     TypeFullName:
-      string
+      Type.FullName
     Methods:
       array<TestMethodSchema>
   }
@@ -100,7 +100,7 @@ with
 type TestResult =
   {
     TypeFullName:
-      string
+      Type.FullName
     /// Represents a test method result or an instantiation error.
     Result:
       Result<TestMethodResult, exn>
@@ -109,7 +109,7 @@ type TestResult =
 type TestClassResult =
   {
     TypeFullName:
-      string
+      Type.FullName
     InstantiationError:
       option<Exception>
     TestMethodResults:
