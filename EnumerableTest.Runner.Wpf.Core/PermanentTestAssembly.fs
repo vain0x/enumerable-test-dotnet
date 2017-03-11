@@ -52,7 +52,17 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
       )
 
   let testResults =
-    new Subject<_>()
+    currentTestAssembly
+      .Select
+        (fun testAssembly ->
+          match testAssembly with
+          | Some testAssembly ->
+            testAssembly.TestResults
+            |> fun o -> o.Finally(fun () -> cancel ())
+          | None ->
+            Observable.Empty()
+        )
+    |> fun o -> o.Switch()
 
   let subscription =
     new SingleAssignmentDisposable()
@@ -61,17 +71,7 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     cancel ()
     match OneshotTestAssembly.ofFile file with
     | Success testAssembly ->
-      let subscriptions = new CompositeDisposable()
-      let unload () =
-        subscriptions.Dispose()
-        cancel()
       currentTestSchema.Value <- testAssembly.Schema
-      testAssembly.TestResults.Subscribe
-        ( testResults.OnNext
-        , ignore >> unload
-        , unload
-        )
-      |> subscriptions.Add
       currentTestAssembly.Value <- Some testAssembly
       testAssembly.Start()
     | Failure e ->
@@ -95,7 +95,7 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     schemaUpdated
 
   override this.TestResults =
-    testResults :> IObservable<_>
+    testResults
 
   override this.Start() =
     start ()
