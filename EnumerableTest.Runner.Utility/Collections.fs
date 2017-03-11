@@ -42,9 +42,12 @@ module ReadOnlyList =
 
   type SymmetricDifference<'k, 'x, 'y> =
     {
-      Left                      : IReadOnlyList<'x>
-      Intersect                 : IReadOnlyList<'k * 'x * 'y>
-      Right                     : IReadOnlyList<'y>
+      Left:
+        IReadOnlyList<'x>
+      Intersect:
+        IReadOnlyList<'k * 'x * 'y>
+      Right:
+        IReadOnlyList<'y>
     }
 
   let symmetricDifferenceBy
@@ -69,7 +72,10 @@ module ReadOnlyList =
       |> Seq.filter (fun x -> intersectKeys |> Set.contains (xKey x) |> not)
       |> Seq.toArray
     {
-      Left                      = left :> IReadOnlyList<_>
-      Intersect                 = intersect
-      Right                     = right
+      Left =
+        left :> IReadOnlyList<_>
+      Intersect =
+        intersect
+      Right =
+        right
     }

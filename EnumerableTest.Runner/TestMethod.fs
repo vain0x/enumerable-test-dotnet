@@ -10,10 +10,14 @@ open EnumerableTest.Sdk
 module TestMethod =
   let ofResult name result disposingError duration =
     {
-      MethodName                    = name
-      Result                        = result
-      DisposingError                = disposingError
-      Duration                      = duration
+      MethodName =
+        name
+      Result =
+        result
+      DisposingError =
+        disposingError
+      Duration =
+        duration
     }
 
   let ofInstantiationError (e: exn) =

@@ -6,21 +6,27 @@ open System.Collections.Generic
 
 type UptodateCollectionNotification<'x> =
   {
-    IsAdded             : bool
-    Value               : 'x
+    IsAdded:
+      bool
+    Value:
+      'x
   }
 
 module UptodateCollectionNotification =
   let ofAdded x =
     {
-      IsAdded           = true
-      Value             = x
+      IsAdded =
+        true
+      Value =
+        x
     }
 
   let ofRemoved x =
     {
-      IsAdded           = false
-      Value             = x
+      IsAdded =
+        false
+      Value =
+        x
     }
 
 /// NOTE: Thread-unsafe.

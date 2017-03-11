@@ -30,7 +30,7 @@ module TestClassType =
 module TestMethodSchema =
   let ofMethodInfo (m: MethodInfo): TestMethodSchema =
     {
-      MethodName                    = m.Name
+      MethodName = m.Name
     }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
@@ -65,8 +65,9 @@ module TestClassSchema =
     {
       Path =
         typ |> TestClassPath.ofType
-      TypeFullName                = typ.FullName
-      Methods                     = 
+      TypeFullName =
+        typ.FullName
+      Methods = 
         typ
         |> TestClassType.testMethodInfos
         |> Seq.map TestMethodSchema.ofMethodInfo

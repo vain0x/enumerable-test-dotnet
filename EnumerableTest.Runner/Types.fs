@@ -14,7 +14,7 @@ type TestInstance =
 
 type TestMethodSchema =
   {
-    MethodName                  : string
+    MethodName: string
   }
 
 type TestClassPath =
@@ -31,8 +31,10 @@ type TestClassSchema =
   {
     Path:
       TestClassPath
-    TypeFullName                : string
-    Methods                     : array<TestMethodSchema>
+    TypeFullName:
+      string
+    Methods:
+      array<TestMethodSchema>
   }
 
 type TestSuiteSchema =
@@ -80,10 +82,14 @@ with
 
 type TestMethod =
   {
-    MethodName                  : string
-    Result                      : SerializableGroupTest
-    DisposingError              : option<MarshalValue>
-    Duration                    : TimeSpan
+    MethodName:
+      string
+    Result:
+      SerializableGroupTest
+    DisposingError:
+      option<MarshalValue>
+    Duration:
+      TimeSpan
   }
 with
   member this.DisposingErrorOrNull =
@@ -102,10 +108,14 @@ type TestResult =
 
 type TestClass =
   {
-    TypeFullName                : string
-    InstantiationError          : option<Exception>
-    Result                      : array<TestMethod>
-    NotCompletedMethods         : array<TestMethodSchema>
+    TypeFullName:
+      string
+    InstantiationError:
+      option<Exception>
+    Result:
+      array<TestMethod>
+    NotCompletedMethods:
+      array<TestMethodSchema>
   }
 
 type TestSuite =
