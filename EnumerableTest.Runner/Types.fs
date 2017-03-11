@@ -82,12 +82,14 @@ type TestMethod =
   {
     MethodName                  : string
     Result                      : SerializableGroupTest
-    DisposingError              : option<Exception>
+    DisposingError              : option<MarshalValue>
     Duration                    : TimeSpan
   }
 with
   member this.DisposingErrorOrNull =
-    this.DisposingError |> Option.getOr null
+    match this.DisposingError with
+    | Some e -> e :> obj
+    | None -> null
 
 type TestResult =
   {

@@ -6,19 +6,46 @@ open System.Collections.Generic
 open System.Reflection
 open Basis.Core
 
-type MarshalResult =
-  | MarshalResult
-    of Result<MarshalValue, exn>
-with
-  member this.Unwrap() =
-    let (MarshalResult value) = this
-    value
+[<AbstractClass>]
+type MarshalResult() =
+  abstract ToResult: unit -> Result<MarshalValue, MarshalValue>
 
-  member this.AsObject =
-    this.Unwrap() |> Result.toObj
+  member this.HasValue =
+    this.ToResult() |> Result.isSuccess
+
+  member this.HasError =
+    this.HasValue |> not
 
   member this.ValueOrThrow =
-    this.Unwrap() |> Result.get
+    this.ToResult() |> Result.get
+
+  member this.ErrorOrThrow =
+    this.ToResult() |> Result.getFailure
+
+  member this.AsObject =
+    this.ToResult() |> Result.toObj
+
+and
+  [<Sealed>]
+  ValueMarshalResult(value: MarshalValue) =
+  inherit MarshalResult()
+
+  let result =
+    Result.Success value
+
+  override this.ToResult() =
+    result
+
+and
+  [<Sealed>]
+  ErrorMarshalResult(error: MarshalValue) =
+  inherit MarshalResult()
+
+  let result =
+    Result.Failure error
+
+  override this.ToResult() =
+    result
 
 and MarshalProperty =
   KeyValuePair<string, MarshalResult>
@@ -111,8 +138,13 @@ module MarshalValue =
   let private publicProperties (factory: Factory) source =
     seq {
       for (propertyInfo, result) in source |> getPublicInstancePropertyValues do
-        let result = result |> Result.map factory.Invoke
-        yield KeyValuePair<_, _>(propertyInfo.Name, MarshalResult result)
+        let result =
+          match result with
+          | Success value ->
+            ValueMarshalResult(factory.Invoke value) :> MarshalResult
+          | Failure e ->
+            ErrorMarshalResult(factory.Invoke (e :> obj)) :> MarshalResult
+        yield KeyValuePair<_, _>(propertyInfo.Name, result)
     }
   let private ofCollectionCore factory elementSelector showElement source =
     let typ = source.GetType()
@@ -135,7 +167,7 @@ module MarshalValue =
         yield! publicProperties factory source
         for (key, value) in items do
           let key = sprintf "[%s]" key
-          let value = value |> Success |> MarshalResult
+          let value = ValueMarshalResult(value) :> MarshalResult
           yield KeyValuePair(key, value)
       }
     create factory typ string properties
@@ -159,10 +191,16 @@ module MarshalValue =
       (fun (_, x) -> x.String)
       source
 
-  let private ofProperties factory (value: obj) =
+  let private ofObject factory stringify value =
     let typ = value.GetType()
     let properties = publicProperties factory value
-    create factory typ (value |> string) properties
+    create factory typ (value |> stringify) properties
+
+  let private ofException (factory: Factory) (value: exn) =
+    ofObject factory (fun (e: exn) -> e.Message) value
+
+  let private ofProperties factory (value: obj) =
+    ofObject factory string value
 
   let private (|KeyedCollection|_|) (value: obj) =
     value.GetType() |> Type.tryMatchKeyedCollectionType |> Option.map
@@ -183,11 +221,18 @@ module MarshalValue =
       value |> ofKeyedCollection factory
     | Collection value ->
       value |> ofCollection factory
+    | :? exn as value ->
+      value |> ofException factory
     | value ->
       value |> ofProperties factory
 
   let ofObjFlat value =
     value |> ofObjCore 0
 
-  let ofObj value =
+  let ofObjDeep value =
     value |> ofObjCore Recursion
+
+  let ofObj isFlat value =
+    if isFlat
+    then ofObjFlat value
+    else ofObjDeep value

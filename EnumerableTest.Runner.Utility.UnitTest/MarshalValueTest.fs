@@ -1,5 +1,6 @@
 ﻿namespace EnumerableTest.Runner.UnitTest
 
+open System
 open System.Collections.Generic
 open Basis.Core
 open Persimmon
@@ -50,8 +51,8 @@ module MarshalValueTest =
         let instance = ThrowingPropertyClass()
         let it = instance |> MarshalValue.ofObjCore 1
         do! it.Properties |> assertSatisfies (Seq.length >> (=) 1)
-        let result = it.Properties.[0].Value.Unwrap()
-        do! result |> assertEquals (instance.Exception() |> Failure)
+        let result = it.Properties.[0].Value.ToResult()
+        do! result |> assertSatisfies Result.isFailure
       }
 
     let ``test String`` =
@@ -64,6 +65,7 @@ module MarshalValueTest =
         case ([| 0..9 |] :> obj, "{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}")
         case ([| 0..10 |] :> obj, "{Count = 11}")
         case (Seq.empty :> obj, Seq.empty |> string)
+        case (exn("message") :> obj, "message")
         case ("hello" :> obj, "hello")
         run body
       }

@@ -27,18 +27,18 @@ type PermanentTestAssembly() =
 type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   inherit PermanentTestAssembly()
 
-  let current =
+  let currentTestAssembly =
     ReactiveProperty.create (None: option<OneshotTestAssembly>)
 
   let cancel () =
-    match current.Value with
+    match currentTestAssembly.Value with
     | Some testAssembly ->
       testAssembly.Dispose()
-      current.Value <- None
+      currentTestAssembly.Value <- None
     | None -> ()
 
   let cancelCommand =
-    current
+    currentTestAssembly
     |> ReactiveProperty.map Option.isSome
     |> ObservableCommand.ofFunc cancel
 
@@ -72,7 +72,7 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
         , unload
         )
       |> subscriptions.Add
-      current.Value <- Some testAssembly
+      currentTestAssembly.Value <- Some testAssembly
       testAssembly.Start()
     | Failure e ->
       notifier.NotifyWarning

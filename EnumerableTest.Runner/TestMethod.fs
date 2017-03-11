@@ -18,6 +18,7 @@ module TestMethod =
 
   let ofInstantiationError (e: exn) =
     let name = "default constructor"
+    let e = e |> MarshalValue.ofObjDeep
     let result = SerializableGroupTest(name, [||], Some e, SerializableEmptyTestData.Empty)
     ofResult name result None TimeSpan.Zero
 
@@ -31,6 +32,7 @@ module TestMethod =
       tests.ToTestGroup(m.Name)
     let disposingError =
       Option.tryCatch (fun () -> instance |> Disposable.dispose)
+      |> Option.map MarshalValue.ofObjDeep
     let duration = stopwatch.Elapsed
     // Convert the result to be serializable.
     let groupTest =
