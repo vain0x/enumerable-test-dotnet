@@ -550,6 +550,7 @@ module FileSystemInfo =
     }
 
 module ReactiveProperty =
+  open System
   open System.Reactive.Linq
   open Reactive.Bindings
 
@@ -558,6 +559,9 @@ module ReactiveProperty =
 
   let map (f: 'x -> 'y) (this: IReadOnlyReactiveProperty<'x>) =
     this.Select(f).ToReactiveProperty()
+
+  let collect (f: 'x -> IObservable<'y>) (rp: IReadOnlyReactiveProperty<'x>) =
+    rp.SelectMany(f).ToReactiveProperty()
 
 module ReactiveCommand =
   open System

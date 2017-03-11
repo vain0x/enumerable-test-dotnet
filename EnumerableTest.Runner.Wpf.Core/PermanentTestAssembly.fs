@@ -43,7 +43,14 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     |> ObservableCommand.ofFunc cancel
 
   let currentTestSchema =
-    ReactiveProperty.create [||]
+    currentTestAssembly |> ReactiveProperty.collect
+      (fun testAssembly ->
+        match testAssembly with
+        | Some testAssembly ->
+          Observable.Return(testAssembly.Schema)
+        | None ->
+          Observable.Empty()
+      )
 
   let schemaUpdated =
     currentTestSchema.Pairwise().Select
@@ -71,7 +78,6 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     cancel ()
     match OneshotTestAssembly.ofFile file with
     | Success testAssembly ->
-      currentTestSchema.Value <- testAssembly.Schema
       currentTestAssembly.Value <- Some testAssembly
       testAssembly.Start()
     | Failure e ->
