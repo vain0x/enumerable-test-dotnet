@@ -12,26 +12,26 @@ open EnumerableTest.Runner.UnitTest
 module TestTreeTest =
   type TestClass1() =
     member this.PassingTest() =
-      TestClass.passingTest
+      TestClasses.passingTest
 
     member this.ViolatingTest() =
-      TestClass.violatingTest
+      TestClasses.violatingTest
 
     member this.ThrowingTest() =
-      TestClass.throwingTest
+      TestClasses.throwingTest
 
   type TestClass1Updated() =
     // Unchanged.
     member this.ViolatingTest() =
-      TestClass.violatingTest
+      TestClasses.violatingTest
 
     // Fixed.
     member this.ThrowingTest() =
-      TestClass.passingTest
+      TestClasses.passingTest
 
     // Added.
     member this.NewPassingTest() =
-      TestClass.passingTest
+      TestClasses.passingTest
 
   type ControlPanel =
     {

@@ -5,8 +5,8 @@ open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 
 module ``test TestMethodResult`` =
-  let ``test create TestClass.WithManyProperties1`` =
-    let typ = typeof<TestClass.WithManyProperties>
+  let ``test create TestClasses.WithManyProperties1`` =
+    let typ = typeof<TestClasses.WithManyProperties>
     let instantiate = typ |> TestClassType.instantiate
     [
       test {
@@ -28,8 +28,8 @@ module ``test TestMethodResult`` =
       }
     ]
 
-  let ``test create TestClass.WithThrowingDispose`` =
-    let typ = typeof<TestClass.WithThrowingDispose>
+  let ``test create TestClasses.WithThrowingDispose`` =
+    let typ = typeof<TestClasses.WithThrowingDispose>
     let instantiate = typ |> TestClassType.instantiate
     [
       test {
@@ -42,13 +42,13 @@ module ``test TestMethodResult`` =
     [
       test {
         let (testMethods, instantiationError) =
-          typeof<TestClass.WithManyProperties> |> TestMethodResult.createManyAsync
+          typeof<TestClasses.WithManyProperties> |> TestMethodResult.createManyAsync
         do! instantiationError |> assertEquals None
         do! testMethods |> assertSatisfies (Array.length >> (=) 3)
       }
       test {
         let (testMethods, instantiationError) =
-          typeof<TestClass.Uninstantiatable> |> TestMethodResult.createManyAsync
+          typeof<TestClasses.Uninstantiatable> |> TestMethodResult.createManyAsync
         do! instantiationError |> assertSatisfies Option.isSome
         do! testMethods |> assertSatisfies Array.isEmpty
       }

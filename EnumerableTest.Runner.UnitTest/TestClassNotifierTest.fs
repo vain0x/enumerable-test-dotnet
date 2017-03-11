@@ -23,7 +23,7 @@ module TestClassNotifierTest =
 
   let ``test it notiies completed classes`` =
     test {
-      let (it, connectable) = seed [| typeof<TestClass.Passing> |]
+      let (it, connectable) = seed [| typeof<TestClasses.Passing> |]
       use notifications = it |> Observable.collectNotifications
       connectable.Connect() |> ignore
       connectable |> Observable.wait
@@ -36,7 +36,7 @@ module TestClassNotifierTest =
 
   let ``test it notifies classes with instantiation errors`` =
     test {
-      let (it, connectable) = seed [| typeof<TestClass.Uninstantiatable> |]
+      let (it, connectable) = seed [| typeof<TestClasses.Uninstantiatable> |]
       use notifications = it |> Observable.collectNotifications
       connectable.Connect() |> ignore
       connectable |> Observable.wait
@@ -49,7 +49,7 @@ module TestClassNotifierTest =
 
   let ``test it notifies not-completed classes when completed`` =
     test {
-      let (it, connectable) = seed [| typeof<TestClass.Never> |]
+      let (it, connectable) = seed [| typeof<TestClasses.Never> |]
       use notifications = it |> Observable.collectNotifications
       connectable.Connect() |> ignore
       let isCompleted = connectable |> Observable.waitTimeout (TimeSpan.FromMilliseconds(50.0))

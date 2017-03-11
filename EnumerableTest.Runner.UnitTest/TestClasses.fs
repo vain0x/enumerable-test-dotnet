@@ -3,7 +3,7 @@
 open System
 open EnumerableTest
 
-module TestClass =
+module TestClasses =
   let passingTest = 
     seq {
       yield (0).Is(0)

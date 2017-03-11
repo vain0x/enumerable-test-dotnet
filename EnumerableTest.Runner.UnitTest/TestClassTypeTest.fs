@@ -7,7 +7,7 @@ open EnumerableTest.Runner
 module TestClassTypeTest =
   let ``test testMethodInfos`` =
     test {
-      let typ = typeof<TestClass.WithManyProperties>
+      let typ = typeof<TestClasses.WithManyProperties>
       let expected =
         [
           typ.GetMethod("PassingTestMethod")
@@ -23,22 +23,22 @@ module TestClassTypeTest =
         do! typ |> TestClassType.isTestClass |> assertEquals expected
       }
     parameterize {
-      case (typeof<TestClass.WithManyProperties>, true)
-      case (typeof<TestClass.Uninstantiatable>, true)
-      case (typeof<TestClass.WithThrowingDispose>, true)
-      case (typeof<TestClass.NotTestClass>, false)
+      case (typeof<TestClasses.WithManyProperties>, true)
+      case (typeof<TestClasses.Uninstantiatable>, true)
+      case (typeof<TestClasses.WithThrowingDispose>, true)
+      case (typeof<TestClasses.NotTestClass>, false)
       run body
     }
 
   let ``test instantiate`` =
     [
       test {
-        let instantiate = typeof<TestClass.Passing> |> TestClassType.instantiate
+        let instantiate = typeof<TestClasses.Passing> |> TestClassType.instantiate
         let instance = instantiate ()
-        do! instance.GetType() |> assertEquals typeof<TestClass.Passing>
+        do! instance.GetType() |> assertEquals typeof<TestClasses.Passing>
       }
       test {
-        let instantiate = typeof<TestClass.Uninstantiatable> |> TestClassType.instantiate
+        let instantiate = typeof<TestClasses.Uninstantiatable> |> TestClassType.instantiate
         let! (_: exn) = trap { it (instantiate ()) }
         return ()
       }
