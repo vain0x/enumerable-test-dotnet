@@ -10,6 +10,7 @@ open System.Reactive.Threading.Tasks
 open System.Reflection
 open System.Windows.Input
 open Basis.Core
+open FSharp.Control.Reactive
 open Reactive.Bindings
 open Reactive.Bindings.Extensions
 open EnumerableTest.Sdk
@@ -53,23 +54,24 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
       )
 
   let schemaUpdated =
-    currentTestSchema.Pairwise().Select
+    currentTestSchema.Pairwise()
+    |> Observable.map
       (fun pair ->
         TestSuiteSchema.difference pair.OldItem pair.NewItem
       )
 
   let testResults =
     currentTestAssembly
-      .Select
-        (fun testAssembly ->
-          match testAssembly with
-          | Some testAssembly ->
-            testAssembly.TestResults
-            |> fun o -> o.Finally(fun () -> cancel ())
-          | None ->
-            Observable.Empty()
-        )
-    |> fun o -> o.Switch()
+    |> Observable.map
+      (fun testAssembly ->
+        match testAssembly with
+        | Some testAssembly ->
+          testAssembly.TestResults
+          |> fun o -> o.Finally(fun () -> cancel ())
+        | None ->
+          Observable.Empty()
+      )
+    |> Observable.switch
 
   let subscription =
     new SingleAssignmentDisposable()
