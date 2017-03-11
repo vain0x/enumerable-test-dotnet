@@ -94,6 +94,8 @@ module TestClassSchema =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
 module TestSuiteSchema =
+  let empty: TestSuiteSchema = [||]
+
   let ofTypes types: TestSuiteSchema =
     types
     |> Seq.filter TestClassType.isTestClass

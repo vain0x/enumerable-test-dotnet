@@ -557,6 +557,9 @@ module ReactiveProperty =
   let create x =
     new ReactiveProperty<_>(initialValue = x)
 
+  let ofObservable initialValue (o: IObservable<'x>) =
+    o.ToReactiveProperty(initialValue = initialValue)
+
   let map (f: 'x -> 'y) (this: IReadOnlyReactiveProperty<'x>) =
     this.Select(f).ToReactiveProperty()
 

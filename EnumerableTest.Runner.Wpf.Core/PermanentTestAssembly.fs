@@ -44,14 +44,10 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     |> ObservableCommand.ofFunc cancel
 
   let currentTestSchema =
-    currentTestAssembly |> ReactiveProperty.collect
-      (fun testAssembly ->
-        match testAssembly with
-        | Some testAssembly ->
-          Observable.Return(testAssembly.Schema)
-        | None ->
-          Observable.Empty()
-      )
+    currentTestAssembly
+    |> Observable.choose id
+    |> Observable.map (fun testAssembly -> testAssembly.Schema)
+    |> ReactiveProperty.ofObservable TestSuiteSchema.empty
 
   let schemaUpdated =
     currentTestSchema.Pairwise()
