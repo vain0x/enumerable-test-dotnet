@@ -14,6 +14,7 @@ module MarshalByRefObject =
 module AppDomain =
   open System
   open System.Reactive.Linq
+  open System.Reactive.Subjects
   open System.Threading
 
   type DisposableAppDomain(appDomain: AppDomain) =
@@ -73,16 +74,17 @@ module AppDomain =
     let result =
       this |> run (fun () -> f observer)
     let connectable =
-      { new Observable.IConnectableObservable<'y> with
+      { new IConnectableObservable<'y> with
           override this.Subscribe(observer) =
             subscribers <- Array.append subscribers [| observer |]
             { new IDisposable with
                 override this.Dispose() = ()
             }
           override this.Connect() =
-            timerOrNone <-
+            let timer =
               new Timer(notify, (), TimeSpan.Zero, TimeSpan.FromMilliseconds(17.0))
-              |> Some
+            timerOrNone <- Some timer
+            timer :> IDisposable
       }
     (result, connectable)
 

@@ -4,6 +4,7 @@ module Observable =
   open System
   open System.Collections
   open System.Collections.Generic
+  open System.Reactive.Disposables
   open System.Reactive.Linq
   open System.Reactive.Subjects
   open System.Threading
@@ -37,11 +38,6 @@ module Observable =
 
   let collectNotifications (this: IObservable<_>) =
     new NotificationCollection<_>(this)
-
-  type IConnectableObservable<'x> =
-    inherit IObservable<'x>
-
-    abstract member Connect: unit -> unit
 
   let subscribeEnd f (observable: IObservable<_>) =
     let observer =
@@ -87,6 +83,7 @@ module Observable =
     { new IConnectableObservable<_> with
         override this.Connect() =
           Async.Start(computation)
+          Disposable.Empty
         override this.Subscribe(observer) =
           (subject :> IObservable<_>).Subscribe(observer)
     }
@@ -107,6 +104,7 @@ module Observable =
     { new IConnectableObservable<_> with
         override this.Connect() =
           connect ()
+          Disposable.Empty
         override this.Subscribe(observer) =
           (subject :> IObservable<_>).Subscribe(observer)
     }

@@ -20,7 +20,7 @@ module private OneshotTestAssemblyCore =
       let connectable =
         TestSuite.ofAssembly assembly
       connectable.Subscribe(observer) |> ignore<IDisposable>
-      connectable.Connect()
+      connectable.Connect() |> ignore
       () |> Some
     with
     | _ ->
@@ -66,7 +66,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
     match result with
     | Some ()->
       connectable.Subscribe(resultObserver) |> resource.Add
-      connectable.Connect()
+      connectable.Connect() |> ignore
     | None ->
       resource.Dispose()
 

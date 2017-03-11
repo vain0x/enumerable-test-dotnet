@@ -121,7 +121,7 @@ module TestTreeTest =
   let afterFirstExecution () =
     let (controlPanel, classNode, connectable) = afterFirstSchemaUpdated ()
     connectable.Subscribe(controlPanel.TestResultObserver) |> ignore
-    connectable.Connect()
+    connectable.Connect() |> ignore
     connectable |> Observable.wait
     (controlPanel, classNode)
 

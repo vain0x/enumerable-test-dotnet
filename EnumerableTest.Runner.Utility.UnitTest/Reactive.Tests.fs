@@ -43,7 +43,7 @@ module ObservableTest =
       connectable
       |> Observable.subscribe (fun i -> notificationCount := !notificationCount + i)
       |> ignore
-      connectable.Connect()
+      connectable.Connect() |> ignore
       connectable |> Observable.wait
       do! !executionCount |> assertEquals n
       do! !notificationCount |> assertEquals (seq { 0..(n - 1) } |> Seq.sum)
@@ -67,7 +67,7 @@ module ObservableTest =
       connectable
       |> Observable.subscribe (fun i -> notificationCount := !notificationCount + i)
       |> ignore
-      connectable.Connect()
+      connectable.Connect() |> ignore
       connectable |> Observable.wait
       do! !executionCount |> assertEquals n
       do! !notificationCount |> assertEquals (seq { 0..(n - 1) } |> Seq.sum)

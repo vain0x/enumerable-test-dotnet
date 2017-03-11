@@ -14,7 +14,7 @@ module TestClassNotifierTest =
     let testAssembly =
       { new TestAssembly() with
           override this.Start() =
-            testResults.Connect()
+            testResults.Connect() |> ignore
           override this.TestResults =
             testResults :> IObservable<_>
           override this.Dispose() = ()
@@ -25,7 +25,7 @@ module TestClassNotifierTest =
     test {
       let (it, connectable) = seed [| typeof<TestClass.Passing> |]
       use notifications = it |> Observable.collectNotifications
-      connectable.Connect()
+      connectable.Connect() |> ignore
       connectable |> Observable.wait
       do! notifications.Count |> assertEquals 1
       let testClass = notifications |> Seq.head
@@ -38,7 +38,7 @@ module TestClassNotifierTest =
     test {
       let (it, connectable) = seed [| typeof<TestClass.Uninstantiatable> |]
       use notifications = it |> Observable.collectNotifications
-      connectable.Connect()
+      connectable.Connect() |> ignore
       connectable |> Observable.wait
       do! notifications.Count |> assertEquals 1
       let testClass = notifications |> Seq.head
@@ -51,7 +51,7 @@ module TestClassNotifierTest =
     test {
       let (it, connectable) = seed [| typeof<TestClass.Never> |]
       use notifications = it |> Observable.collectNotifications
-      connectable.Connect()
+      connectable.Connect() |> ignore
       let isCompleted = connectable |> Observable.waitTimeout (TimeSpan.FromMilliseconds(50.0))
       do! isCompleted |> assertEquals false
       do! notifications.Count |> assertEquals 0
