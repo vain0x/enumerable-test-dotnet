@@ -21,7 +21,7 @@ type TestClassPath =
   {
     NamespacePath:
       array<string>
-    ClassPath:
+    TypePath:
       array<string>
     Name:
       string

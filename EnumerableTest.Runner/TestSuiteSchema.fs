@@ -41,7 +41,7 @@ module TestClassPath =
     {
       NamespacePath =
         namespacePath
-      ClassPath =
+      TypePath =
         typePath
       Name =
         name
@@ -53,7 +53,7 @@ module TestClassPath =
   let fullPath (this: TestClassPath) =
     [
       yield! this.NamespacePath
-      yield! this.ClassPath
+      yield! this.TypePath
       yield this.Name
     ]
 
