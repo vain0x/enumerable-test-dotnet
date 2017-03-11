@@ -49,12 +49,12 @@ module TestStatistic =
         TimeSpan.Zero
     }
 
-  let ofTestMethod testMethod =
+  let ofTestMethod testMethodResult =
     {
       AssertionCount =
-        testMethod |> AssertionCount.ofTestMethod
+        testMethodResult |> AssertionCount.ofTestMethodResult
       Duration =
-        testMethod.Duration
+        testMethodResult.Duration
     }
 
   let isPassed (this: TestStatistic) =

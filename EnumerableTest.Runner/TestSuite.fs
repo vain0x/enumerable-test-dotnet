@@ -19,7 +19,7 @@ module TestResult =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestSuite =
   let executeType (typ: Type) =
-    match TestMethod.createManyAsync typ with
+    match TestMethodResult.createManyAsync typ with
     | (_, Some e) ->
       let result = TestResult.create typ (Failure e)
       [| async { return result } |]

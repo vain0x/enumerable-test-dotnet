@@ -80,7 +80,7 @@ with
         modified
     }
 
-type TestMethod =
+type TestMethodResult =
   {
     MethodName:
       string
@@ -103,7 +103,7 @@ type TestResult =
       string
     /// Represents completion of a test method or an instantiation error.
     Result:
-      Result<TestMethod, exn>
+      Result<TestMethodResult, exn>
   }
 
 type TestClass =
@@ -113,7 +113,7 @@ type TestClass =
     InstantiationError:
       option<Exception>
     Result:
-      array<TestMethod>
+      array<TestMethodResult>
     NotCompletedMethods:
       array<TestMethodSchema>
   }

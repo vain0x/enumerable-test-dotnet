@@ -86,15 +86,15 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printTestAsync i test
     }
 
-  let printTestMethodAsync i (testMethod: TestMethod) =
+  let printTestMethodAsync i (testMethodResult: TestMethodResult) =
     async {
-      if isVerbose || testMethod |> TestMethod.isPassed |> not then
+      if isVerbose || testMethodResult |> TestMethodResult.isPassed |> not then
         do! printSoftSeparatorAsync ()
-        do! printer.WriteLineAsync(sprintf "Method: %s" testMethod.MethodName)
+        do! printer.WriteLineAsync(sprintf "Method: %s" testMethodResult.MethodName)
         use indenting = printer.AddIndent()
-        for (i, test) in testMethod.Result.Tests |> Seq.indexed do
+        for (i, test) in testMethodResult.Result.Tests |> Seq.indexed do
           do! printTestAsync i test
-        match testMethod.DisposingError with
+        match testMethodResult.DisposingError with
         | Some e ->
           do! printMarshalValueAsync "RUNTIME ERROR in Dispose" e
         | None -> ()
@@ -120,8 +120,8 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
         | Some e ->
           do! printExceptionAsync "constructor" e
         | None ->
-          for (i, testMethod) in testClass.Result |> Seq.indexed do
-            do! testMethod |> printTestMethodAsync i
+          for (i, testMethodResult) in testClass.Result |> Seq.indexed do
+            do! testMethodResult |> printTestMethodAsync i
           do! printNotCompletedMethodsAsync testClass.NotCompletedMethods
     }
 

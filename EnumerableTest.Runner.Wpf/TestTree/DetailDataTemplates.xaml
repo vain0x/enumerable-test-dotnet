@@ -30,7 +30,7 @@
         <ContentPresenter Content="{Binding GroupTest}" />
     </DataTemplate>
     
-    <DataTemplate DataType="{x:Type runner:TestMethod}">
+    <DataTemplate DataType="{x:Type runner:TestMethodResult}">
         <StackPanel>
             <ContentPresenter Content="{Binding Result}" />
             <StackPanel>

@@ -76,10 +76,10 @@ module AssertionCount =
     }
     |> Seq.fold add zero
 
-  let ofTestMethod (testMethod: TestMethod) =
-    testMethod.Result |> ofGroupTest
+  let ofTestMethodResult (testMethodResult: TestMethodResult) =
+    testMethodResult.Result |> ofGroupTest
     |> add
-      (match testMethod.DisposingError with
+      (match testMethodResult.DisposingError with
       | Some _ -> oneError
       | None -> zero
       )

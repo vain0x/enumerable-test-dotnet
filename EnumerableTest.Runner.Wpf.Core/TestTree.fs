@@ -91,10 +91,10 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
     root |> tryRoute path |> Option.iter
       (fun classNode ->
         match result.Result with
-        | Success testMethod ->
-          classNode |> tryRouteTestMethodNode [testMethod.MethodName] |> Option.iter
+        | Success testMethodResult ->
+          classNode |> tryRouteTestMethodNode [testMethodResult.MethodName] |> Option.iter
             (fun node ->
-              node.UpdateResult(testMethod)
+              node.UpdateResult(testMethodResult)
             )
         | Failure e ->
           // Update one of test method nodes to show the error.
@@ -102,8 +102,8 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
           // because no need to show the instantiation error in the case.
           classNode.Children |> Seq.tryPick tryCast |> Option.iter
             (fun node ->
-              let testMethod = TestMethod.ofInstantiationError e
-              (node: TestMethodNode).UpdateResult(testMethod)
+              let testMethodResult = TestMethodResult.ofInstantiationError e
+              (node: TestMethodNode).UpdateResult(testMethodResult)
             )
       )
 

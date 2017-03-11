@@ -7,7 +7,7 @@ open EnumerableTest
 open EnumerableTest.Sdk
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestMethod =
+module TestMethodResult =
   let ofResult name result disposingError duration =
     {
       MethodName =
@@ -26,7 +26,7 @@ module TestMethod =
     let result = SerializableGroupTest(name, [||], Some e, SerializableEmptyTestData.Empty)
     ofResult name result None TimeSpan.Zero
 
-  /// Creates an instance of TestMethod
+  /// Creates an instance of TestMethodResult
   /// by executing a test method of an instance and disposing the instance.
   let create (instance: TestInstance) (m: MethodInfo) =
     let stopwatch = Stopwatch.StartNew()
@@ -43,7 +43,7 @@ module TestMethod =
       groupTest |> SerializableTest.ofGroupTest
     ofResult m.Name groupTest disposingError duration
 
-  /// Builds computations to create TestMethod instance
+  /// Builds computations to create TestMethodResult instance
   /// for each test method from a test class type.
   /// NOTE: Execute all computations to dispose created instances.
   let createManyAsync (typ: Type) =
@@ -67,6 +67,6 @@ module TestMethod =
     | e ->
       ([||], Some e)
 
-  let isPassed (testMethod: TestMethod) =
-    testMethod.Result.IsPassed
-    && testMethod.DisposingError |> Option.isNone
+  let isPassed (testMethodResult: TestMethodResult) =
+    testMethodResult.Result.IsPassed
+    && testMethodResult.DisposingError |> Option.isNone

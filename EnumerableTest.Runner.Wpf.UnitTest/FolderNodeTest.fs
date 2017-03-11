@@ -60,13 +60,13 @@ module FolderNodeTest =
           let groupTest =
             [| (0).Is(0) |].ToTestGroup("a")
             |> SerializableTest.ofGroupTest
-          in TestMethod.ofResult "a" groupTest None TimeSpan.Zero
+          in TestMethodResult.ofResult "a" groupTest None TimeSpan.Zero
           )
         b.UpdateResult(
           let groupTest =
             (seq { do exn() |> raise }).ToTestGroup("b")
             |> SerializableTest.ofGroupTest
-          in TestMethod.ofResult "b" groupTest None TimeSpan.Zero
+          in TestMethodResult.ofResult "b" groupTest None TimeSpan.Zero
           )
         do! node.TestStatistic.Value |> assertEquals
               {

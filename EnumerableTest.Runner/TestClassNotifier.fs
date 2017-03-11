@@ -14,7 +14,7 @@ type internal MutableTestClass =
     mutable InstantiationError:
       option<exn>
     Result:
-      ResizeArray<TestMethod>
+      ResizeArray<TestMethodResult>
     NotCompletedMethods:
       HashSet<TestMethodSchema>
   }
@@ -37,12 +37,12 @@ with
         HashSet(testClassSchema.Methods)
     }
 
-  member this.UpdateResult(result: Result<TestMethod, exn>) =
+  member this.UpdateResult(result: Result<TestMethodResult, exn>) =
     match result with
-    | Success testMethod ->
-      let testMethodSchema = { MethodName = testMethod.MethodName }: TestMethodSchema
+    | Success testMethodResult ->
+      let testMethodSchema = { MethodName = testMethodResult.MethodName }: TestMethodSchema
       if this.NotCompletedMethods.Remove(testMethodSchema) then
-        this.Result.Add(testMethod)
+        this.Result.Add(testMethodResult)
     | Failure instantiationError ->
       this.InstantiationError <- Some instantiationError
 

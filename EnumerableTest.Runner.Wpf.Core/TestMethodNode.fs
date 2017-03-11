@@ -23,8 +23,8 @@ type TestMethodNode(testMethodSchema: TestMethodSchema, cancelCommand: ICommand)
   let lastResultUntyped =
     lastResult |> ReactiveProperty.map
       (function
-        | Some testMethod ->
-          testMethod :> obj
+        | Some testMethodResult ->
+          testMethodResult :> obj
         | None ->
           NotExecutedResult.Instance :> obj
       )
@@ -33,8 +33,8 @@ type TestMethodNode(testMethodSchema: TestMethodSchema, cancelCommand: ICommand)
   let testStatistic =
     lastResult |> ReactiveProperty.map
       (function
-        | Some testMethod ->
-          TestStatistic.ofTestMethod testMethod
+        | Some testMethodResult ->
+          TestStatistic.ofTestMethod testMethodResult
         | None ->
           TestStatistic.notCompleted
       )
@@ -58,9 +58,9 @@ type TestMethodNode(testMethodSchema: TestMethodSchema, cancelCommand: ICommand)
     lastResult.Value <- None
     children.Clear()
 
-  member this.UpdateResult(testMethod) =
-    lastResult.Value <- Some testMethod
-    testMethod.Result.Tests |> Seq.choose tryCast |> Seq.iter
+  member this.UpdateResult(testMethodResult) =
+    lastResult.Value <- Some testMethodResult
+    testMethodResult.Result.Tests |> Seq.choose tryCast |> Seq.iter
       (fun groupTest ->
         children.Add(TestGroupNode(groupTest))
       )
