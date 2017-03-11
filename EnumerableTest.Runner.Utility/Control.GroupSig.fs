@@ -2,6 +2,6 @@
 
 [<AbstractClass>]
 type GroupSig<'x>() =
-  abstract member Unit: 'x
-  abstract member Multiply: 'x * 'x -> 'x
-  abstract member Divide: 'x * 'x -> 'x
+  abstract Unit: 'x
+  abstract Multiply: 'x * 'x -> 'x
+  abstract Divide: 'x * 'x -> 'x
