@@ -28,7 +28,7 @@ module TestSuite =
 
   let ofTypes types =
     types
-    |> Seq.filter TestClassType.isTestClass
+    |> Seq.filter TestType.isTestClass
     |> Seq.collect executeType
     |> Observable.startParallel
 

@@ -6,27 +6,6 @@ open Basis.Core
 open EnumerableTest
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestClassType =
-  let testMethodInfos (typ: Type) =
-    typ.GetMethods(BindingFlags.Instance ||| BindingFlags.Public ||| BindingFlags.NonPublic)
-    |> Seq.filter
-      (fun m ->
-        not m.IsSpecialName
-        && not m.IsGenericMethodDefinition
-        && m.ReturnType = typeof<seq<Test>>
-        && (m.GetParameters() |> Array.isEmpty)
-      )
-
-  let isTestClass (typ: Type) =
-    typ.GetConstructor([||]) |> isNull |> not
-    && typ |> testMethodInfos |> Seq.isEmpty |> not
-
-  let instantiate (typ: Type): unit -> TestInstance =
-    let defaultConstructor =
-      typ.GetConstructor([||])
-    fun () -> defaultConstructor.Invoke([||])
-
-[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestMethodSchema =
   let ofMethodInfo (m: MethodInfo): TestMethodSchema =
     {
@@ -67,7 +46,7 @@ module TestClassSchema =
         typ |> Type.fullName
       Methods = 
         typ
-        |> TestClassType.testMethodInfos
+        |> TestType.testMethodInfos
         |> Seq.map TestMethodSchema.ofMethodInfo
         |> Seq.toArray
     }
@@ -97,7 +76,7 @@ module TestSuiteSchema =
 
   let ofTypes types: TestSuiteSchema =
     types
-    |> Seq.filter TestClassType.isTestClass
+    |> Seq.filter TestType.isTestClass
     |> Seq.map TestClassSchema.ofType
     |> Seq.toArray
 

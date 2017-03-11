@@ -4,7 +4,7 @@ open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 
-module TestClassTypeTest =
+module ``test TestType`` =
   let ``test testMethodInfos`` =
     test {
       let typ = typeof<TestClasses.WithManyProperties>
@@ -14,13 +14,13 @@ module TestClassTypeTest =
           typ.GetMethod("ViolatingTestMethod")
           typ.GetMethod("ThrowingTestMethod")
         ]
-      do! typ |> TestClassType.testMethodInfos |> assertSeqEquals expected
+      do! typ |> TestType.testMethodInfos |> assertSeqEquals expected
     }
 
   let ``test isTestClass`` =
     let body (typ, expected) =
       test {
-        do! typ |> TestClassType.isTestClass |> assertEquals expected
+        do! typ |> TestType.isTestClass |> assertEquals expected
       }
     parameterize {
       case (typeof<TestClasses.WithManyProperties>, true)
@@ -33,12 +33,12 @@ module TestClassTypeTest =
   let ``test instantiate`` =
     [
       test {
-        let instantiate = typeof<TestClasses.Passing> |> TestClassType.instantiate
+        let instantiate = typeof<TestClasses.Passing> |> TestType.instantiate
         let instance = instantiate ()
         do! instance.GetType() |> assertEquals typeof<TestClasses.Passing>
       }
       test {
-        let instantiate = typeof<TestClasses.Uninstantiatable> |> TestClassType.instantiate
+        let instantiate = typeof<TestClasses.Uninstantiatable> |> TestType.instantiate
         let! (_: exn) = trap { it (instantiate ()) }
         return ()
       }

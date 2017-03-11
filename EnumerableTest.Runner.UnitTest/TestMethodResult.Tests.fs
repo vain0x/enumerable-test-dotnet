@@ -7,7 +7,7 @@ open EnumerableTest.Runner
 module ``test TestMethodResult`` =
   let ``test create TestClasses.WithManyProperties1`` =
     let typ = typeof<TestClasses.WithManyProperties>
-    let instantiate = typ |> TestClassType.instantiate
+    let instantiate = typ |> TestType.instantiate
     [
       test {
         let result = TestMethodResult.create (instantiate ()) (typ.GetMethod("PassingTestMethod"))
@@ -30,7 +30,7 @@ module ``test TestMethodResult`` =
 
   let ``test create TestClasses.WithThrowingDispose`` =
     let typ = typeof<TestClasses.WithThrowingDispose>
-    let instantiate = typ |> TestClassType.instantiate
+    let instantiate = typ |> TestType.instantiate
     [
       test {
         let result = TestMethodResult.create (instantiate ()) (typ.GetMethod("PassingTest"))

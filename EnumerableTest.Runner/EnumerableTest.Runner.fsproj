@@ -50,6 +50,7 @@
     <Compile Include="AssertionCount.fs" />
     <Compile Include="TestStatistic.fs" />
     <Compile Include="TestStatus.fs" />
+    <Compile Include="TestType.fs" />
     <Compile Include="TestSuiteSchema.fs" />
     <Compile Include="TestMethodResult.fs" />
     <Compile Include="TestSuite.fs" />

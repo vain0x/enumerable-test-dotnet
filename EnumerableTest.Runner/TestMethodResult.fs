@@ -47,8 +47,8 @@ module TestMethodResult =
   /// for each test method from a test class type.
   /// NOTE: Execute all computations to dispose created instances.
   let createManyAsync (typ: Type) =
-    let methodInfos = typ |> TestClassType.testMethodInfos
-    let instantiate = typ |> TestClassType.instantiate
+    let methodInfos = typ |> TestType.testMethodInfos
+    let instantiate = typ |> TestType.instantiate
     try
       let computations =
         methodInfos
