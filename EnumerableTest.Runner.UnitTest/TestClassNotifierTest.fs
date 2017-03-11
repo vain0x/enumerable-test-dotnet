@@ -30,7 +30,7 @@ module TestClassNotifierTest =
       do! notifications.Count |> assertEquals 1
       let result = notifications |> Seq.head
       do! result.InstantiationError |> assertEquals None
-      do! result.Result |> assertSatisfies (Array.length >> (=) 1)
+      do! result.TestMethodResults |> assertSatisfies (Array.length >> (=) 1)
       do! result.NotCompletedMethods |> assertEquals Array.empty
     }
 
@@ -43,7 +43,7 @@ module TestClassNotifierTest =
       do! notifications.Count |> assertEquals 1
       let result = notifications |> Seq.head
       do! result.InstantiationError |> assertSatisfies Option.isSome
-      do! result.Result |> assertSatisfies Array.isEmpty
+      do! result.TestMethodResults |> assertSatisfies Array.isEmpty
       do! result.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 2)
     }
 
@@ -59,6 +59,6 @@ module TestClassNotifierTest =
       do! notifications.Count |> assertEquals 1
       let result = notifications |> Seq.head
       do! result.InstantiationError |> assertSatisfies Option.isNone
-      do! result.Result |> assertSatisfies (Array.length >> (=) 2)
+      do! result.TestMethodResults |> assertSatisfies (Array.length >> (=) 2)
       do! result.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 1)
     }

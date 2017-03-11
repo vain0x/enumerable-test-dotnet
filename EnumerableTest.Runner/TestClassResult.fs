@@ -10,7 +10,7 @@ module TestClassResult =
   let isPassed (testClassResult: TestClassResult) =
     testClassResult.InstantiationError.IsNone
     && testClassResult.NotCompletedMethods |> Array.isEmpty
-    && testClassResult.Result |> Seq.forall TestMethodResult.isPassed
+    && testClassResult.TestMethodResults |> Seq.forall TestMethodResult.isPassed
 
   let assertionCount (testClassResult: TestClassResult) =
     seq {
@@ -18,7 +18,7 @@ module TestClassResult =
       | Some e ->
         yield AssertionCount.oneError
       | None ->
-        for testMethodResult in testClassResult.Result do
+        for testMethodResult in testClassResult.TestMethodResults do
           yield AssertionCount.ofTestMethodResult testMethodResult
         yield AssertionCount.ofNotCompleted (testClassResult.NotCompletedMethods |> Array.length)
     }

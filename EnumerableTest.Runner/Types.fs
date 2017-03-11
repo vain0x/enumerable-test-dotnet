@@ -112,7 +112,7 @@ type TestClassResult =
       string
     InstantiationError:
       option<Exception>
-    Result:
+    TestMethodResults:
       array<TestMethodResult>
     NotCompletedMethods:
       array<TestMethodSchema>

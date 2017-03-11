@@ -120,7 +120,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
         | Some e ->
           do! printExceptionAsync "constructor" e
         | None ->
-          for (i, testMethodResult) in testClassResult.Result |> Seq.indexed do
+          for (i, testMethodResult) in testClassResult.TestMethodResults |> Seq.indexed do
             do! testMethodResult |> printTestMethodAsync i
           do! printNotCompletedMethodsAsync testClassResult.NotCompletedMethods
     }

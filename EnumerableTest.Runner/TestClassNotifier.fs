@@ -52,7 +52,7 @@ with
         this.TypeFullName
       InstantiationError =
         this.InstantiationError
-      Result =
+      TestMethodResults =
         this.Result |> Seq.toArray
       NotCompletedMethods =
         this.NotCompletedMethods |> Seq.toArray
