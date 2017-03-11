@@ -28,10 +28,10 @@ module TestClassNotifierTest =
       connectable.Connect() |> ignore
       connectable |> Observable.wait
       do! notifications.Count |> assertEquals 1
-      let testClass = notifications |> Seq.head
-      do! testClass.InstantiationError |> assertEquals None
-      do! testClass.Result |> assertSatisfies (Array.length >> (=) 1)
-      do! testClass.NotCompletedMethods |> assertEquals Array.empty
+      let result = notifications |> Seq.head
+      do! result.InstantiationError |> assertEquals None
+      do! result.Result |> assertSatisfies (Array.length >> (=) 1)
+      do! result.NotCompletedMethods |> assertEquals Array.empty
     }
 
   let ``test it notifies classes with instantiation errors`` =
@@ -41,10 +41,10 @@ module TestClassNotifierTest =
       connectable.Connect() |> ignore
       connectable |> Observable.wait
       do! notifications.Count |> assertEquals 1
-      let testClass = notifications |> Seq.head
-      do! testClass.InstantiationError |> assertSatisfies Option.isSome
-      do! testClass.Result |> assertSatisfies Array.isEmpty
-      do! testClass.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 2)
+      let result = notifications |> Seq.head
+      do! result.InstantiationError |> assertSatisfies Option.isSome
+      do! result.Result |> assertSatisfies Array.isEmpty
+      do! result.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 2)
     }
 
   let ``test it notifies not-completed classes when completed`` =
@@ -57,8 +57,8 @@ module TestClassNotifierTest =
       do! notifications.Count |> assertEquals 0
       it.Complete()
       do! notifications.Count |> assertEquals 1
-      let testClass = notifications |> Seq.head
-      do! testClass.InstantiationError |> assertSatisfies Option.isNone
-      do! testClass.Result |> assertSatisfies (Array.length >> (=) 2)
-      do! testClass.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 1)
+      let result = notifications |> Seq.head
+      do! result.InstantiationError |> assertSatisfies Option.isNone
+      do! result.Result |> assertSatisfies (Array.length >> (=) 2)
+      do! result.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 1)
     }

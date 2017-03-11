@@ -54,7 +54,7 @@
     <Compile Include="TestMethodResult.fs" />
     <Compile Include="TestSuite.fs" />
     <Compile Include="OneshotTestAssembly.fs" />
-    <Compile Include="TestClass.fs" />
+    <Compile Include="TestClassResult.fs" />
     <Compile Include="TestClassNotifier.fs" />
     <Compile Include="Notifier.fs" />
     <Compile Include="LogFile.fs" />

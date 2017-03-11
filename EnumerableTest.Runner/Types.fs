@@ -106,7 +106,7 @@ type TestResult =
       Result<TestMethodResult, exn>
   }
 
-type TestClass =
+type TestClassResult =
   {
     TypeFullName:
       string

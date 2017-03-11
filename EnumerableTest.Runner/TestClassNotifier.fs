@@ -7,7 +7,7 @@ open System.Reactive.Subjects
 open Basis.Core
 open EnumerableTest.Runner
 
-type internal MutableTestClass =
+type internal MutableTestClassResult =
   {
     TypeFullName:
       string
@@ -19,7 +19,7 @@ type internal MutableTestClass =
       HashSet<TestMethodSchema>
   }
 with
-  static member FromSchema(testClassSchema: TestClassSchema): MutableTestClass =
+  static member FromSchema(testClassSchema: TestClassSchema): MutableTestClassResult =
     let methods =
       testClassSchema.Methods |> Seq.map
         (fun testMethodSchema ->
@@ -46,7 +46,7 @@ with
     | Failure instantiationError ->
       this.InstantiationError <- Some instantiationError
 
-  member this.MakeReadOnly(): TestClass =
+  member this.MakeReadOnly(): TestClassResult =
     {
       TypeFullName =
         this.TypeFullName
@@ -62,7 +62,7 @@ with
     this.InstantiationError |> Option.isSome
     || this.NotCompletedMethods.Count = 0
 
-/// An observable which otifies TestClass instances.
+/// An observable which otifies TestClassResult instances.
 /// 1. Subscribes TestAssembly and collects test results.
 /// 2. Whenever a test class is completed, notifies it.
 /// 3. When completed, notifies rest test classes (with not-completed test methods) and get disposed.
@@ -72,7 +72,7 @@ type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssem
     |> Seq.map
       (fun testClassSchema ->
         let path = testClassSchema.Path |> TestClassPath.fullPath
-        (path, MutableTestClass.FromSchema(testClassSchema))
+        (path, MutableTestClassResult.FromSchema(testClassSchema))
       )
     |> Dictionary.ofSeq
 
@@ -82,9 +82,9 @@ type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssem
   let subject =
     new Subject<_>()
 
-  let notify path (testClass: MutableTestClass) =
+  let notify path (testClassResult: MutableTestClassResult) =
     if classes.Remove(path) then
-      subject.OnNext(testClass.MakeReadOnly())
+      subject.OnNext(testClassResult.MakeReadOnly())
       if classes.Count = 0 then
         subject.OnCompleted()
 
@@ -95,10 +95,10 @@ type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssem
         lock gate
           (fun () ->
             match classes |> Dictionary.tryFind path with
-            | Some testClass ->
-              testClass.UpdateResult(testResult.Result)
-              if testClass.IsCompleted then
-                notify path testClass
+            | Some testClassResult ->
+              testClassResult.UpdateResult(testResult.Result)
+              if testClassResult.IsCompleted then
+                notify path testClassResult
             | None ->
               todo "warning"
           )
@@ -108,8 +108,8 @@ type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssem
     subscription.Dispose()
     lock gate
       (fun () ->
-        for KeyValue (path, testClass) in classes |> Seq.toArray do
-          notify path testClass
+        for KeyValue (path, testClassResult) in classes |> Seq.toArray do
+          notify path testClassResult
       )
     subject.Dispose()
 
@@ -120,7 +120,7 @@ type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssem
     subscription.Dispose()
     subject.Dispose()
 
-  interface IObservable<TestClass> with
+  interface IObservable<TestClassResult> with
     override this.Subscribe(observer) =
       this.Subscribe(observer)
 

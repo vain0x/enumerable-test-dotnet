@@ -110,19 +110,19 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%d. %s" i schema.MethodName)
     }
 
-  let printAsync (testClass: TestClass) =
+  let printAsync (testClassResult: TestClassResult) =
     async {
-      if isVerbose || testClass |> TestClass.isPassed |> not then
+      if isVerbose || testClassResult |> TestClassResult.isPassed |> not then
         do! printHardSeparatorAsync ()
-        do! printer.WriteLineAsync(sprintf "Type: %s" testClass.TypeFullName)
+        do! printer.WriteLineAsync(sprintf "Type: %s" testClassResult.TypeFullName)
         use indenting = printer.AddIndent()
-        match testClass.InstantiationError with
+        match testClassResult.InstantiationError with
         | Some e ->
           do! printExceptionAsync "constructor" e
         | None ->
-          for (i, testMethodResult) in testClass.Result |> Seq.indexed do
+          for (i, testMethodResult) in testClassResult.Result |> Seq.indexed do
             do! testMethodResult |> printTestMethodAsync i
-          do! printNotCompletedMethodsAsync testClass.NotCompletedMethods
+          do! printNotCompletedMethodsAsync testClassResult.NotCompletedMethods
     }
 
   let printWarningsAsync (warnings: IReadOnlyList<Warning>) =
@@ -161,9 +161,9 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
   member this.QueueGotEmpty =
     queue.GotEmpty
 
-  interface IObserver<TestClass> with
-    override this.OnNext(testClass) =
-      queue.Enqueue(printAsync testClass)
+  interface IObserver<TestClassResult> with
+    override this.OnNext(testClassResult) =
+      queue.Enqueue(printAsync testClassResult)
 
     override this.OnError(_) = ()
 
