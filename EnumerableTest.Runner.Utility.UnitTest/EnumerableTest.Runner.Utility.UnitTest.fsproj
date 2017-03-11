@@ -49,7 +49,7 @@
     <Compile Include="Reactive.Tests.fs" />
     <Compile Include="Collections.Tests.fs" />
     <Compile Include="Reflection.Tests.fs" />
-    <Compile Include="MarshalValueTest.fs" />
+    <Compile Include="Misc.MarshalValue.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Runner.Utility\EnumerableTest.Runner.Utility.fsproj">

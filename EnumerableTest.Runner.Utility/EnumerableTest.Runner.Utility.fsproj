@@ -47,17 +47,17 @@
     <Compile Include="Misc.fs" />
     <Compile Include="ErrorHandling.fs" />
     <Compile Include="Collections.fs" />
+    <Compile Include="Control.GroupSig.fs" />
     <Compile Include="IO.fs" />
-    <Compile Include="Reactive.fs" />
-    <Compile Include="Reactive.Bindings.fs" />
     <Compile Include="Reflection.fs" />
     <Compile Include="Threading.fs" />
+    <Compile Include="Threading.ConcurrentActionQueue.fs" />
+    <Compile Include="Threading.Future.fs" />
+    <Compile Include="Reactive.fs" />
+    <Compile Include="Reactive.Bindings.fs" />
+    <Compile Include="Reactive.Bindings.ObservableCommand.fs" />
     <Compile Include="Misc.AppDomain.fs" />
-    <Compile Include="GroupSig.fs" />
-    <Compile Include="MarshalValue.fs" />
-    <Compile Include="Future.fs" />
-    <Compile Include="ObservableCommand.fs" />
-    <Compile Include="ConcurrentActionQueue.fs" />
+    <Compile Include="Misc.MarshalValue.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
