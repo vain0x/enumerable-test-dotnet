@@ -62,13 +62,13 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
 
   let updateSchema cancelCommand (difference: TestSuiteSchemaDifference) =
     for schema in difference.Removed do
-      root |> tryRoute (schema.Path |> TestClassPath.fullPath) |> Option.iter
+      root |> tryRoute (schema.Path |> Type.FullName.fullPath) |> Option.iter
         (fun node ->
           node.RemoveChild(schema.Path.Name)
         )
 
     for schema in difference.Added do
-      let node = root.FindOrAddFolderNode(schema.Path |> TestClassPath.fullPath)
+      let node = root.FindOrAddFolderNode(schema.Path |> Type.FullName.fullPath)
       for schema in schema.Methods do
         node.AddChild(TestMethodNode(schema, cancelCommand))
 
@@ -87,7 +87,7 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
         )
 
   let updateResult (result: TestResult) =
-    let path = result.TypeFullName |> TestClassPath.ofFullName |> TestClassPath.fullPath
+    let path = result.TypeFullName |> Type.FullName.fullPath
     root |> tryRoute path |> Option.iter
       (fun classNode ->
         match result.Result with

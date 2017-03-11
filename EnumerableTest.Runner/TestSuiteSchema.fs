@@ -13,26 +13,11 @@ module TestMethodSchema =
     }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestClassPath =
-  let ofFullName (fullName: Type.FullName) =
-    fullName
-
-  let ofType (typ: Type) =
-    typ |> Type.fullName |> ofFullName
-
-  let fullPath (this: TestClassPath) =
-    [
-      yield! this.NamespacePath
-      yield! this.TypePath
-      yield this.Name
-    ]
-
-[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TestClassSchema =
   let ofType (typ: Type): TestClassSchema =
     {
       Path =
-        typ |> TestClassPath.ofType
+        typ |> Type.fullName
       TypeFullName =
         typ |> Type.fullName
       Methods = 
@@ -84,7 +69,7 @@ module TestSuiteSchema =
     let modified =
       d.Intersect |> Seq.map
         (fun (name, l, r) ->
-          (l.Path |> TestClassPath.fullPath, TestClassSchema.difference l r)
+          (l.Path |> Type.FullName.fullPath, TestClassSchema.difference l r)
         )
       |> Map.ofSeq
     TestSuiteSchemaDifference.Create

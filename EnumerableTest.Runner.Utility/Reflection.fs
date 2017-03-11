@@ -52,6 +52,13 @@ module Type =
         nestedTypeName |> Str.splitBy "+" |> Array.decomposeLast
       FullName.Create(namespacePath, typePath, name)
 
+    let fullPath (fullName: FullName) =
+      [
+        yield! fullName.NamespacePath
+        yield! fullName.TypePath
+        yield fullName.Name
+      ]
+
   let fullName (typ: Type) =
     FullName.ofString typ.FullName
 

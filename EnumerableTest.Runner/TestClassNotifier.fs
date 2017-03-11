@@ -71,7 +71,7 @@ type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssem
     testSuiteSchema
     |> Seq.map
       (fun testClassSchema ->
-        let path = testClassSchema.Path |> TestClassPath.fullPath
+        let path = testClassSchema.Path |> Type.FullName.fullPath
         (path, MutableTestClassResult.FromSchema(testClassSchema))
       )
     |> Dictionary.ofSeq
@@ -91,7 +91,7 @@ type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssem
   let subscription =
     testAssembly.TestResults |> Observable.subscribe
       (fun testResult ->
-        let path = testResult.TypeFullName |> TestClassPath.ofFullName |> TestClassPath.fullPath
+        let path = testResult.TypeFullName |> Type.FullName.fullPath
         lock gate
           (fun () ->
             match classes |> Dictionary.tryFind path with
