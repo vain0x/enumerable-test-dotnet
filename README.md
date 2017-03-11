@@ -5,11 +5,11 @@ A unit testing framework for .NET framework.
 
 .NET フレームワーク向けの単体テストフレームワーク。
 
-![A screen shot of EnumerableTest.Runner.Wpf](document/image/EnumerableTest.Runner.Wpf.Screenshot.png)
+![A screen shot of EnumerableTest.Runner.Wpf](documents/images/EnumerableTest.Runner.Wpf.Screenshot.png)
 
 ## Documents
-- [Tutorial (チュートリアル)](document/Tutorial.md)
-- [Expert (上級者向けの解説)](document/Expert.md)
+- [Tutorial (チュートリアル)](documents/Tutorial.md)
+- [Expert (上級者向けの解説)](documents/Expert.md)
 
 ### Why use **EnumerableTest**?
 - You can write **parameterized tests** easily because of two functionalities:
