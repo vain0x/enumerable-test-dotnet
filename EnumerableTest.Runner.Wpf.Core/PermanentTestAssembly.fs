@@ -35,7 +35,12 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     new Subject<_>()
 
   let reloadRequested =
-    new Subject<_>()
+    file
+    |> FileInfo.observeChanged
+    |> Observable.map ignore
+    |> Observable.startWith [|()|]
+    |> Observable.throttle (TimeSpan.FromMilliseconds(100.0))
+    |> Observable.publish
 
   let tryLoad () =
     match OneshotTestAssembly.ofFile file with
@@ -102,9 +107,7 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     |> Observable.switch
 
   let start () =
-    reloadRequested.OnNext(())
-    file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0))
-      (fun () -> reloadRequested.OnNext(()))
+    reloadRequested.Connect()
     |> disposables.Add
 
   do

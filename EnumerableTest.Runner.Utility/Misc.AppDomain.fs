@@ -87,19 +87,3 @@ module AppDomain =
             timer :> IDisposable
       }
     (result, connectable)
-
-[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module FileInfo =
-  open System
-  open System.IO
-  open System.Reactive.Linq
-
-  let subscribeChanged (threshold: TimeSpan) onChanged (file: FileInfo) =
-    let watcher = new FileSystemWatcher(file.DirectoryName, file.Name)
-    watcher.NotifyFilter <- NotifyFilters.LastWrite
-    watcher.Changed
-      .Select(ignore)
-      .Throttle(threshold)
-      .Add(onChanged)
-    watcher.EnableRaisingEvents <- true
-    watcher :> IDisposable

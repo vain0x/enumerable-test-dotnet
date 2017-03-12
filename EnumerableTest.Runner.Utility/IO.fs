@@ -43,3 +43,22 @@ module FileSystemInfo =
 #endif
       yield! findTestAssemblies thisFile
     }
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module FileInfo =
+  open System
+  open System.IO
+  open System.Reactive.Disposables
+  open FSharp.Control.Reactive
+
+  let observeChanged (file: FileInfo) =
+    { new IObservable<FileSystemEventArgs> with
+        override this.Subscribe(observer) =
+          let watcher =
+            new FileSystemWatcher(file.DirectoryName, file.Name)
+          let subscription =
+            watcher.Changed |> Observable.subscribeObserver observer
+          watcher.NotifyFilter <- NotifyFilters.LastWrite
+          watcher.EnableRaisingEvents <- true
+          StableCompositeDisposable.Create(watcher, subscription) :> IDisposable
+    }
