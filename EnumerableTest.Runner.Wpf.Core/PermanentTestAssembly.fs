@@ -63,7 +63,7 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
         match testAssembly with
         | Some testAssembly ->
           testAssembly.TestCompleted
-          |> fun o -> o.Finally(fun () -> cancel ())
+          |> Observable.finallyDo cancel
         | None ->
           Observable.Empty()
       )
