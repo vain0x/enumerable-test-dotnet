@@ -64,16 +64,16 @@ module Observable =
 
   /// Creates a connectable observable
   /// which executes async tasks when connected and notifies each result.
-  let ofParallel asyncs =
+  let ofParallel computations =
     let gate = obj()
     let subject = new Subject<_>()
     let computation =
       async {
         let! (_: array<unit>) =
-          asyncs |> Seq.map
-            (fun a ->
+          computations |> Seq.map
+            (fun computation ->
               async {
-                let! x = a
+                let! x = computation
                 lock gate (fun () -> (subject :> IObserver<_>).OnNext(x))
               }
             )
