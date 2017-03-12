@@ -92,7 +92,7 @@ module ``test TestTree`` =
     let schema =
       TestSuiteSchema.ofTypes types
     let connectable =
-      TestSuite.ofTypes types
+      TestSuite.runTestTypes types
     controlPanel.SchemaUpdatedObserver.OnNext(TestSuiteSchema.difference [||] schema)
     let classNode =
       let path =
