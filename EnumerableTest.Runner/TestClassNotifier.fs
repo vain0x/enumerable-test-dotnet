@@ -62,10 +62,10 @@ with
     this.InstantiationError |> Option.isSome
     || this.NotCompletedMethods.Count = 0
 
-/// An observable which otifies TestClassResult instances.
+/// An observable which notifies TestClassResult instances.
 /// 1. Subscribes TestAssembly and collects test results.
-/// 2. Whenever a test class is completed, notifies it.
-/// 3. When completed, notifies rest test classes (with not-completed test methods) and get disposed.
+/// 2. Whenever execution of a test class completed, notifies the result.
+/// 3. When all execution completed, notifies rest test classes (with incompleted test methods) and gets disposed.
 type TestClassNotifier(testSuiteSchema: TestSuiteSchema, testAssembly: TestAssembly) =
   let classes =
     testSuiteSchema
