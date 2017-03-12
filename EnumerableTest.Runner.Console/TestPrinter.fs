@@ -158,8 +158,8 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
   member this.PrintSummaryAsync(count) =
     queue.Enqueue(printSummaryAsync count)
 
-  member this.QueueGotEmpty =
-    queue.GotEmpty
+  member this.JoinAsync() =
+    queue.EnqueueAsync(async { () })
 
   interface IObserver<TestClassResult> with
     override this.OnNext(testClassResult) =

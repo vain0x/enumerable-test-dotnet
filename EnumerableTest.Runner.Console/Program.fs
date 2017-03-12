@@ -45,7 +45,7 @@ module Program =
           )
     printer.PrintWarningsAsync(notifier.Warnings)
     printer.PrintSummaryAsync(counter.Current)
-    printer.QueueGotEmpty.FirstAsync().Wait()
+    printer.JoinAsync() |> Async.RunSynchronously
     counter.IsPassed
 
   [<EntryPoint>]
