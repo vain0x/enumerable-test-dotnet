@@ -18,13 +18,6 @@ module Type =
         string
     }
   with
-    member this.ToArray() =
-      [|
-        yield! this.NamespacePath
-        yield! this.TypePath
-        yield this.Name
-      |]
-
     override this.ToString() =
       Array.append
         this.NamespacePath
