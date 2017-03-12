@@ -28,15 +28,46 @@ type PermanentTestAssembly() =
 type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   inherit PermanentTestAssembly()
 
+  let disposables =
+    new CompositeDisposable()
+
+  let cancelRequested =
+    new Subject<_>()
+
+  let reloadRequested =
+    new Subject<_>()
+
+  let tryLoad () =
+    match OneshotTestAssembly.ofFile file with
+    | Success testAssembly ->
+      testAssembly |> Some
+    | Failure e ->
+      notifier.NotifyWarning
+        ( sprintf "Couldn't load an assembly '%s'." file.Name
+        , [| ("Exception", e :> obj) |]
+        )
+      None
+
   let currentTestAssembly =
-    ReactiveProperty.create (None: option<OneshotTestAssembly>)
+    reloadRequested
+    |> Observable.map tryLoad
+    |> Observable.merge (cancelRequested |> Observable.map (fun () -> None))
+    |> ReactiveProperty.ofObservable None
+
+  let testAssemblyTrash =
+    let trash = new SerialDisposable()
+    currentTestAssembly |> Observable.subscribe
+      (fun testAssembly ->
+        trash.Disposable <-
+          match testAssembly with
+          | Some testAssembly -> testAssembly :> IDisposable
+          | None -> Disposable.Empty
+      ) |> ignore
+    disposables.Add(trash)
+    trash
 
   let cancel () =
-    match currentTestAssembly.Value with
-    | Some testAssembly ->
-      testAssembly.Dispose()
-      currentTestAssembly.Value <- None
-    | None -> ()
+    cancelRequested.OnNext(())
 
   let cancelCommand =
     currentTestAssembly
@@ -50,10 +81,11 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     |> ReactiveProperty.ofObservable TestSuiteSchema.empty
 
   let schemaUpdated =
-    currentTestSchema.Pairwise()
+    currentTestSchema
+    |> Observable.pairwise
     |> Observable.map
-      (fun pair ->
-        TestSuiteSchema.difference pair.OldItem pair.NewItem
+      (fun (oldSchema, newSchema) ->
+        TestSuiteSchema.difference oldSchema newSchema
       )
 
   let testCompleted =
@@ -69,25 +101,17 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
       )
     |> Observable.switch
 
-  let subscription =
-    new SingleAssignmentDisposable()
-
-  let load () =
-    cancel ()
-    match OneshotTestAssembly.ofFile file with
-    | Success testAssembly ->
-      currentTestAssembly.Value <- Some testAssembly
-      testAssembly.Start()
-    | Failure e ->
-      notifier.NotifyWarning
-        ( sprintf "Couldn't load an assembly '%s'." file.Name
-        , [| ("Exception", e :> obj) |]
-        )
-
   let start () =
-    load ()
-    subscription.Disposable <-
-      file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load
+    reloadRequested.OnNext(())
+    file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0))
+      (fun () -> reloadRequested.OnNext(()))
+    |> disposables.Add
+
+  do
+    currentTestAssembly
+    |> Observable.choose id
+    |> Observable.subscribe (fun testAssembly -> testAssembly.Start())
+    |> ignore
 
   override this.CancelCommand =
     cancelCommand
@@ -105,4 +129,4 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     start ()
 
   override this.Dispose() =
-    subscription.Dispose()
+    disposables.Dispose()
