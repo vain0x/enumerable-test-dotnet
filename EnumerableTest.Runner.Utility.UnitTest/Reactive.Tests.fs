@@ -24,30 +24,6 @@ module ObservableTest =
          |> assertEquals true
       }
     ]
-    
-  let ``test ofParallel`` =
-    test {
-      let executionCount = ref 0
-      let notificationCount = ref 0
-      let n = 5
-      let computations =
-        seq {
-          for i in 0..(n - 1) ->
-            async {
-              Interlocked.Increment(executionCount) |> ignore
-              return i
-            }
-        }
-      let connectable =
-        computations |> Observable.ofParallel
-      connectable
-      |> Observable.subscribe (fun i -> notificationCount := !notificationCount + i)
-      |> ignore
-      connectable.Connect() |> ignore
-      connectable |> Observable.wait
-      do! !executionCount |> assertEquals n
-      do! !notificationCount |> assertEquals (seq { 0..(n - 1) } |> Seq.sum)
-    }
 
   let ``test startParallel`` =
     test {

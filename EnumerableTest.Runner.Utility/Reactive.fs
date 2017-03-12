@@ -64,7 +64,7 @@ module Observable =
 
   /// Creates a connectable observable
   /// which executes async tasks when connected and notifies each result.
-  let ofParallel computations =
+  let startParallel computations =
     let gate = obj()
     let subject = new Subject<_>()
     let computation =
@@ -83,27 +83,6 @@ module Observable =
     { new IConnectableObservable<_> with
         override this.Connect() =
           Async.Start(computation)
-          Disposable.Empty
-        override this.Subscribe(observer) =
-          (subject :> IObservable<_>).Subscribe(observer)
-    }
-
-  let startParallel computations =
-    let gate = obj()
-    let subject = new Subject<_>()
-    let computations = computations |> Seq.toArray
-    let connect () =
-      let mutable count = 0
-      for computation in computations do
-        async {
-          let! x = computation
-          lock gate (fun () -> (subject :> IObserver<_>).OnNext(x))
-          if Interlocked.Increment(&count) = computations.Length then
-            lock gate (fun () -> (subject :> IObserver<_>).OnCompleted())
-        } |> Async.Start
-    { new IConnectableObservable<_> with
-        override this.Connect() =
-          connect ()
           Disposable.Empty
         override this.Subscribe(observer) =
           (subject :> IObservable<_>).Subscribe(observer)
