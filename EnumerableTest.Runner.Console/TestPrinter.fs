@@ -86,7 +86,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printTestAsync i test
     }
 
-  let printTestMethodAsync i (testMethodResult: TestMethodResult) =
+  let printTestMethodResultAsync i (testMethodResult: TestMethodResult) =
     async {
       if isVerbose || testMethodResult |> TestMethodResult.isPassed |> not then
         do! printSoftSeparatorAsync ()
@@ -110,7 +110,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%d. %s" i schema.MethodName)
     }
 
-  let printAsync (testClassResult: TestClassResult) =
+  let printTestClassResultAsync (testClassResult: TestClassResult) =
     async {
       if isVerbose || testClassResult |> TestClassResult.isPassed |> not then
         do! printHardSeparatorAsync ()
@@ -121,7 +121,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printExceptionAsync "constructor" e
         | None ->
           for (i, testMethodResult) in testClassResult.TestMethodResults |> Seq.indexed do
-            do! testMethodResult |> printTestMethodAsync i
+            do! testMethodResult |> printTestMethodResultAsync i
           do! printNotCompletedMethodsAsync testClassResult.NotCompletedMethods
     }
 
@@ -163,7 +163,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
 
   interface IObserver<TestClassResult> with
     override this.OnNext(testClassResult) =
-      queue.Enqueue(printAsync testClassResult)
+      queue.Enqueue(printTestClassResultAsync testClassResult)
 
     override this.OnError(_) = ()
 
