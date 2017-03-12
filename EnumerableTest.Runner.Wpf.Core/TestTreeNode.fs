@@ -11,13 +11,13 @@ open EnumerableTest.Runner
 
 [<AbstractClass>]
 type TestTreeNode() =
-  abstract member Name: string
+  abstract Name: string
 
-  abstract member Children: ObservableCollection<TestTreeNode>
+  abstract Children: ObservableCollection<TestTreeNode>
 
-  abstract member TestStatistic: IReadOnlyReactiveProperty<TestStatistic>
+  abstract TestStatistic: IReadOnlyReactiveProperty<TestStatistic>
 
-  abstract member IsExpanded: IReadOnlyReactiveProperty<bool>
+  abstract IsExpanded: IReadOnlyReactiveProperty<bool>
 
   member this.AddChild(child) =
     this.Children.Add(child)

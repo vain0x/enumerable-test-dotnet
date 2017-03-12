@@ -14,9 +14,9 @@ type AssertionCounter() =
   member this.IsPassed =
     !count |> AssertionCount.isPassed
 
-  interface IObserver<TestClass>  with
-    override this.OnNext(testClass) =
-      count := AssertionCount.add (!count) (testClass |> TestClass.assertionCount)
+  interface IObserver<TestClassResult>  with
+    override this.OnNext(testClassResult) =
+      count := AssertionCount.add (!count) (testClassResult |> TestClassResult.assertionCount)
 
     override this.OnError(_) = ()
 

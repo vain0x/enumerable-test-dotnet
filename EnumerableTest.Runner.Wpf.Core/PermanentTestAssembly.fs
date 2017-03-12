@@ -10,6 +10,7 @@ open System.Reactive.Threading.Tasks
 open System.Reflection
 open System.Windows.Input
 open Basis.Core
+open FSharp.Control.Reactive
 open Reactive.Bindings
 open Reactive.Bindings.Extensions
 open EnumerableTest.Sdk
@@ -27,15 +28,51 @@ type PermanentTestAssembly() =
 type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   inherit PermanentTestAssembly()
 
+  let disposables =
+    new CompositeDisposable()
+
+  let cancelRequested =
+    new Subject<_>()
+
+  let reloadRequested =
+    file
+    |> FileInfo.observeChanged
+    |> Observable.map ignore
+    |> Observable.startWith [|()|]
+    |> Observable.throttle (TimeSpan.FromMilliseconds(100.0))
+    |> Observable.publish
+
+  let tryLoad () =
+    match OneshotTestAssembly.ofFile file with
+    | Success testAssembly ->
+      testAssembly |> Some
+    | Failure e ->
+      notifier.NotifyWarning
+        ( sprintf "Couldn't load an assembly '%s'." file.Name
+        , [| ("Exception", e :> obj) |]
+        )
+      None
+
   let currentTestAssembly =
-    ReactiveProperty.create (None: option<OneshotTestAssembly>)
+    reloadRequested
+    |> Observable.map tryLoad
+    |> Observable.merge (cancelRequested |> Observable.map (fun () -> None))
+    |> ReactiveProperty.ofObservable None
+
+  let testAssemblyTrash =
+    let trash = new SerialDisposable()
+    currentTestAssembly |> Observable.subscribe
+      (fun testAssembly ->
+        trash.Disposable <-
+          match testAssembly with
+          | Some testAssembly -> testAssembly :> IDisposable
+          | None -> Disposable.Empty
+      ) |> ignore
+    disposables.Add(trash)
+    trash
 
   let cancel () =
-    match currentTestAssembly.Value with
-    | Some testAssembly ->
-      testAssembly.Dispose()
-      currentTestAssembly.Value <- None
-    | None -> ()
+    cancelRequested.OnNext(())
 
   let cancelCommand =
     currentTestAssembly
@@ -43,47 +80,41 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     |> ObservableCommand.ofFunc cancel
 
   let currentTestSchema =
-    ReactiveProperty.create [||]
+    currentTestAssembly
+    |> Observable.choose id
+    |> Observable.map (fun testAssembly -> testAssembly.Schema)
+    |> ReactiveProperty.ofObservable TestSuiteSchema.empty
 
   let schemaUpdated =
-    currentTestSchema.Pairwise().Select
-      (fun pair ->
-        TestSuiteSchema.difference pair.OldItem pair.NewItem
+    currentTestSchema
+    |> Observable.pairwise
+    |> Observable.map
+      (fun (oldSchema, newSchema) ->
+        TestSuiteSchema.difference oldSchema newSchema
       )
 
-  let testResults =
-    new Subject<_>()
-
-  let subscription =
-    new SingleAssignmentDisposable()
-
-  let load () =
-    cancel ()
-    match OneshotTestAssembly.ofFile file with
-    | Success testAssembly ->
-      let subscriptions = new CompositeDisposable()
-      let unload () =
-        subscriptions.Dispose()
-        cancel()
-      currentTestSchema.Value <- testAssembly.Schema
-      testAssembly.TestResults.Subscribe
-        ( testResults.OnNext
-        , ignore >> unload
-        , unload
-        )
-      |> subscriptions.Add
-      currentTestAssembly.Value <- Some testAssembly
-      testAssembly.Start()
-    | Failure e ->
-      notifier.NotifyWarning
-        ( sprintf "Couldn't load an assembly '%s'." file.Name
-        , [| ("Exception", e :> obj) |]
-        )
+  let testCompleted =
+    currentTestAssembly
+    |> Observable.map
+      (fun testAssembly ->
+        match testAssembly with
+        | Some testAssembly ->
+          testAssembly.TestCompleted
+          |> Observable.finallyDo cancel
+        | None ->
+          Observable.Empty()
+      )
+    |> Observable.switch
 
   let start () =
-    load ()
-    subscription.Disposable <-
-      file |> FileInfo.subscribeChanged (TimeSpan.FromMilliseconds(100.0)) load
+    reloadRequested.Connect()
+    |> disposables.Add
+
+  do
+    currentTestAssembly
+    |> Observable.choose id
+    |> Observable.subscribe (fun testAssembly -> testAssembly.Start())
+    |> ignore
 
   override this.CancelCommand =
     cancelCommand
@@ -94,11 +125,11 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   override this.SchemaUpdated =
     schemaUpdated
 
-  override this.TestResults =
-    testResults :> IObservable<_>
+  override this.TestCompleted =
+    testCompleted
 
   override this.Start() =
     start ()
 
   override this.Dispose() =
-    subscription.Dispose()
+    disposables.Dispose()

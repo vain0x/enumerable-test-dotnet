@@ -5,7 +5,7 @@ open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 
-module ReadOnlyUptodateCollectionTest =
+module ``test ReadOnlyUptodateCollection`` =
   open System.Collections.ObjectModel
   open Reactive.Bindings
 

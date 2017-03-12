@@ -36,7 +36,7 @@ module Program =
         use counterSubscription =
           testClassNotifier.Subscribe(counter)
         testAssembly.Start()
-        testAssembly.TestResults |> Observable.waitTimeout timeout |> ignore<bool>
+        testAssembly.TestCompleted |> Observable.waitTimeout timeout |> ignore<bool>
         testClassNotifier.Complete()
       | Failure e ->
         notifier.NotifyWarning
@@ -45,7 +45,7 @@ module Program =
           )
     printer.PrintWarningsAsync(notifier.Warnings)
     printer.PrintSummaryAsync(counter.Current)
-    printer.QueueGotEmpty.FirstAsync().Wait()
+    printer.JoinAsync() |> Async.RunSynchronously
     counter.IsPassed
 
   [<EntryPoint>]

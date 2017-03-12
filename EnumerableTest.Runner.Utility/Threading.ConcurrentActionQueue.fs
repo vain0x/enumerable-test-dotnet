@@ -12,8 +12,6 @@ open System.Threading.Tasks
 type ConcurrentActionQueue() =
   let queue = ConcurrentQueue()
 
-  let gotEmpty = new Subject<unit>()
-
   let isRunning = ref 0
 
   let rec consume () =
@@ -32,9 +30,7 @@ type ConcurrentActionQueue() =
           do! loop ()
         finally
           Interlocked.Exchange(isRunning, 0) |> ignore
-        if queue.IsEmpty then
-          gotEmpty.OnNext(())
-        else
+        if queue.IsEmpty |> not then
           return! consume ()
     }
 
@@ -42,12 +38,16 @@ type ConcurrentActionQueue() =
     queue.Enqueue(action)
     consume () |> Async.Start
 
-  member val GotEmpty =
-    Observable.Create
-      ( fun (observer: IObserver<_>) ->
-          if queue.IsEmpty then
-            observer.OnNext(())
-            Disposable.Empty
-          else
-            gotEmpty.Subscribe(observer)
-      )
+  member this.EnqueueAsync(action) =
+    let taskCompletionSource = TaskCompletionSource()
+    let action =
+      async {
+        try
+          let! value = action
+          taskCompletionSource.SetResult(value)
+        with
+        | e ->
+          taskCompletionSource.SetException(e)
+      }
+    this.Enqueue(action)
+    taskCompletionSource.Task |> Async.AwaitTask

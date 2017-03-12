@@ -5,17 +5,17 @@ open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 
-module TestClassNotifierTest =
+module ``test TestClassNotifier`` =
   let seed types =
     let schema =
       TestSuiteSchema.ofTypes types
     let testResults =
-      TestSuite.ofTypes types
+      TestRunner.runTestTypes types
     let testAssembly =
       { new TestAssembly() with
           override this.Start() =
-            testResults.Connect()
-          override this.TestResults =
+            testResults.Connect() |> ignore
+          override this.TestCompleted =
             testResults :> IObservable<_>
           override this.Dispose() = ()
       }
@@ -23,42 +23,42 @@ module TestClassNotifierTest =
 
   let ``test it notiies completed classes`` =
     test {
-      let (it, connectable) = seed [| typeof<TestClass.Passing> |]
+      let (it, connectable) = seed [| typeof<TestClasses.Passing> |]
       use notifications = it |> Observable.collectNotifications
-      connectable.Connect()
+      connectable.Connect() |> ignore
       connectable |> Observable.wait
       do! notifications.Count |> assertEquals 1
-      let testClass = notifications |> Seq.head
-      do! testClass.InstantiationError |> assertEquals None
-      do! testClass.Result |> assertSatisfies (Array.length >> (=) 1)
-      do! testClass.NotCompletedMethods |> assertEquals Array.empty
+      let result = notifications |> Seq.head
+      do! result.InstantiationError |> assertEquals None
+      do! result.TestMethodResults |> assertSatisfies (Array.length >> (=) 1)
+      do! result.NotCompletedMethods |> assertEquals Array.empty
     }
 
   let ``test it notifies classes with instantiation errors`` =
     test {
-      let (it, connectable) = seed [| typeof<TestClass.Uninstantiatable> |]
+      let (it, connectable) = seed [| typeof<TestClasses.Uninstantiatable> |]
       use notifications = it |> Observable.collectNotifications
-      connectable.Connect()
+      connectable.Connect() |> ignore
       connectable |> Observable.wait
       do! notifications.Count |> assertEquals 1
-      let testClass = notifications |> Seq.head
-      do! testClass.InstantiationError |> assertSatisfies Option.isSome
-      do! testClass.Result |> assertSatisfies Array.isEmpty
-      do! testClass.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 2)
+      let result = notifications |> Seq.head
+      do! result.InstantiationError |> assertSatisfies Option.isSome
+      do! result.TestMethodResults |> assertSatisfies Array.isEmpty
+      do! result.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 2)
     }
 
   let ``test it notifies not-completed classes when completed`` =
     test {
-      let (it, connectable) = seed [| typeof<TestClass.Never> |]
+      let (it, connectable) = seed [| typeof<TestClasses.Never> |]
       use notifications = it |> Observable.collectNotifications
-      connectable.Connect()
+      connectable.Connect() |> ignore
       let isCompleted = connectable |> Observable.waitTimeout (TimeSpan.FromMilliseconds(50.0))
       do! isCompleted |> assertEquals false
       do! notifications.Count |> assertEquals 0
       it.Complete()
       do! notifications.Count |> assertEquals 1
-      let testClass = notifications |> Seq.head
-      do! testClass.InstantiationError |> assertSatisfies Option.isNone
-      do! testClass.Result |> assertSatisfies (Array.length >> (=) 2)
-      do! testClass.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 1)
+      let result = notifications |> Seq.head
+      do! result.InstantiationError |> assertSatisfies Option.isNone
+      do! result.TestMethodResults |> assertSatisfies (Array.length >> (=) 2)
+      do! result.NotCompletedMethods |> assertSatisfies (Array.length >> (=) 1)
     }

@@ -6,30 +6,36 @@ open System.Collections.Generic
 
 type UptodateCollectionNotification<'x> =
   {
-    IsAdded             : bool
-    Value               : 'x
+    IsAdded:
+      bool
+    Value:
+      'x
   }
 
 module UptodateCollectionNotification =
   let ofAdded x =
     {
-      IsAdded           = true
-      Value             = x
+      IsAdded =
+        true
+      Value =
+        x
     }
 
   let ofRemoved x =
     {
-      IsAdded           = false
-      Value             = x
+      IsAdded =
+        false
+      Value =
+        x
     }
 
 /// NOTE: Thread-unsafe.
 [<AbstractClass>]
 type ReadOnlyUptodateCollection<'x>() =
-  abstract member Count: int
-  abstract member GetEnumerator: unit -> IEnumerator<'x>
-  abstract member Subscribe: IObserver<UptodateCollectionNotification<'x>> -> IDisposable
-  abstract member Dispose: unit -> unit
+  abstract Count: int
+  abstract GetEnumerator: unit -> IEnumerator<'x>
+  abstract Subscribe: IObserver<UptodateCollectionNotification<'x>> -> IDisposable
+  abstract Dispose: unit -> unit
 
   interface IReadOnlyCollection<'x> with
     override this.Count = this.Count
@@ -49,8 +55,8 @@ type ReadOnlyUptodateCollection<'x>() =
 type UptodateCollection<'x>() =
   inherit ReadOnlyUptodateCollection<'x>()
 
-  abstract member Add: 'x -> unit
-  abstract member Remove: 'x -> bool
+  abstract Add: 'x -> unit
+  abstract Remove: 'x -> bool
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module UptodateCollection =

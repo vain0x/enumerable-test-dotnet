@@ -9,8 +9,8 @@ open EnumerableTest.Runner.Wpf
 open EnumerableTest.Sdk
 open EnumerableTest.Runner.UnitTest
 
-module FolderNodeTest =
-  module test_FindOrAddFolderNode =
+module ``test FolderNode`` =
+  module ``test FindOrAddFolderNode`` =
     let empty () =
       FolderNode.CreateRoot()
 
@@ -41,7 +41,7 @@ module FolderNodeTest =
         do! a.Children |> assertSatisfies (Seq.contains ay)
       }
 
-  module test_TestStatistic =
+  module ``test TestStatistic`` =
     let ``test updating`` =
       test {
         let node = FolderNode("folderNode")
@@ -60,13 +60,13 @@ module FolderNodeTest =
           let groupTest =
             [| (0).Is(0) |].ToTestGroup("a")
             |> SerializableTest.ofGroupTest
-          in TestMethod.ofResult "a" groupTest None TimeSpan.Zero
+          in TestMethodResult.ofResult "a" groupTest None TimeSpan.Zero
           )
         b.UpdateResult(
           let groupTest =
             (seq { do exn() |> raise }).ToTestGroup("b")
             |> SerializableTest.ofGroupTest
-          in TestMethod.ofResult "b" groupTest None TimeSpan.Zero
+          in TestMethodResult.ofResult "b" groupTest None TimeSpan.Zero
           )
         do! node.TestStatistic.Value |> assertEquals
               {

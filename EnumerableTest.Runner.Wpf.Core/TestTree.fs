@@ -62,13 +62,13 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
 
   let updateSchema cancelCommand (difference: TestSuiteSchemaDifference) =
     for schema in difference.Removed do
-      root |> tryRoute (schema.Path |> TestClassPath.fullPath) |> Option.iter
+      root |> tryRoute (schema.TypeFullName |> Type.FullName.fullPath) |> Option.iter
         (fun node ->
-          node.RemoveChild(schema.Path.Name)
+          node.RemoveChild(schema.TypeFullName.Name)
         )
 
     for schema in difference.Added do
-      let node = root.FindOrAddFolderNode(schema.Path |> TestClassPath.fullPath)
+      let node = root.FindOrAddFolderNode(schema.TypeFullName |> Type.FullName.fullPath)
       for schema in schema.Methods do
         node.AddChild(TestMethodNode(schema, cancelCommand))
 
@@ -87,14 +87,14 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
         )
 
   let updateResult (result: TestResult) =
-    let path = result.TypeFullName |> TestClassPath.ofFullName |> TestClassPath.fullPath
+    let path = result.TypeFullName |> Type.FullName.fullPath
     root |> tryRoute path |> Option.iter
       (fun classNode ->
         match result.Result with
-        | Success testMethod ->
-          classNode |> tryRouteTestMethodNode [testMethod.MethodName] |> Option.iter
+        | Success testMethodResult ->
+          classNode |> tryRouteTestMethodNode [testMethodResult.MethodName] |> Option.iter
             (fun node ->
-              node.UpdateResult(testMethod)
+              node.UpdateResult(testMethodResult)
             )
         | Failure e ->
           // Update one of test method nodes to show the error.
@@ -102,8 +102,8 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
           // because no need to show the instantiation error in the case.
           classNode.Children |> Seq.tryPick tryCast |> Option.iter
             (fun node ->
-              let testMethod = TestMethod.ofInstantiationError e
-              (node: TestMethodNode).UpdateResult(testMethod)
+              let testMethodResult = TestMethodResult.ofInstantiationError e
+              (node: TestMethodNode).UpdateResult(testMethodResult)
             )
       )
 
@@ -116,7 +116,7 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
         |> Observable.subscribe (updateSchema testAssembly.CancelCommand)
         |> subscriptions.Add
 
-        testAssembly.TestResults.ObserveOn(scheduler)
+        testAssembly.TestCompleted.ObserveOn(scheduler)
         |> Observable.subscribe updateResult
         |> subscriptions.Add
       )

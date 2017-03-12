@@ -18,9 +18,9 @@ module private OneshotTestAssemblyCore =
     try
       let assembly = Assembly.Load(assemblyName)
       let connectable =
-        TestSuite.ofAssembly assembly
+        TestRunner.runTestAssembly assembly
       connectable.Subscribe(observer) |> ignore<IDisposable>
-      connectable.Connect()
+      connectable.Connect() |> ignore
       () |> Some
     with
     | _ ->
@@ -66,7 +66,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
     match result with
     | Some ()->
       connectable.Subscribe(resultObserver) |> resource.Add
-      connectable.Connect()
+      connectable.Connect() |> ignore
     | None ->
       resource.Dispose()
 
@@ -76,7 +76,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   member this.Schema =
     testSuiteSchema
 
-  override this.TestResults =
+  override this.TestCompleted =
     testResults :> IObservable<_>
 
   override this.Start() =

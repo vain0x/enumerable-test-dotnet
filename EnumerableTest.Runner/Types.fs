@@ -14,25 +14,15 @@ type TestInstance =
 
 type TestMethodSchema =
   {
-    MethodName                  : string
-  }
-
-type TestClassPath =
-  {
-    NamespacePath:
-      array<string>
-    ClassPath:
-      array<string>
-    Name:
-      string
+    MethodName: string
   }
 
 type TestClassSchema =
   {
-    Path:
-      TestClassPath
-    TypeFullName                : string
-    Methods                     : array<TestMethodSchema>
+    TypeFullName:
+      Type.FullName
+    Methods:
+      array<TestMethodSchema>
   }
 
 type TestSuiteSchema =
@@ -78,12 +68,16 @@ with
         modified
     }
 
-type TestMethod =
+type TestMethodResult =
   {
-    MethodName                  : string
-    Result                      : SerializableGroupTest
-    DisposingError              : option<MarshalValue>
-    Duration                    : TimeSpan
+    MethodName:
+      string
+    Result:
+      SerializableGroupTest
+    DisposingError:
+      option<MarshalValue>
+    Duration:
+      TimeSpan
   }
 with
   member this.DisposingErrorOrNull =
@@ -94,18 +88,22 @@ with
 type TestResult =
   {
     TypeFullName:
-      string
-    /// Represents completion of a test method or an instantiation error.
+      Type.FullName
+    /// Represents a test method result or an instantiation error.
     Result:
-      Result<TestMethod, exn>
+      Result<TestMethodResult, exn>
   }
 
-type TestClass =
+type TestClassResult =
   {
-    TypeFullName                : string
-    InstantiationError          : option<Exception>
-    Result                      : array<TestMethod>
-    NotCompletedMethods         : array<TestMethodSchema>
+    TypeFullName:
+      Type.FullName
+    InstantiationError:
+      option<Exception>
+    TestMethodResults:
+      array<TestMethodResult>
+    NotCompletedMethods:
+      array<TestMethodSchema>
   }
 
 type TestSuite =
@@ -113,7 +111,7 @@ type TestSuite =
 
 [<AbstractClass>]
 type TestAssembly() =
-  abstract TestResults: IObservable<TestResult>
+  abstract TestCompleted: IObservable<TestResult>
 
   abstract Start: unit -> unit
 

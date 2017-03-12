@@ -3,28 +3,16 @@
 open System
 open System.Diagnostics
 open System.Reflection
+open System.Threading.Tasks
+open Basis.Core
 open EnumerableTest
 open EnumerableTest.Sdk
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestMethod =
-  let ofResult name result disposingError duration =
-    {
-      MethodName                    = name
-      Result                        = result
-      DisposingError                = disposingError
-      Duration                      = duration
-    }
-
-  let ofInstantiationError (e: exn) =
-    let name = "default constructor"
-    let e = e |> MarshalValue.ofObjDeep
-    let result = SerializableGroupTest(name, [||], Some e, SerializableEmptyTestData.Empty)
-    ofResult name result None TimeSpan.Zero
-
-  /// Creates an instance of TestMethod
+module TestRunner =
+  /// Creates an instance of TestMethodResult
   /// by executing a test method of an instance and disposing the instance.
-  let create (instance: TestInstance) (m: MethodInfo) =
+  let runTestMethod (instance: TestInstance) (m: MethodInfo) =
     let stopwatch = Stopwatch.StartNew()
     let tests =
       m.Invoke(instance, [||]) :?> seq<Test>
@@ -37,14 +25,14 @@ module TestMethod =
     // Convert the result to be serializable.
     let groupTest =
       groupTest |> SerializableTest.ofGroupTest
-    ofResult m.Name groupTest disposingError duration
+    TestMethodResult.ofResult m.Name groupTest disposingError duration
 
-  /// Builds computations to create TestMethod instance
-  /// for each test method from a test class type.
+  /// Builds computations to run tests
+  /// for each test method from a test type.
   /// NOTE: Execute all computations to dispose created instances.
-  let createManyAsync (typ: Type) =
-    let methodInfos = typ |> TestClassType.testMethodInfos
-    let instantiate = typ |> TestClassType.instantiate
+  let runTestTypeAsyncCore (typ: Type) =
+    let methodInfos = typ |> TestType.testMethodInfos
+    let instantiate = typ |> TestType.instantiate
     try
       let computations =
         methodInfos
@@ -53,7 +41,7 @@ module TestMethod =
             let instance = instantiate ()
             let computation =
               async {
-                return m |> create instance
+                return m |> runTestMethod instance
               }
             (m, computation)
           )
@@ -63,6 +51,20 @@ module TestMethod =
     | e ->
       ([||], Some e)
 
-  let isPassed (testMethod: TestMethod) =
-    testMethod.Result.IsPassed
-    && testMethod.DisposingError |> Option.isNone
+  let runTestTypeAsync (typ: Type) =
+    match runTestTypeAsyncCore typ with
+    | (_, Some e) ->
+      let result = TestResult.create typ (Failure e)
+      [| async { return result } |]
+    | (methods, None) ->
+      methods |> Array.map (snd >> Async.map (Success >> TestResult.create typ))
+
+  let runTestTypes types =
+    types
+    |> Seq.filter TestType.isTestClass
+    |> Seq.collect runTestTypeAsync
+    |> Observable.startParallel
+
+  let runTestAssembly (assembly: Assembly) =
+    assembly.GetTypes()
+    |> runTestTypes

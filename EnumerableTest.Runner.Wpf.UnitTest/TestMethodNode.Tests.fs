@@ -8,7 +8,7 @@ open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 open EnumerableTest.Runner.UnitTest
 
-module TestMethodNodeTest =
+module ``test TestMethodNode`` =
   let testMethodSchema: TestMethodSchema =
     {
       MethodName =
@@ -28,14 +28,14 @@ module TestMethodNodeTest =
     test {
       let node = TestMethodNode(testMethodSchema, Command.never)
       let duration = TimeSpan.FromMilliseconds(1.2)
-      let testMethod =
-        TestMethod.ofResult
+      let testMethodResult =
+        TestMethodResult.ofResult
           testMethodSchema.MethodName
           ([| (0).Is(1) |].ToTestGroup("group") |> SerializableTest.ofGroupTest)
           None
           duration
-      node.UpdateResult(testMethod)
-      do! node.LastResult.Value |> assertEquals (testMethod :> obj)
+      node.UpdateResult(testMethodResult)
+      do! node.LastResult.Value |> assertEquals (testMethodResult :> obj)
       do! node.TestStatistic.Value
           |> assertEquals
             {

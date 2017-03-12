@@ -6,7 +6,7 @@ open Basis.Core
 open EnumerableTest.Runner.Wpf
 open EnumerableTest.Runner.UnitTest
 
-module TestTreeNodeTest =
+module ``test TestTreeNode`` =
   let empty () =
     FolderNode.CreateRoot()
 
@@ -20,7 +20,7 @@ module TestTreeNodeTest =
       return root
     }
 
-  module test_RouteOrFailure =
+  module ``test RouteOrFailure`` =
     let ``find self`` =
       test {
         let root = empty ()

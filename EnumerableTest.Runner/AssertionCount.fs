@@ -4,60 +4,55 @@ open EnumerableTest.Sdk
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module AssertionCount =
-  let zero =
+  let create totalCount violatedCount errorCount notCompletedCount =
     {
-      TotalCount                = 0
-      ViolatedCount             = 0
-      ErrorCount                = 0
-      NotCompletedCount         = 0
+      TotalCount =
+        totalCount
+      ViolatedCount =
+        violatedCount
+      ErrorCount =
+        errorCount
+      NotCompletedCount =
+        notCompletedCount
     }
+
+  let zero =
+    create 0 0 0 0
 
   let onePassed =
-    {
-      TotalCount                = 1
-      ViolatedCount             = 0
-      ErrorCount                = 0
-      NotCompletedCount         = 0
-    }
+    create 1 0 0 0
 
   let oneViolated =
-    {
-      TotalCount                = 1
-      ViolatedCount             = 1
-      ErrorCount                = 0
-      NotCompletedCount         = 0
-    }
+    create 1 1 0 0
 
   let oneError =
-    {
-      TotalCount                = 1
-      ViolatedCount             = 0
-      ErrorCount                = 1
-      NotCompletedCount         = 0
-    }
+    create 1 0 1 0
 
   let ofNotCompleted n =
-    {
-      TotalCount                = n
-      ViolatedCount             = 0
-      ErrorCount                = 0
-      NotCompletedCount         = n
-    }
+    create n 0 0 n
 
   let add (l: AssertionCount) (r: AssertionCount) =
     {
-      TotalCount                = l.TotalCount + r.TotalCount
-      ViolatedCount             = l.ViolatedCount + r.ViolatedCount
-      ErrorCount                = l.ErrorCount + r.ErrorCount
-      NotCompletedCount         = l.NotCompletedCount + r.NotCompletedCount
+      TotalCount =
+        l.TotalCount + r.TotalCount
+      ViolatedCount =
+        l.ViolatedCount + r.ViolatedCount
+      ErrorCount =
+        l.ErrorCount + r.ErrorCount
+      NotCompletedCount =
+        l.NotCompletedCount + r.NotCompletedCount
     }
 
   let subtract (l: AssertionCount) (r: AssertionCount) =
     {
-      TotalCount                = l.TotalCount - r.TotalCount
-      ViolatedCount             = l.ViolatedCount - r.ViolatedCount
-      ErrorCount                = l.ErrorCount - r.ErrorCount
-      NotCompletedCount         = l.NotCompletedCount - r.NotCompletedCount
+      TotalCount =
+        l.TotalCount - r.TotalCount
+      ViolatedCount =
+        l.ViolatedCount - r.ViolatedCount
+      ErrorCount =
+        l.ErrorCount - r.ErrorCount
+      NotCompletedCount =
+        l.NotCompletedCount - r.NotCompletedCount
     }
 
   let groupSig =
@@ -81,10 +76,10 @@ module AssertionCount =
     }
     |> Seq.fold add zero
 
-  let ofTestMethod (testMethod: TestMethod) =
-    testMethod.Result |> ofGroupTest
+  let ofTestMethodResult (testMethodResult: TestMethodResult) =
+    testMethodResult.Result |> ofGroupTest
     |> add
-      (match testMethod.DisposingError with
+      (match testMethodResult.DisposingError with
       | Some _ -> oneError
       | None -> zero
       )

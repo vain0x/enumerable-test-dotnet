@@ -9,29 +9,29 @@ open EnumerableTest.Runner
 open EnumerableTest.Runner.Wpf
 open EnumerableTest.Runner.UnitTest
 
-module TestTreeTest =
+module ``test TestTree`` =
   type TestClass1() =
     member this.PassingTest() =
-      TestClass.passingTest
+      TestClasses.passingTest
 
     member this.ViolatingTest() =
-      TestClass.violatingTest
+      TestClasses.violatingTest
 
     member this.ThrowingTest() =
-      TestClass.throwingTest
+      TestClasses.throwingTest
 
   type TestClass1Updated() =
     // Unchanged.
     member this.ViolatingTest() =
-      TestClass.violatingTest
+      TestClasses.violatingTest
 
     // Fixed.
     member this.ThrowingTest() =
-      TestClass.passingTest
+      TestClasses.passingTest
 
     // Added.
     member this.NewPassingTest() =
-      TestClass.passingTest
+      TestClasses.passingTest
 
   type ControlPanel =
     {
@@ -56,7 +56,7 @@ module TestTreeTest =
       { new PermanentTestAssembly() with
           override this.SchemaUpdated =
             schemaUpdated :> _
-          override this.TestResults =
+          override this.TestCompleted =
             testResults :> _
           override this.CancelCommand =
             ObservableCommand.never
@@ -92,7 +92,7 @@ module TestTreeTest =
     let schema =
       TestSuiteSchema.ofTypes types
     let connectable =
-      TestSuite.ofTypes types
+      TestRunner.runTestTypes types
     controlPanel.SchemaUpdatedObserver.OnNext(TestSuiteSchema.difference [||] schema)
     let classNode =
       let path =
@@ -101,7 +101,7 @@ module TestTreeTest =
           "Runner"
           "Wpf"
           "UnitTest"
-          "TestTreeTest"
+          "test TestTree"
           "TestClass1"
         ]
       controlPanel.Tree.Root.TryRoute(path)
@@ -121,7 +121,7 @@ module TestTreeTest =
   let afterFirstExecution () =
     let (controlPanel, classNode, connectable) = afterFirstSchemaUpdated ()
     connectable.Subscribe(controlPanel.TestResultObserver) |> ignore
-    connectable.Connect()
+    connectable.Connect() |> ignore
     connectable |> Observable.wait
     (controlPanel, classNode)
 
@@ -138,7 +138,7 @@ module TestTreeTest =
   let afterSecondSchemaUpdated () =
     let (controlPanel, classNode) = afterFirstExecution ()
     let fullPath =
-      typeof<TestClass1>.FullName |> TestClassPath.ofFullName |> TestClassPath.fullPath
+      typeof<TestClass1> |> Type.fullName |> Type.FullName.fullPath
     let difference: TestSuiteSchemaDifference =
       let classDifference =
         TestClassSchema.difference
