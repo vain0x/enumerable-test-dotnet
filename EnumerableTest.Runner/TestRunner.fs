@@ -9,7 +9,7 @@ open EnumerableTest
 open EnumerableTest.Sdk
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TestSuite =
+module TestRunner =
   /// Creates an instance of TestMethodResult
   /// by executing a test method of an instance and disposing the instance.
   let runTestMethod (instance: TestInstance) (m: MethodInfo) =

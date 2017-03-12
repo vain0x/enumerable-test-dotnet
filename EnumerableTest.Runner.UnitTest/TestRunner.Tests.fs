@@ -4,9 +4,9 @@ open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
 
-module ``test TestSuite`` =
+module ``test TestRunner`` =
   module ``test runTestMethod`` =
-    let run = TestSuite.runTestMethod
+    let run = TestRunner.runTestMethod
 
     let ``test run TestClasses.WithManyProperties1`` =
       let typ = typeof<TestClasses.WithManyProperties>
@@ -42,7 +42,7 @@ module ``test TestSuite`` =
       ]
 
   let ``test runTestTypeAsyncCore`` =
-    let run = TestSuite.runTestTypeAsyncCore
+    let run = TestRunner.runTestTypeAsyncCore
     [
       test {
         let (testMethods, instantiationError) =

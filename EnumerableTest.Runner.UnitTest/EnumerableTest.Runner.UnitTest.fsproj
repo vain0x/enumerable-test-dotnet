@@ -49,7 +49,7 @@
     <Compile Include="TestClasses.fs" />
     <Compile Include="TestType.Tests.fs" />
     <Compile Include="AsserionCount.Tests.fs" />
-    <Compile Include="TestSuite.Tests.fs" />
+    <Compile Include="TestRunner.Tests.fs" />
     <Compile Include="TestClassNotifier.Tests.fs" />
   </ItemGroup>
   <ItemGroup>

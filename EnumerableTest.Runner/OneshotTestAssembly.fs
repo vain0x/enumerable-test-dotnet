@@ -18,7 +18,7 @@ module private OneshotTestAssemblyCore =
     try
       let assembly = Assembly.Load(assemblyName)
       let connectable =
-        TestSuite.runTestAssembly assembly
+        TestRunner.runTestAssembly assembly
       connectable.Subscribe(observer) |> ignore<IDisposable>
       connectable.Connect() |> ignore
       () |> Some
