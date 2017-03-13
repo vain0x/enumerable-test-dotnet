@@ -51,24 +51,20 @@ type OneshotTestAssembly
       )
     |> disposables.Add
 
-  let mutable isTerminated = false
-
-  do
-    // When all tests terminated, dispose this itself.
-    let period = TimeSpan.FromMilliseconds(17.0)
-    let onTick _ = if isTerminated then disposables.Dispose()
-    let timer = new Timer(onTick, (), period, period)
-    disposables.Add(timer)
-
   let start () =
+    let onTerminated () =
+      let onTick _ = testCompleted.OnCompleted()
+      let dueTime = TimeSpan.FromMilliseconds(100.0)
+      let timer = new Timer(onTick, (), dueTime, Timeout.InfiniteTimeSpan)
+      disposables.Add(timer)
     let observer =
       { new IObserver<TestResult> with
           override this.OnNext(value) =
             testCompleted.OnNext(value)
           override this.OnError(e) =
-            isTerminated <- true
+            onTerminated ()
           override this.OnCompleted() =
-            isTerminated <- true
+            onTerminated ()
       } |> MarshalByRefObserver.ofObserver
     let load =
       OneshotTestAssemblyCore.load assemblyName MarshalValue.Recursion observer
