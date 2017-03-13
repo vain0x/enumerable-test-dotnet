@@ -5,6 +5,7 @@ open System.IO
 open System.Reactive.Disposables
 open System.Reactive.Subjects
 open System.Reflection
+open System.Threading
 open System.Threading.Tasks
 open Basis.Core
 
@@ -13,7 +14,7 @@ module private OneshotTestAssemblyCore =
     Result.catch (fun () -> Assembly.Load(assemblyName))
     |> Result.map TestSuiteSchema.ofAssembly
 
-  let load (assemblyName: AssemblyName) marshalValueRecursion observer =
+  let load (assemblyName: AssemblyName) marshalValueRecursion observer () =
     MarshalValue.Recursion <- marshalValueRecursion
     try
       let assembly = Assembly.Load(assemblyName)
@@ -21,54 +22,60 @@ module private OneshotTestAssemblyCore =
         TestRunner.runTestAssembly assembly
       connectable.Subscribe(observer) |> ignore<IDisposable>
       connectable.Connect() |> ignore
-      () |> Some
+      Success ()
     with
-    | _ ->
-      None
+    | e ->
+      Failure e
 
 [<Sealed>]
 type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   inherit TestAssembly()
 
-  let marshalValueRecursion =
-    MarshalValue.Recursion
-
-  let resource =
+  let disposables =
     new CompositeDisposable()
 
-  do resource.Add(domain)
+  do disposables.Add(domain)
 
-  let testResults =
+  let testCompleted =
     new Subject<TestResult>()
 
   do
     Disposable.Create
       (fun () ->
-        testResults.OnCompleted()
-        testResults.Dispose()
+        testCompleted.OnCompleted()
+        testCompleted.Dispose()
       )
-    |> resource.Add
+    |> disposables.Add
+
+  let mutable isTerminated = false
+
+  do
+    // When all tests terminated, dispose this itself.
+    let period = TimeSpan.FromMilliseconds(17.0)
+    let onTick _ = if isTerminated then disposables.Dispose()
+    let timer = new Timer(onTick, (), period, period)
+    disposables.Add(timer)
 
   let resultObserver =
-    { new IObserver<_> with
-        override this.OnNext(result) =
-          testResults.OnNext(result)
-        override this.OnError(_) =
-          resource.Dispose()
+    { new IObserver<TestResult> with
+        override this.OnNext(value) =
+          testCompleted.OnNext(value)
+        override this.OnError(e) =
+          isTerminated <- true
         override this.OnCompleted() =
-          resource.Dispose()
-    }
+          isTerminated <- true
+    } |> MarshalByRefObserver.ofObserver
 
   let start () =
-    let (result, connectable) =
-      (domain: AppDomain.DisposableAppDomain).Value
-      |> AppDomain.runObservable (OneshotTestAssemblyCore.load assemblyName marshalValueRecursion)
+    let f =
+      OneshotTestAssemblyCore.load assemblyName MarshalValue.Recursion resultObserver
+    let result =
+      (domain: AppDomain.DisposableAppDomain).Value |> AppDomain.run f
     match result with
-    | Some ()->
-      connectable.Subscribe(resultObserver) |> resource.Add
-      connectable.Connect() |> ignore
-    | None ->
-      resource.Dispose()
+    | Success () ->
+      ()
+    | Failure _ ->
+      disposables.Dispose()
 
   member this.AssemblyName =
     assemblyName
@@ -77,13 +84,13 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
     testSuiteSchema
 
   override this.TestCompleted =
-    testResults :> IObservable<_>
+    testCompleted :> IObservable<_>
 
   override this.Start() =
     start ()
 
   override this.Dispose() =
-    resource.Dispose()
+    disposables.Dispose()
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
 module OneshotTestAssembly =
