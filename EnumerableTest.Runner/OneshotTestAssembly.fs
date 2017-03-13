@@ -36,14 +36,14 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
 
   do resource.Add(domain)
 
-  let testResults =
+  let testCompleted =
     new Subject<TestResult>()
 
   do
     Disposable.Create
       (fun () ->
-        testResults.OnCompleted()
-        testResults.Dispose()
+        testCompleted.OnCompleted()
+        testCompleted.Dispose()
       )
     |> resource.Add
 
@@ -59,7 +59,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   let resultObserver =
     { new IObserver<TestResult> with
         override this.OnNext(value) =
-          testResults.OnNext(value)
+          testCompleted.OnNext(value)
         override this.OnError(e) =
           isTerminated <- true
         override this.OnCompleted() =
@@ -84,7 +84,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
     testSuiteSchema
 
   override this.TestCompleted =
-    testResults :> IObservable<_>
+    testCompleted :> IObservable<_>
 
   override this.Start() =
     start ()
