@@ -31,10 +31,10 @@ module private OneshotTestAssemblyCore =
 type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   inherit TestAssembly()
 
-  let resource =
+  let disposables =
     new CompositeDisposable()
 
-  do resource.Add(domain)
+  do disposables.Add(domain)
 
   let testCompleted =
     new Subject<TestResult>()
@@ -45,16 +45,16 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
         testCompleted.OnCompleted()
         testCompleted.Dispose()
       )
-    |> resource.Add
+    |> disposables.Add
 
   let mutable isTerminated = false
 
   do
     // When all tests terminated, dispose this itself.
     let period = TimeSpan.FromMilliseconds(17.0)
-    let onTick _ = if isTerminated then resource.Dispose()
+    let onTick _ = if isTerminated then disposables.Dispose()
     let timer = new Timer(onTick, (), period, period)
-    resource.Add(timer)
+    disposables.Add(timer)
 
   let resultObserver =
     { new IObserver<TestResult> with
@@ -75,7 +75,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
     | Success () ->
       ()
     | Failure _ ->
-      resource.Dispose()
+      disposables.Dispose()
 
   member this.AssemblyName =
     assemblyName
@@ -90,7 +90,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
     start ()
 
   override this.Dispose() =
-    resource.Dispose()
+    disposables.Dispose()
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
 module OneshotTestAssembly =
