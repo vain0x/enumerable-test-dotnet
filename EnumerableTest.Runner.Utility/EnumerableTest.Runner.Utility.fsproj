@@ -57,6 +57,7 @@
     <Compile Include="Reactive.Bindings.fs" />
     <Compile Include="Reactive.Bindings.ObservableCommand.fs" />
     <Compile Include="Misc.AppDomain.fs" />
+    <Compile Include="Misc.MarshalByRefObserver.fs" />
     <Compile Include="Misc.MarshalValue.fs" />
   </ItemGroup>
   <PropertyGroup>
