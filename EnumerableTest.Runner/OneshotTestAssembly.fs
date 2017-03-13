@@ -91,13 +91,15 @@ type OneshotTestAssembly
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
 module OneshotTestAssembly =
+  let private domainName (assemblyName: AssemblyName) =
+    sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
+
   let ofFile (file: FileInfo) =
     result {
       let! assemblyName =
         Result.catch (fun () -> AssemblyName.GetAssemblyName(file.FullName))
-      let domain =
-        sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
-        |> AppDomain.create
-      let! schema = domain.Value |> AppDomain.run (OneshotTestAssemblyCore.loadSchema assemblyName)
+      let domain = AppDomain.create (domainName assemblyName)
+      let loadSchema = OneshotTestAssemblyCore.loadSchema assemblyName
+      let! schema = domain.Value |> AppDomain.run loadSchema
       return new OneshotTestAssembly(assemblyName, domain, schema)
     }
