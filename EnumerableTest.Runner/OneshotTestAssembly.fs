@@ -28,7 +28,11 @@ module private OneshotTestAssemblyCore =
       Failure e
 
 [<Sealed>]
-type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
+type OneshotTestAssembly
+  ( assemblyName: AssemblyName
+  , domain: AppDomain.DisposableAppDomain
+  , testSuiteSchema: TestSuiteSchema
+  ) =
   inherit TestAssembly()
 
   let disposables =
@@ -47,31 +51,24 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
       )
     |> disposables.Add
 
-  let mutable isTerminated = false
-
-  do
-    // When all tests terminated, dispose this itself.
-    let period = TimeSpan.FromMilliseconds(17.0)
-    let onTick _ = if isTerminated then disposables.Dispose()
-    let timer = new Timer(onTick, (), period, period)
-    disposables.Add(timer)
-
-  let resultObserver =
-    { new IObserver<TestResult> with
-        override this.OnNext(value) =
-          testCompleted.OnNext(value)
-        override this.OnError(e) =
-          isTerminated <- true
-        override this.OnCompleted() =
-          isTerminated <- true
-    } |> MarshalByRefObserver.ofObserver
-
   let start () =
-    let f =
-      OneshotTestAssemblyCore.load assemblyName MarshalValue.Recursion resultObserver
-    let result =
-      (domain: AppDomain.DisposableAppDomain).Value |> AppDomain.run f
-    match result with
+    let onTerminated () =
+      let onTick _ = testCompleted.OnCompleted()
+      let dueTime = TimeSpan.FromMilliseconds(100.0)
+      let timer = new Timer(onTick, (), dueTime, Timeout.InfiniteTimeSpan)
+      disposables.Add(timer)
+    let observer =
+      { new IObserver<TestResult> with
+          override this.OnNext(value) =
+            testCompleted.OnNext(value)
+          override this.OnError(e) =
+            onTerminated ()
+          override this.OnCompleted() =
+            onTerminated ()
+      } |> MarshalByRefObserver.ofObserver
+    let load =
+      OneshotTestAssemblyCore.load assemblyName MarshalValue.Recursion observer
+    match domain.Value |> AppDomain.run load with
     | Success () ->
       ()
     | Failure _ ->
@@ -94,13 +91,15 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
 module OneshotTestAssembly =
+  let private domainName (assemblyName: AssemblyName) =
+    sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
+
   let ofFile (file: FileInfo) =
     result {
       let! assemblyName =
         Result.catch (fun () -> AssemblyName.GetAssemblyName(file.FullName))
-      let domain =
-        sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
-        |> AppDomain.create
-      let! schema = domain.Value |> AppDomain.run (OneshotTestAssemblyCore.loadSchema assemblyName)
+      let domain = AppDomain.create (domainName assemblyName)
+      let loadSchema = OneshotTestAssemblyCore.loadSchema assemblyName
+      let! schema = domain.Value |> AppDomain.run loadSchema
       return new OneshotTestAssembly(assemblyName, domain, schema)
     }
