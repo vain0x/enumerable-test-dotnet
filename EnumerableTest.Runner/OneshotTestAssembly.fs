@@ -28,7 +28,11 @@ module private OneshotTestAssemblyCore =
       Failure e
 
 [<Sealed>]
-type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
+type OneshotTestAssembly
+  ( assemblyName: AssemblyName
+  , domain: AppDomain.DisposableAppDomain
+  , testSuiteSchema: TestSuiteSchema
+  ) =
   inherit TestAssembly()
 
   let disposables =
@@ -56,22 +60,19 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
     let timer = new Timer(onTick, (), period, period)
     disposables.Add(timer)
 
-  let resultObserver =
-    { new IObserver<TestResult> with
-        override this.OnNext(value) =
-          testCompleted.OnNext(value)
-        override this.OnError(e) =
-          isTerminated <- true
-        override this.OnCompleted() =
-          isTerminated <- true
-    } |> MarshalByRefObserver.ofObserver
-
   let start () =
-    let f =
-      OneshotTestAssemblyCore.load assemblyName MarshalValue.Recursion resultObserver
-    let result =
-      (domain: AppDomain.DisposableAppDomain).Value |> AppDomain.run f
-    match result with
+    let observer =
+      { new IObserver<TestResult> with
+          override this.OnNext(value) =
+            testCompleted.OnNext(value)
+          override this.OnError(e) =
+            isTerminated <- true
+          override this.OnCompleted() =
+            isTerminated <- true
+      } |> MarshalByRefObserver.ofObserver
+    let load =
+      OneshotTestAssemblyCore.load assemblyName MarshalValue.Recursion observer
+    match domain.Value |> AppDomain.run load with
     | Success () ->
       ()
     | Failure _ ->
