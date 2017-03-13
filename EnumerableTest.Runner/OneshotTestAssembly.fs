@@ -31,9 +31,6 @@ module private OneshotTestAssemblyCore =
 type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   inherit TestAssembly()
 
-  let marshalValueRecursion =
-    MarshalValue.Recursion
-
   let resource =
     new CompositeDisposable()
 
@@ -71,7 +68,7 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
 
   let start () =
     let f =
-      OneshotTestAssemblyCore.load assemblyName marshalValueRecursion resultObserver
+      OneshotTestAssemblyCore.load assemblyName MarshalValue.Recursion resultObserver
     let result =
       (domain: AppDomain.DisposableAppDomain).Value |> AppDomain.run f
     match result with
