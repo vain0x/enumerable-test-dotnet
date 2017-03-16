@@ -6,6 +6,7 @@ open System.Reactive.Linq
 open System.Reflection
 open Argu
 open Basis.Core
+open Reactive.Bindings
 open EnumerableTest.Runner
 
 module Assembly =
@@ -19,6 +20,7 @@ module Assembly =
 module Program =
   let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
     use notifier = new ConcreteNotifier()
+    let warnings = notifier.Warnings()
     use logFile =
       new LogFile() |> tap
         (fun l -> l.ObserveNotifications(notifier))
@@ -43,7 +45,7 @@ module Program =
           ( sprintf "Couldn't load an assembly '%s'." assemblyFile.Name
           , [| ("Path", assemblyFile.FullName :> obj); ("Exception", e :> obj) |]
           )
-    printer.PrintWarningsAsync(notifier.Warnings)
+    printer.PrintWarningsAsync(warnings)
     printer.PrintSummaryAsync(counter.Current)
     printer.JoinAsync() |> Async.RunSynchronously
     counter.IsPassed

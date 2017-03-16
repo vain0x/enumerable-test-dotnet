@@ -163,8 +163,6 @@ type Notification =
 
 [<AbstractClass>]
 type Notifier() =
-  abstract Warnings: ObservableCollection<Warning>
-
   abstract NotifyInfo: string -> unit
 
   abstract NotifyWarning: string * seq<string * obj> -> unit

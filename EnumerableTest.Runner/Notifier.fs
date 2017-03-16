@@ -4,16 +4,12 @@ open System.Collections.Generic
 open System.Collections.ObjectModel
 open System.Reactive.Disposables
 open System.Reactive.Subjects
+open System.Runtime.CompilerServices
+open Reactive.Bindings
 
 [<Sealed>]
 type NullNotifier() =
   inherit Notifier()
-
-  let warnings =
-    ObservableCollection<_>()
-
-  override this.Warnings =
-    warnings
 
   override this.NotifyInfo(_) =
     ()
@@ -34,12 +30,6 @@ type ConcreteNotifier() =
   let subject =
     new Subject<_>()
 
-  let warnings =
-    ObservableCollection<_>()
-
-  override this.Warnings =
-    warnings
-
   override this.NotifyInfo(message) =
     subject.OnNext(Info message)
 
@@ -51,7 +41,6 @@ type ConcreteNotifier() =
         Data =
           data |> Seq.map KeyValuePair
       }
-    warnings.Add(warning)
     subject.OnNext(Warning warning)
 
   override this.Subscribe(observer) =
@@ -59,3 +48,11 @@ type ConcreteNotifier() =
 
   override this.Dispose() =
     subject.Dispose()
+
+[<Extension>]
+type NotifierExtension() =
+  [<Extension>]
+  static member Warnings(this: Notifier) =
+    let warnings = this |> Observable.choose (function | Warning w -> Some w | _ -> None)
+    warnings.ToReadOnlyReactiveCollection()
+    :> IReadOnlyList<_>
