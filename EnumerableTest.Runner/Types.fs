@@ -147,29 +147,43 @@ type TestStatus =
   | Violated
   | Error
 
-type Warning =
+type NotificationType =
+  | Info
+  | Warning
+
+type Notification =
   {
+    Type:
+      NotificationType
     Message:
       string
     Data:
-      seq<KeyValuePair<string, obj>>
+      IReadOnlyList<KeyValuePair<string, obj>>
   }
-
-type Notification =
-  | Info
-    of string
-  | Warning
-    of Warning
+with
+  static member Create(typ, message, data) =
+    {
+      Type =
+        typ
+      Message =
+        message
+      Data =
+        data |> Seq.map (fun (key, value) -> KeyValuePair(key, value)) |> Seq.toArray
+    }
 
 [<AbstractClass>]
 type Notifier() =
-  abstract NotifyInfo: string -> unit
-
-  abstract NotifyWarning: string * seq<string * obj> -> unit
+  abstract Notify: Notification -> unit
 
   abstract Subscribe: IObserver<Notification> -> IDisposable
 
   abstract Dispose: unit -> unit
+
+  member this.NotifyInfo(message) =
+    this.Notify(Notification.Create(NotificationType.Info, message, Array.empty))
+
+  member this.NotifyWarning(message, data) =
+    this.Notify(Notification.Create(NotificationType.Warning, message, data))
 
   interface IObservable<Notification> with
     override this.Subscribe(observer) =

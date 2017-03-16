@@ -11,10 +11,7 @@ open Reactive.Bindings
 type NullNotifier() =
   inherit Notifier()
 
-  override this.NotifyInfo(_) =
-    ()
-
-  override this.NotifyWarning(_, _) =
+  override this.Notify(_) =
     ()
 
   override this.Subscribe(_) =
@@ -30,18 +27,8 @@ type ConcreteNotifier() =
   let subject =
     new Subject<_>()
 
-  override this.NotifyInfo(message) =
-    subject.OnNext(Info message)
-
-  override this.NotifyWarning(message, data) =
-    let warning =
-      {
-        Message =
-          message
-        Data =
-          data |> Seq.map KeyValuePair
-      }
-    subject.OnNext(Warning warning)
+  override this.Notify(notification) =
+    subject.OnNext(notification)
 
   override this.Subscribe(observer) =
     subject.Subscribe(observer)
@@ -53,6 +40,16 @@ type ConcreteNotifier() =
 type NotifierExtension() =
   [<Extension>]
   static member Warnings(this: Notifier) =
-    let warnings = this |> Observable.choose (function | Warning w -> Some w | _ -> None)
+    let warnings =
+      this |> Observable.filter (fun n -> n.Type = NotificationType.Warning)
     warnings.ToReadOnlyReactiveCollection()
     :> IReadOnlyList<_>
+
+[<AutoOpen>]
+module NotificationExtension =
+  let (|Info|Warning|) (notification: Notification) =
+    match notification.Type with
+    | NotificationType.Info ->
+      Info notification.Message
+    | NotificationType.Warning ->
+      Warning (notification.Message, notification.Data)

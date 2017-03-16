@@ -11,7 +11,6 @@ module ToastNotifier =
       (function
         | Info message ->
           toastNotifier.Notify(ToastNotification(ToastNotificationType.Info, message))
-        | Warning warning ->
-          let message = warning.Message
+        | Warning (message, _) ->
           toastNotifier.Notify(ToastNotification(ToastNotificationType.Warning, message))
       )

@@ -125,7 +125,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printNotCompletedMethodsAsync testClassResult.NotCompletedMethods
     }
 
-  let printWarningsAsync (warnings: IReadOnlyList<Warning>) =
+  let printWarningsAsync (warnings: IReadOnlyList<Notification>) =
     async {
       if warnings.Count > 0 then
         do! printHardSeparatorAsync ()
