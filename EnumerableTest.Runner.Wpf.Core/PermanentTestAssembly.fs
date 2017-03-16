@@ -80,7 +80,7 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
 
   let unloadSuccessfully () =
     unload ()
-    notifier.NotifyInfo(sprintf "'%s' completed." assemblyName)
+    notifier.NotifySuccess(sprintf "'%s' completed." assemblyName)
 
   let cancel () =
     unload ()
