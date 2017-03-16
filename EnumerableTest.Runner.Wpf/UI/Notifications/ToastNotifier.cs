@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Threading.Tasks;
 using System.Windows;
 using DotNetKit.Windows.Controls;
 
 namespace EnumerableTest.Runner.Wpf.UI.Notifications
 {
-    public abstract class AppToastNotification
-        : DotNetKit.Windows.Controls.ToastNotification
+    public sealed class AppToastNotification
+        : ToastNotification
     {
         public override TimeSpan? Duration =>
             TimeSpan.FromSeconds(5.0);
@@ -18,67 +20,74 @@ namespace EnumerableTest.Runner.Wpf.UI.Notifications
         public override Duration FadeDuration =>
             new Duration(TimeSpan.FromSeconds(1.0));
 
-        public string Message { get; }
+        public Notification Notification { get; }
 
-        public AppToastNotification(string message)
+        public AppToastNotification(Notification notification)
         {
-            Message = message;
+            Notification = notification;
         }
     }
 
-    public sealed class InfoToastNotification
-        : AppToastNotification
+    public sealed class NotificationTemplateSelector
+        : DataTemplateSelector
     {
-        public InfoToastNotification(string message)
-            : base(message)
+        string TempalteNameOrNull(NotificationType type)
         {
-        }
-    }
+            if (type == NotificationType.Info)
+            {
+                return "InfoNotificationTemplate";
+            }
+            else if (type == NotificationType.Warning)
+            {
+                return "WarningNotificationTemplate";
+            }
 
-    public sealed class WarningToastNotification
-        : AppToastNotification
-    {
-        public WarningToastNotification(string message)
-            : base(message)
+            return null;
+        }
+
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
+            var element = container as FrameworkElement;
+            var notification = item as Notification;
+            if (element == null || notification == null) return null;
+
+            var templateNameOrNull = TempalteNameOrNull(notification.Type);
+            return
+                templateNameOrNull == null
+                    ? null
+                    : element.FindResource(templateNameOrNull) as DataTemplate;
         }
     }
 
     sealed class ToastNotifier
-        : IToastNotifier
+        : IObserver<Notification>
     {
         public ToastNotificationCollection Collection { get; } =
             new ToastNotificationCollection();
 
         public Window Window { get; }
 
-        AppToastNotification ToastNotification(ToastNotification notification)
+        public void OnNext(Notification notification)
         {
-            switch (notification.Type)
-            {
-                case ToastNotificationType.Info:
-                    return new InfoToastNotification(notification.Message);
-                case ToastNotificationType.Warning:
-                    return new WarningToastNotification(notification.Message);
-                default:
-                    throw new Exception();
-            }
+            Collection.Add(new AppToastNotification(notification));
         }
 
-        public void Notify(ToastNotification notification)
+        public void OnError(Exception _)
         {
-            Collection.Add(ToastNotification(notification));
         }
 
-        public void Display(Window owner)
+        public void OnCompleted()
         {
-            Window.Owner = owner;
+        }
+
+        public void Display()
+        {
             Window.Show();
         }
 
         public ToastNotifier(Window owner)
         {
-            Window = new ToastNotificationWindow(Collection, owner: null);
+            Window = new ToastNotificationWindow(Collection, owner);
         }
     }
 }
