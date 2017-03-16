@@ -53,6 +53,7 @@
     <Compile Include="TestMethodNode.fs" />
     <Compile Include="FolderNode.fs" />
     <Compile Include="TestTree.fs" />
+    <Compile Include="UI.Notifications.ToastNotifier.fs" />
     <Compile Include="AppArgument.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>

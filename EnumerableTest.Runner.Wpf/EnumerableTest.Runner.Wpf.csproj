@@ -67,6 +67,7 @@
     <Compile Include="TestTree\TestTreeView.xaml.cs">
       <DependentUpon>TestTreeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Notifications\ToastNotifier.cs" />
     <Compile Include="Utility\KeyValueGrid.xaml.cs">
       <DependentUpon>KeyValueGrid.xaml</DependentUpon>
     </Compile>

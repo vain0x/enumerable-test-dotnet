@@ -5,9 +5,10 @@ open System.IO
 open System.Reactive.Disposables;
 open System.Reflection
 open EnumerableTest.Runner
+open EnumerableTest.Runner.Wpf.UI.Notifications
 
 [<Sealed>]
-type Main() =
+type Main(toastNotifier: IToastNotifier) =
   let disposables =
     new CompositeDisposable()
 
@@ -29,6 +30,10 @@ type Main() =
 
   do
     logFile.ObserveNotifications(notifier)
+
+  do
+    toastNotifier |> ToastNotifier.subscribeNotifier notifier
+    |> disposables.Add
 
   do
     let assemblyFiles =
