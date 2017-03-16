@@ -33,7 +33,11 @@ namespace EnumerableTest.Runner.Wpf.UI.Notifications
     {
         string TempalteNameOrNull(NotificationType type)
         {
-            if (type == NotificationType.Info)
+            if (type == NotificationType.Successful)
+            {
+                return "SuccessfulNotificationTemplate";
+            }
+            else if (type == NotificationType.Info)
             {
                 return "InfoNotificationTemplate";
             }

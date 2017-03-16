@@ -47,8 +47,10 @@ type NotifierExtension() =
 
 [<AutoOpen>]
 module NotificationExtension =
-  let (|Info|Warning|) (notification: Notification) =
+  let (|Successful|Info|Warning|) (notification: Notification) =
     match notification.Type with
+    | NotificationType.Successful ->
+      Successful notification.Message
     | NotificationType.Info ->
       Info notification.Message
     | NotificationType.Warning ->

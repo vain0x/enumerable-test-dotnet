@@ -54,6 +54,7 @@ type LogFile() =
   member this.ObserveNotifications(notifier: Notifier) =
     notifier |> Observable.subscribe
       (function
+        | Successful _ -> ()
         | Info _ -> ()
         | Warning (message, _) ->
           addWarningAsync message |> Async.Start

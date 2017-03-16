@@ -148,6 +148,7 @@ type TestStatus =
   | Error
 
 type NotificationType =
+  | Successful
   | Info
   | Warning
 
@@ -178,6 +179,9 @@ type Notifier() =
   abstract Subscribe: IObserver<Notification> -> IDisposable
 
   abstract Dispose: unit -> unit
+
+  member this.NotifySuccess(message) =
+    this.Notify(Notification.Create(NotificationType.Successful, message, Array.empty))
 
   member this.NotifyInfo(message) =
     this.Notify(Notification.Create(NotificationType.Info, message, Array.empty))
