@@ -33,6 +33,13 @@ namespace EnumerableTest.Runner.Wpf
 
             Main = new Main();
 
+            Loaded += (sender, e) =>
+            {
+                var toastNotifier = new UI.Notifications.ToastNotifier(this);
+                Main.Notifier.Subscribe(toastNotifier);
+                toastNotifier.Display();
+            };
+
             // NOTE: Binding to these properties don't work.
             var settings = Properties.Settings.Default;
             Left = settings.MainWindowPoint.X;

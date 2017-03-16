@@ -41,6 +41,9 @@ type Main() =
     for assemblyFile in assemblyFiles do
       runner.LoadFile(assemblyFile)
 
+  member this.Notifier =
+    notifier
+
   member this.TestTree =
     testTree
 

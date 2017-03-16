@@ -4,21 +4,14 @@ open System.Collections.Generic
 open System.Collections.ObjectModel
 open System.Reactive.Disposables
 open System.Reactive.Subjects
+open System.Runtime.CompilerServices
+open Reactive.Bindings
 
 [<Sealed>]
 type NullNotifier() =
   inherit Notifier()
 
-  let warnings =
-    ObservableCollection<_>()
-
-  override this.Warnings =
-    warnings
-
-  override this.NotifyInfo(_) =
-    ()
-
-  override this.NotifyWarning(_, _) =
+  override this.Notify(_) =
     ()
 
   override this.Subscribe(_) =
@@ -34,28 +27,31 @@ type ConcreteNotifier() =
   let subject =
     new Subject<_>()
 
-  let warnings =
-    ObservableCollection<_>()
-
-  override this.Warnings =
-    warnings
-
-  override this.NotifyInfo(message) =
-    subject.OnNext(Info message)
-
-  override this.NotifyWarning(message, data) =
-    let warning =
-      {
-        Message =
-          message
-        Data =
-          data |> Seq.map KeyValuePair
-      }
-    warnings.Add(warning)
-    subject.OnNext(Warning warning)
+  override this.Notify(notification) =
+    subject.OnNext(notification)
 
   override this.Subscribe(observer) =
     subject.Subscribe(observer)
 
   override this.Dispose() =
     subject.Dispose()
+
+[<Extension>]
+type NotifierExtension() =
+  [<Extension>]
+  static member Warnings(this: Notifier) =
+    let warnings =
+      this |> Observable.filter (fun n -> n.Type = NotificationType.Warning)
+    warnings.ToReadOnlyReactiveCollection()
+    :> IReadOnlyList<_>
+
+[<AutoOpen>]
+module NotificationExtension =
+  let (|Successful|Info|Warning|) (notification: Notification) =
+    match notification.Type with
+    | NotificationType.Successful ->
+      Successful notification.Message
+    | NotificationType.Info ->
+      Info notification.Message
+    | NotificationType.Warning ->
+      Warning (notification.Message, notification.Data)

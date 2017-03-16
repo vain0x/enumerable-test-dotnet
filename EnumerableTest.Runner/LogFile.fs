@@ -34,7 +34,7 @@ type LogFile() =
       return! stream |> writeStringAsync Environment.NewLine
     }
 
-  let addWarningAsync (warning: Warning) =
+  let addWarningAsync message =
     async {
       let now = DateTimeOffset.Now
       let file = getFile now
@@ -42,7 +42,7 @@ type LogFile() =
       let lines =
         seq {
           yield sprintf "%02d:%02d:%02d" now.Hour now.Minute now.Second
-          yield sprintf "  Warning: %s" warning.Message
+          yield sprintf "  Warning: %s" message
         }
       for line in lines do
         do! stream |> writeLineAsync line
@@ -54,9 +54,10 @@ type LogFile() =
   member this.ObserveNotifications(notifier: Notifier) =
     notifier |> Observable.subscribe
       (function
+        | Successful _ -> ()
         | Info _ -> ()
-        | Warning warning ->
-          addWarningAsync warning |> Async.Start
+        | Warning (message, _) ->
+          addWarningAsync message |> Async.Start
       )
     |> subscriptions.Add
 
