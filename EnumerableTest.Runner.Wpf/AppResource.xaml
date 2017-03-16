@@ -135,7 +135,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="InfoNotificationTemplate" DataType="{x:Type runner:Notification}">
-        <Border TextBlock.Foreground="Black" Background="#5EAEC5" Padding="10">
+        <Border Background="DarkGray" Padding="10">
             <StackPanel>
                 <TextBlock Text="EnumerableTest" FontWeight="Bold" />
                 <TextBlock Text="{Binding Message}" />
@@ -144,7 +144,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="WarningNotificationTemplate" DataType="{x:Type runner:Notification}">
-        <Border TextBlock.Foreground="Black" Background="#FF9400" Padding="10">
+        <Border Background="DarkOrange" Padding="10">
             <StackPanel>
                 <TextBlock Text="EnumerableTest" FontWeight="Bold" />
                 <TextBlock Text="{Binding Message}" />
