@@ -17,6 +17,7 @@ module Async =
       return f x
     }
 
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module SynchronizationContext =
   open System.Threading
 

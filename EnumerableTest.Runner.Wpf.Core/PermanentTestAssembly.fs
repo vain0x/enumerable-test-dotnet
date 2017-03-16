@@ -28,6 +28,9 @@ type PermanentTestAssembly() =
 type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   inherit PermanentTestAssembly()
 
+  let assemblyName =
+    file.Name
+
   let disposables =
     new CompositeDisposable()
 
@@ -45,10 +48,11 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   let tryLoad () =
     match OneshotTestAssembly.ofFile file with
     | Success testAssembly ->
+      notifier.NotifyInfo(sprintf "Loading '%s'..." assemblyName)
       testAssembly |> Some
     | Failure e ->
       notifier.NotifyWarning
-        ( sprintf "Couldn't load an assembly '%s'." file.Name
+        ( sprintf "Couldn't load an assembly '%s'." assemblyName
         , [| ("Exception", e :> obj) |]
         )
       None
@@ -71,8 +75,16 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
     disposables.Add(trash)
     trash
 
-  let cancel () =
+  let unload () =
     cancelRequested.OnNext(())
+
+  let unloadSuccessfully () =
+    unload ()
+    notifier.NotifyInfo(sprintf "'%s' completed." assemblyName)
+
+  let cancel () =
+    unload ()
+    notifier.NotifyWarning(sprintf "Aborting '%s'..." assemblyName, Seq.empty)
 
   let cancelCommand =
     currentTestAssembly
@@ -100,7 +112,7 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
         match testAssembly with
         | Some testAssembly ->
           testAssembly.TestCompleted
-          |> Observable.finallyDo cancel
+          |> Observable.finallyDo unloadSuccessfully
         | None ->
           Observable.Empty()
       )
