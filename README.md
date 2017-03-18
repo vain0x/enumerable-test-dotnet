@@ -13,6 +13,7 @@ A unit testing framework for .NET framework.
 [Tutorial (チュートリアル)](https://vain0.github.io/EnumerableTest/articles/tutorials/walk-around.html)
 
 ## Why?
+### Parameterized tests
 **EnumerableTest** enables you to write parameterized tests easily because of two features:
 
 (ja) **EnumerableTest** では、パラメーター化されたテストを記述するのが簡単です。その理由は次の2つの特徴にあります:
