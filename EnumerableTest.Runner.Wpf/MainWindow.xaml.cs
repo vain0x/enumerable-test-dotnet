@@ -21,17 +21,24 @@ namespace EnumerableTest.Runner.Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        new MainWindowViewModel DataContext
+        Main Main
         {
-            get { return (MainWindowViewModel)base.DataContext; }
-            set { base.DataContext = value; }
+            get { return (Main)DataContext; }
+            set { DataContext = value; }
         }
 
         public MainWindow()
         {
             InitializeComponent();
 
-            DataContext = new MainWindowViewModel();
+            Main = new Main();
+
+            Loaded += (sender, e) =>
+            {
+                var toastNotifier = new UI.Notifications.ToastNotifier(this);
+                Main.Notifier.Subscribe(toastNotifier);
+                toastNotifier.Display();
+            };
 
             // NOTE: Binding to these properties don't work.
             var settings = Properties.Settings.Default;
@@ -48,7 +55,7 @@ namespace EnumerableTest.Runner.Wpf
             settings.MainWindowSize = new Size(Width, Height);
             settings.Save();
 
-            DataContext.Dispose();
+            Main.Dispose();
         }
     }
 }

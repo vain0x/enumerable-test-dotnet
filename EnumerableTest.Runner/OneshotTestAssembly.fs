@@ -5,6 +5,7 @@ open System.IO
 open System.Reactive.Disposables
 open System.Reactive.Subjects
 open System.Reflection
+open System.Threading
 open System.Threading.Tasks
 open Basis.Core
 
@@ -13,62 +14,65 @@ module private OneshotTestAssemblyCore =
     Result.catch (fun () -> Assembly.Load(assemblyName))
     |> Result.map TestSuiteSchema.ofAssembly
 
-  let load (assemblyName: AssemblyName) marshalValueRecursion observer =
+  let load (assemblyName: AssemblyName) marshalValueRecursion observer () =
     MarshalValue.Recursion <- marshalValueRecursion
     try
       let assembly = Assembly.Load(assemblyName)
       let connectable =
-        TestSuite.ofAssembly assembly
+        TestRunner.runTestAssembly assembly
       connectable.Subscribe(observer) |> ignore<IDisposable>
-      connectable.Connect()
-      () |> Some
+      connectable.Connect() |> ignore
+      Success ()
     with
-    | _ ->
-      None
+    | e ->
+      Failure e
 
 [<Sealed>]
-type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
+type OneshotTestAssembly
+  ( assemblyName: AssemblyName
+  , domain: AppDomain.DisposableAppDomain
+  , testSuiteSchema: TestSuiteSchema
+  ) =
   inherit TestAssembly()
 
-  let marshalValueRecursion =
-    MarshalValue.Recursion
-
-  let resource =
+  let disposables =
     new CompositeDisposable()
 
-  do resource.Add(domain)
+  do disposables.Add(domain)
 
-  let testResults =
+  let testCompleted =
     new Subject<TestResult>()
 
   do
     Disposable.Create
       (fun () ->
-        testResults.OnCompleted()
-        testResults.Dispose()
+        testCompleted.OnCompleted()
+        testCompleted.Dispose()
       )
-    |> resource.Add
-
-  let resultObserver =
-    { new IObserver<_> with
-        override this.OnNext(result) =
-          testResults.OnNext(result)
-        override this.OnError(_) =
-          resource.Dispose()
-        override this.OnCompleted() =
-          resource.Dispose()
-    }
+    |> disposables.Add
 
   let start () =
-    let (result, connectable) =
-      (domain: AppDomain.DisposableAppDomain).Value
-      |> AppDomain.runObservable (OneshotTestAssemblyCore.load assemblyName marshalValueRecursion)
-    match result with
-    | Some ()->
-      connectable.Subscribe(resultObserver) |> resource.Add
-      connectable.Connect()
-    | None ->
-      resource.Dispose()
+    let onTerminated () =
+      let onTick _ = testCompleted.OnCompleted()
+      let dueTime = TimeSpan.FromMilliseconds(100.0)
+      let timer = new Timer(onTick, (), dueTime, Timeout.InfiniteTimeSpan)
+      disposables.Add(timer)
+    let observer =
+      { new IObserver<TestResult> with
+          override this.OnNext(value) =
+            testCompleted.OnNext(value)
+          override this.OnError(e) =
+            onTerminated ()
+          override this.OnCompleted() =
+            onTerminated ()
+      } |> MarshalByRefObserver.ofObserver
+    let load =
+      OneshotTestAssemblyCore.load assemblyName MarshalValue.Recursion observer
+    match domain.Value |> AppDomain.run load with
+    | Success () ->
+      ()
+    | Failure _ ->
+      disposables.Dispose()
 
   member this.AssemblyName =
     assemblyName
@@ -76,24 +80,26 @@ type OneshotTestAssembly(assemblyName, domain, testSuiteSchema) =
   member this.Schema =
     testSuiteSchema
 
-  override this.TestResults =
-    testResults :> IObservable<_>
+  override this.TestCompleted =
+    testCompleted :> IObservable<_>
 
   override this.Start() =
     start ()
 
   override this.Dispose() =
-    resource.Dispose()
+    disposables.Dispose()
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]  
 module OneshotTestAssembly =
+  let private domainName (assemblyName: AssemblyName) =
+    sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
+
   let ofFile (file: FileInfo) =
     result {
       let! assemblyName =
         Result.catch (fun () -> AssemblyName.GetAssemblyName(file.FullName))
-      let domain =
-        sprintf "EnumerableTest.Runner[%s]#%d" assemblyName.Name (Counter.generate ())
-        |> AppDomain.create
-      let! schema = domain.Value |> AppDomain.run (OneshotTestAssemblyCore.loadSchema assemblyName)
+      let domain = AppDomain.create (domainName assemblyName)
+      let loadSchema = OneshotTestAssemblyCore.loadSchema assemblyName
+      let! schema = domain.Value |> AppDomain.run loadSchema
       return new OneshotTestAssembly(assemblyName, domain, schema)
     }

@@ -15,6 +15,7 @@
     TextOptions.TextRenderingMode="Auto"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{StaticResource MaterialDesignFont}"
+    Icon="{StaticResource AppIcon}"
     Closing="mainWindow_Closing"
     >
     <local:TestTreeView DataContext="{Binding TestTree}" />

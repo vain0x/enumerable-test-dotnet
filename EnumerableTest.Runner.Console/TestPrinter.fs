@@ -36,12 +36,19 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
     async {
       use indenting = printer.AddIndent()
       for KeyValue (key, result) in properties do
-        match (result: MarshalResult).Unwrap() with
+        match (result: MarshalResult).ToResult() with
         | Success value ->
           do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
           do! printMarshalPropertiesAsync value.Properties
-        | Failure (e: exn) ->
-          do! printer.WriteLineAsync(sprintf "%s (!): %s" key e.Message)
+        | Failure e ->
+          do! printer.WriteLineAsync(sprintf "%s (!): %s" key e.String)
+          do! printMarshalPropertiesAsync e.Properties
+    }
+
+  let rec printMarshalValueAsync key (value: MarshalValue) =
+    async {
+      do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
+      do! printMarshalPropertiesAsync value.Properties
     }
 
   let printTestDataAsync =
@@ -51,8 +58,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
     | DictionaryTestData testData ->
       async {
         for KeyValue (key, value) in testData do
-          do! printer.WriteLineAsync(sprintf "%s: %s" key value.String)
-          do! printMarshalPropertiesAsync value.Properties
+          do! printMarshalValueAsync key value
       }
 
   let printAssertionTestAsync i (result: SerializableAssertionTest) =
@@ -80,17 +86,17 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printTestAsync i test
     }
 
-  let printTestMethodAsync i (testMethod: TestMethod) =
+  let printTestMethodResultAsync i (testMethodResult: TestMethodResult) =
     async {
-      if isVerbose || testMethod |> TestMethod.isPassed |> not then
+      if isVerbose || testMethodResult |> TestMethodResult.isPassed |> not then
         do! printSoftSeparatorAsync ()
-        do! printer.WriteLineAsync(sprintf "Method: %s" testMethod.MethodName)
+        do! printer.WriteLineAsync(sprintf "Method: %s" testMethodResult.MethodName)
         use indenting = printer.AddIndent()
-        for (i, test) in testMethod.Result.Tests |> Seq.indexed do
+        for (i, test) in testMethodResult.Result.Tests |> Seq.indexed do
           do! printTestAsync i test
-        match testMethod.DisposingError with
+        match testMethodResult.DisposingError with
         | Some e ->
-          do! printExceptionAsync "Dispose" e
+          do! printMarshalValueAsync "RUNTIME ERROR in Dispose" e
         | None -> ()
     }
 
@@ -104,19 +110,19 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printer.WriteLineAsync(sprintf "%d. %s" i schema.MethodName)
     }
 
-  let printAsync (testClass: TestClass) =
+  let printTestClassResultAsync (testClassResult: TestClassResult) =
     async {
-      if isVerbose || testClass |> TestClass.isPassed |> not then
+      if isVerbose || testClassResult |> TestClassResult.isPassed |> not then
         do! printHardSeparatorAsync ()
-        do! printer.WriteLineAsync(sprintf "Type: %s" testClass.TypeFullName)
+        do! printer.WriteLineAsync(sprintf "Type: %s" (string testClassResult.TypeFullName))
         use indenting = printer.AddIndent()
-        match testClass.InstantiationError with
+        match testClassResult.InstantiationError with
         | Some e ->
           do! printExceptionAsync "constructor" e
         | None ->
-          for (i, testMethod) in testClass.Result |> Seq.indexed do
-            do! testMethod |> printTestMethodAsync i
-          do! printNotCompletedMethodsAsync testClass.NotCompletedMethods
+          for (i, testMethodResult) in testClassResult.TestMethodResults |> Seq.indexed do
+            do! testMethodResult |> printTestMethodResultAsync i
+          do! printNotCompletedMethodsAsync testClassResult.NotCompletedMethods
     }
 
   let printWarningsAsync (warnings: IReadOnlyList<Warning>) =
@@ -127,11 +133,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
         use indenting = printer.AddIndent()
         for (i, warning) in warnings |> Seq.indexed do
           do! printSoftSeparatorAsync ()
-          do! printer.WriteLineAsync(sprintf "%d. %s" i warning.Message)
-          if isVerbose then
-            use indenting = printer.AddIndent()
-            for KeyValue (key, value) in warning.Data do
-              do! printer.WriteLineAsync(sprintf "%s: %A" key value)
+          do! printer.WriteLineAsync(sprintf "%d. %s" i (warning |> string))
     }
 
   let printSummaryAsync (count: AssertionCount) =
@@ -152,12 +154,12 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
   member this.PrintSummaryAsync(count) =
     queue.Enqueue(printSummaryAsync count)
 
-  member this.QueueGotEmpty =
-    queue.GotEmpty
+  member this.JoinAsync() =
+    queue.EnqueueAsync(async { () })
 
-  interface IObserver<TestClass> with
-    override this.OnNext(testClass) =
-      queue.Enqueue(printAsync testClass)
+  interface IObserver<TestClassResult> with
+    override this.OnNext(testClassResult) =
+      queue.Enqueue(printTestClassResultAsync testClassResult)
 
     override this.OnError(_) = ()
 

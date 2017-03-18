@@ -32,10 +32,12 @@ type SerializableGroupTest(name, tests, error, data) =
     (tests: array<SerializableTest>)
 
   member this.Exception =
-    (error: option<exn>)
+    (error: option<MarshalValue>)
 
   member this.ExceptionOrNull =
-    this.Exception |> Option.toObj
+    match this.Exception with
+    | Some e -> e :> obj
+    | None -> null
 
   member this.Data: SerializableTestData =
     data
@@ -63,7 +65,10 @@ module SerializableTest =
 
   let rec ofGroupTest (test: GroupTest) =
     let tests = test.Tests |> Seq.map ofTest |> Seq.toArray
-    let e = test.ExceptionOrNull |> Option.ofObj
+    let e =
+      test.ExceptionOrNull
+      |> Option.ofObj
+      |> Option.map (MarshalValue.ofObj test.IsPassed)
     let data = test.Data |> SerializableTestData.ofTestData test.IsPassed
     SerializableGroupTest(test.Name, tests, e, data)
 

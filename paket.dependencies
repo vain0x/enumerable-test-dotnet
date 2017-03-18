@@ -7,3 +7,9 @@ nuget Persimmon.Console
 nuget ReactiveProperty 3.0
 nuget System.Reactive
 nuget System.Reactive.Interfaces 3.0.0
+nuget FSharp.Control.Reactive
+
+group Wpf.View
+    source https://www.nuget.org/api/v2
+
+    nuget DotNetKit.Wpf.ToastNotification

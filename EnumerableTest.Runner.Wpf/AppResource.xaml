@@ -1,7 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:windows="clr-namespace:System.Windows;assembly=PresentationFramework"
+    xmlns:runner="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner"
+    xmlns:notifications="clr-namespace:EnumerableTest.Runner.Wpf.UI.Notifications"
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     >
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -112,4 +115,41 @@
     </Style>
 
     <Style TargetType="local:KeyValueGrid" BasedOn="{StaticResource DefaultKeyValueGridStyle}" />
+
+    <!-- ToastNotifications -->
+    <notifications:NotificationTemplateSelector x:Key="NotificationTemplateSelector" />
+
+    <DataTemplate DataType="{x:Type notifications:AppToastNotification}">
+        <ContentPresenter
+            Content="{Binding}"
+            ContentTemplateSelector="{StaticResource NotificationTemplateSelector}"
+            />
+    </DataTemplate>
+
+    <DataTemplate x:Key="SuccessfulNotificationTemplate" DataType="{x:Type notifications:AppToastNotification}">
+        <Border Background="Navy" Padding="10">
+            <StackPanel>
+                <TextBlock Text="EnumerableTest" FontWeight="Bold" />
+                <TextBlock Text="{Binding Message}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="InfoNotificationTemplate" DataType="{x:Type notifications:AppToastNotification}">
+        <Border Background="DarkGray" Padding="10">
+            <StackPanel>
+                <TextBlock Text="EnumerableTest" FontWeight="Bold" />
+                <TextBlock Text="{Binding Message}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="WarningNotificationTemplate" DataType="{x:Type notifications:AppToastNotification}">
+        <Border Background="DarkOrange" Padding="10">
+            <StackPanel>
+                <TextBlock Text="EnumerableTest" FontWeight="Bold" />
+                <TextBlock Text="{Binding Message}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
 </ResourceDictionary>

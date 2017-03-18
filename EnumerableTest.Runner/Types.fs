@@ -14,25 +14,15 @@ type TestInstance =
 
 type TestMethodSchema =
   {
-    MethodName                  : string
-  }
-
-type TestClassPath =
-  {
-    NamespacePath:
-      array<string>
-    ClassPath:
-      array<string>
-    Name:
-      string
+    MethodName: string
   }
 
 type TestClassSchema =
   {
-    Path:
-      TestClassPath
-    TypeFullName                : string
-    Methods                     : array<TestMethodSchema>
+    TypeFullName:
+      Type.FullName
+    Methods:
+      array<TestMethodSchema>
   }
 
 type TestSuiteSchema =
@@ -78,24 +68,42 @@ with
         modified
     }
 
-type TestMethod =
+type TestMethodResult =
   {
-    MethodName                  : string
-    Result                      : SerializableGroupTest
-    DisposingError              : option<Exception>
-    Duration                    : TimeSpan
+    MethodName:
+      string
+    Result:
+      SerializableGroupTest
+    DisposingError:
+      option<MarshalValue>
+    Duration:
+      TimeSpan
   }
 with
   member this.DisposingErrorOrNull =
-    this.DisposingError |> Option.getOr null
+    match this.DisposingError with
+    | Some e -> e :> obj
+    | None -> null
 
 type TestResult =
   {
     TypeFullName:
-      string
-    /// Represents completion of a test method or an instantiation error.
+      Type.FullName
+    /// Represents a test method result or an instantiation error.
     Result:
-      Result<TestMethod, exn>
+      Result<TestMethodResult, exn>
+  }
+
+type TestClassResult =
+  {
+    TypeFullName:
+      Type.FullName
+    InstantiationError:
+      option<Exception>
+    TestMethodResults:
+      array<TestMethodResult>
+    NotCompletedMethods:
+      array<TestMethodSchema>
   }
 
 type TestSuite =
@@ -103,7 +111,7 @@ type TestSuite =
 
 [<AbstractClass>]
 type TestAssembly() =
-  abstract TestResults: IObservable<TestResult>
+  abstract TestCompleted: IObservable<TestResult>
 
   abstract Start: unit -> unit
 
@@ -138,37 +146,3 @@ type TestStatus =
   | Passed
   | Violated
   | Error
-
-type Warning =
-  {
-    Message:
-      string
-    Data:
-      seq<KeyValuePair<string, obj>>
-  }
-
-type Notification =
-  | Info
-    of string
-  | Warning
-    of Warning
-
-[<AbstractClass>]
-type Notifier() =
-  abstract Warnings: ObservableCollection<Warning>
-
-  abstract NotifyInfo: string -> unit
-
-  abstract NotifyWarning: string * seq<string * obj> -> unit
-
-  abstract Subscribe: IObserver<Notification> -> IDisposable
-
-  abstract Dispose: unit -> unit
-
-  interface IObservable<Notification> with
-    override this.Subscribe(observer) =
-      this.Subscribe(observer)
-
-  interface IDisposable with
-    override this.Dispose() =
-      this.Dispose()

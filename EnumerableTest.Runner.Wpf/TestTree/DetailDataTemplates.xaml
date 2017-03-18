@@ -4,8 +4,9 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:core="clr-namespace:EnumerableTest;assembly=EnumerableTest.Core"
     xmlns:sdk="clr-namespace:EnumerableTest.Sdk;assembly=EnumerableTest.Core"
+    xmlns:utility="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner.Utility"
     xmlns:runner="clr-namespace:EnumerableTest.Runner;assembly=EnumerableTest.Runner"
-    xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner.Wpf.ViewModel"
+    xmlns:model="clr-namespace:EnumerableTest.Runner.Wpf;assembly=EnumerableTest.Runner.Wpf.Core"
     xmlns:local="clr-namespace:EnumerableTest.Runner.Wpf"
     >
     <!-- Nodes -->
@@ -29,7 +30,7 @@
         <ContentPresenter Content="{Binding GroupTest}" />
     </DataTemplate>
     
-    <DataTemplate DataType="{x:Type runner:TestMethod}">
+    <DataTemplate DataType="{x:Type runner:TestMethodResult}">
         <StackPanel>
             <ContentPresenter Content="{Binding Result}" />
             <StackPanel>
@@ -145,7 +146,7 @@
     </DataTemplate>
 
     <!-- MarshalValue -->
-    <DataTemplate DataType="{x:Type runner:MarshalValue}">
+    <DataTemplate DataType="{x:Type utility:MarshalValue}">
         <Grid>
             <!-- if Properties.Length = 0 then -->
             <Grid>
@@ -187,8 +188,16 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type runner:MarshalResult}">
-        <ContentPresenter Content="{Binding AsObject}" />
+    <DataTemplate DataType="{x:Type utility:ValueMarshalResult}">
+        <ContentPresenter Content="{Binding ValueOrThrow}" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type utility:ErrorMarshalResult}">
+        <StackPanel Orientation="Horizontal">
+            <local:TestStatusMark DataContext="{x:Static runner:TestStatus.Error}" />
+            
+            <ContentPresenter Content="{Binding ErrorOrThrow}" />
+        </StackPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type system:Exception}">

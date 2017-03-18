@@ -3,10 +3,13 @@
 open System
 open System.IO
 open System.Reactive.Linq
+open System.Reactive.Subjects
 open System.Reflection
 open Argu
 open Basis.Core
+open Reactive.Bindings
 open EnumerableTest.Runner
+open EnumerableTest.Runner.UI.Notifications
 
 module Assembly =
   let tryLoadFile (file: FileInfo) =
@@ -18,10 +21,8 @@ module Assembly =
 
 module Program =
   let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
-    use notifier = new ConcreteNotifier()
-    use logFile =
-      new LogFile() |> tap
-        (fun l -> l.ObserveNotifications(notifier))
+    use notifier = new Notifier<Success, Info, Warning>(new Subject<_>()) :> INotifier
+    let warnings = notifier |> Notifier.collectWarnings
     let printer =
         TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
     let counter = AssertionCounter()
@@ -36,16 +37,13 @@ module Program =
         use counterSubscription =
           testClassNotifier.Subscribe(counter)
         testAssembly.Start()
-        testAssembly.TestResults |> Observable.waitTimeout timeout |> ignore<bool>
+        testAssembly.TestCompleted |> Observable.waitTimeout timeout |> ignore<bool>
         testClassNotifier.Complete()
       | Failure e ->
-        notifier.NotifyWarning
-          ( sprintf "Couldn't load an assembly '%s'." assemblyFile.Name
-          , [| ("Path", assemblyFile.FullName :> obj); ("Exception", e :> obj) |]
-          )
-    printer.PrintWarningsAsync(notifier.Warnings)
+        notifier.NotifyWarning(Warning.CouldNotLoadAssemblyFile (assemblyFile, e))
+    printer.PrintWarningsAsync(warnings)
     printer.PrintSummaryAsync(counter.Current)
-    printer.QueueGotEmpty.FirstAsync().Wait()
+    printer.JoinAsync() |> Async.RunSynchronously
     counter.IsPassed
 
   [<EntryPoint>]
