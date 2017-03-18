@@ -17,10 +17,6 @@ type Main() =
     new Notifier<Success, Info, Warning>(new Subject<_>()) :> INotifier
     |> tap disposables.Add
 
-  let logFile =
-    new LogFile()
-    |> tap disposables.Add
-
   let runner =
     new FileLoadingPermanentTestRunner(notifier)
     |> tap disposables.Add
@@ -28,9 +24,6 @@ type Main() =
   let testTree =
     new TestTree(runner, notifier)
     |> tap disposables.Add
-
-  do
-    logFile.ObserveNotifications(notifier)
 
   do
     let assemblyFiles =
