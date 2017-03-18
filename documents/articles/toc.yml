@@ -1,0 +1,4 @@
+- name: Tutorial (チュートリアル)
+  href: tutorials/walk-around.md
+- name: Tutorial Deep Dive
+  href: tutorials/deep-dive.md

@@ -1,4 +1,4 @@
-# Expert documentation (上級者向けの解説)
+# Tutorial -Deep Dive-
 ## Assembly auto detection (アセンブリーの自動検出)
 If your solution directory is formed as below, you don't need to pass arguments to the runner because it can detect your test assemblies automatically.
 
