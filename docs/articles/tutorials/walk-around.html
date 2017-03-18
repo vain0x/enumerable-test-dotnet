@@ -1,0 +1,258 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Tutorial -Walk Around- </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Tutorial -Walk Around- ">
+    <meta name="generator" content="docfx 2.12.1.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="tutorial--walk-around-">Tutorial -Walk Around-</h1>
+              
+<h2 id="1-create-a-test-project-テストプロジェクトの作成">1. Create a Test Project (テストプロジェクトの作成)</h2>
+<p>Before installing <strong>EnumerableTest</strong>, we recommend to add a project for unit testing to your solution.</p>
+<p><strong>EnumerableTest</strong> をインストールする前に、単体テスト専用のプロジェクトを作成することをおすすめします。</p>
+<p>Open your project (solution) with Visual Studio and select the File menu &gt; Create New &gt; Project and add a class library project named &quot;X.UnitTest&quot; (where X is your project name) to your solution. Note that you need to choose &quot;Add to solution&quot; (rather than &quot;Create new solution&quot;) in a combobox.</p>
+<p>Visual Studio でソリューションを開き、「ファイル」メニュー→「新規作成」→「プロジェクト」を選択し、クラスライブラリーを作成します。名前は「X.UnitTest」(X はプロジェクトの名前)としておくのが通例のようです。ダイアログにあるコンボボックスのうち、「新しいソリューションを作成」と表示されているところを、「ソリューションに追加」に変更しておく必要があります。</p>
+<h2 id="2-install-インストール">2. Install (インストール)</h2>
+<p>To install <strong>EnumerableTest</strong> to your projects, it&#39;s easy to use NuGet the package manager. See <a href="https://docs.nuget.org/ndocs/tools/package-manager-ui#finding-and-installing-a-package">how to find and install a package with NuGet</a>. You should find and install &quot;EnumerableTest.Core&quot; and &quot;EnumerableTest.Runner.Wpf&quot; to the Test project created above.</p>
+<p><strong>EnumerableTest</strong> をインストールするのには、NuGet パッケージマネージャーを使用すると簡単です。Visual Studio の「ツール」メニュー→「NuGetパッケージマネージャー」→「ソリューションの NuGet パッケージの管理」を選択すると、新しいタブが開きます (※バージョンによってはダイアログが開きます)。検索欄に &quot;EnumerableTest&quot; と入力するとパッケージが表示されますので、 &quot;EnumerableTest.Core&quot; と &quot;EnumerableTest.Runner.Wpf&quot; という名前のパッケージを、さきほど作成したテスト用プロジェクトにインストールします。</p>
+<p>Then open a &quot;test explorer&quot; which shows results of unit tests. Build your solution with Visual Studio and find two files:</p>
+<p>次に、単体テストの結果を表示するための「テストエクスプローラー」を実行しましょう。Visual Studio でプロジェクトをビルドして、次の2つのファイルをみつけてください:</p>
+<ul>
+<li>(A) <code>X.UnitTest/bin/Debug/X.UnitTest.dll</code></li>
+<li>(B) <code>packages/EnumerableTest.Runner.Wpf/tools/EnumerableTest.Runner.Wpf.exe</code></li>
+</ul>
+<p>Drag (A) and drop to (B). You will see a window opens and displays nothing. Keep it open and continue to read.</p>
+<p>(A) をドラッグして、(B) にドロップすると、真っ白のウィンドウが表示されるはずです。これを開けたまま、続きをお読みください。</p>
+<h2 id="3-overview-概要">3. Overview (概要)</h2>
+<p>To say it simply, to use <strong>EnumerableTest</strong>, all you need to do is to define <em>test methods</em> in which invokes assertion methods like other unit testing frameworks. Assertion methods provided by <strong>EnumerableTest</strong> (for example, <code>Is</code> which asserts two values are equal) returns a value of <code>Test</code> class and your test methods shall <code>yield return</code> them.</p>
+<p><strong>EnumerableTest</strong> の基本的な使い方は、他の単体フレームワークと同様に、テストメソッド (表明メソッドを書き並べたメソッド) を定義するだけです。<strong>EnumerableTest</strong> が提供する表明メソッド (例えば2つの値が等しいことを表明する <code>Is</code> など) は <code>Test</code> 型の値を返しますので、テストメソッドではこれらを <code>yield return</code> していきます。</p>
+<h3 id="successful-tests-成功するテスト">Successful tests (成功するテスト)</h3>
+<p>As the simplest example, let&#39;s test the <code>++</code> operator increments a variable. Add a .cs file to X.UnitTest project and copy-and-paste the following:</p>
+<p>最も単純な例として、「変数をインクリメントすると値が1増える」ことをテストしてみましょう。X.UnitTest プロジェクトに次の内容のソースコードを追加します:</p>
+<pre><code class="lang-csharp">using System.Collections.Generic;
+using EnumerableTest;
+
+// Define a &quot;test class&quot; in which contains test methods as a public class.
+// テストメソッドを含むクラスを public class として宣言します。
+public class OperatorTest
+{
+    // Define test methods as a public method.
+    // Return type of them must be ``IEnumerable&lt;Test&gt;``.
+    // テストメソッドを public メソッドとして宣言します。
+    // 返り値の型は IEnumerable&lt;Test&gt; でなければなりません。
+    public IEnumerable&lt;Test&gt; TestIncrement()
+    {
+        var n = 0;
+
+        // Assert that n == 0.
+        // n が 0 に等しいことを表明します。
+        yield return n.Is(0);
+
+        n++;
+
+        // And assert that n == 1 here.
+        // ここでは n が 1 に等しいことを表明します。
+        yield return n.Is(1);
+    }
+}
+</code></pre><p>And build the Test project. The test explorer automatically updates the content and shows that the Test is passed.</p>
+<p>テストプロジェクトをビルドすると、テストエクスプローラーは自動的に更新され、1つのテストが通過(成功)したことを表示します。</p>
+<h3 id="violation-表明違反">Violation (表明違反)</h3>
+<p>Next we show an example of a test which doesn&#39;t pass. Add the following method to the OperatorTest class.</p>
+<p>次に、通過しないテストの例を挙げましょう。次のメソッドを <code>OperatorTest</code> クラスに追加します。</p>
+<pre><code class="lang-csharp">    public IEnumerable&lt;Test&gt; TestDecrement_Violated()
+    {
+        var n = 0;
+
+        // Although this assertion is violated, the execution continues.
+        // この表明は失敗するが、実行は継続される。
+        yield return n.Is(1);
+
+        n--;
+
+        // This assertion succeeds.
+        // この表明は成功する。
+        yield return n.Is(-1);
+    }
+</code></pre><p>The first assertion (<code>n == 1</code>) &quot;is violated&quot; and the second assertion (<code>n == -1</code>) is passed. The result of this test method will be &quot;violated&quot; because one of assertions is violated.</p>
+<p><code>n == 1</code> を表す1つ目の表明は「失敗」しますが、実行は継続され、2つ目の <code>n == -1</code> を表す表明が成功することを確認できます。少なくとも1つの表明が失敗しているため、テストメソッドの結果は「失敗」(表明違反)になります。</p>
+<h3 id="assertion-methods-表明メソッド">Assertion methods (表明メソッド)</h3>
+<p><strong>EnumerableTest</strong> provides three assertion methods for usual use and two for uncommon cases. Because we believe that the former three covers 99.9% of assertions, we explain only them here. The first one is <code>Is</code>, which has been already metioned above.</p>
+<p><strong>EnumerableTest</strong> が提供する表明メソッドには、普段使用する3つのメソッドと、特殊な用途に用いる2つのメソッドがあります。99.9% の表明は前者でまかなえるはずですので、ここではそれらだけ説明しましょう。1つは、さきほど紹介した <code>Is</code> です。</p>
+<p>The second is <code>TestSatisfy</code>, which is a generalized method of <code>Is</code>. It allows you to test <em>any</em> property of a value. The following code shows a test method that tests an array isn&#39;t empty.</p>
+<p>2つ目の <code>TestSatisfy</code> は、<code>Is</code> を一般化したものです。これは、値の任意の性質をテストするのに使用できます。次のコードは、「配列の長さがゼロでない」ことをテストするテストメソッドです。</p>
+<pre><code class="lang-csharp">    public int[] MakeArray()
+    {
+        return new[] { 0, 1, 2 };
+    }
+
+    public IEnumerable&lt;Test&gt; test_MakeArray_returns_a_nonempty_array()
+    {
+        yield return MakeArray().TestSatisfy(a =&gt; a.Length != 0);
+    }
+</code></pre><p>The third is <code>Test.Catch</code>, which tries to catch an exception. You can use this to test that a method rejects invalid arguments or something. For example, let&#39;s test that the array indexer rejects an invalid index.</p>
+<p>3つ目は、例外を捕捉する <code>Test.Catch</code> です。例えば、メソッドが異常な引数を拒絶することをテストするのに使えます。次のコードは、「配列のインデックスの範囲外にアクセスすると例外が送出される」ことをテストするテストメソッドです。</p>
+<pre><code class="lang-csharp">    public IEnumerable&lt;Test&gt; test_array_indexer_rejects_invalid_index()
+    {
+        var array = new[] { 0, 1, 2 };
+        yield return
+            Test.Catch(() =&gt;
+            {
+                return array[3];
+            });
+    }
+</code></pre><h2 id="4-parameterized-tests-パラメーター化されたテスト">4. Parameterized Tests (パラメーター化されたテスト)</h2>
+<p>Sometimes you want to write tests which take parameters, so-called <em>parameterized tests</em> or <a href="https://github.com/golang/go/wiki/TableDrivenTests">Table Driven Tests</a>. <code>ParameterizedTestBuilder</code> module helps you to write such a test.</p>
+<p>しばしば、引数を受け取るテストを書きたくなることがあります。そのようなテストは、パラメーター化されたテスト、あるいは <a href="https://github.com/golang/go/wiki/TableDrivenTests">テーブル駆動テスト</a> と呼ばれます。これを書くときは、 <code>ParameterizedTestBuilder</code> モジュールが便利です。</p>
+<p>For example, let&#39;s test the <code>&amp;&amp;</code> operator, which takes two boolean values and calculates a boolean. Its operation table is:</p>
+<p>例として、2つの真理値を受け取って1つの真理値を計算する、<code>&amp;&amp;</code> 演算子をテストしてみましょう。演算表は以下の通りです:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Left</th>
+<th style="text-align:left">Right</th>
+<th style="text-align:left">Expected Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">true</td>
+<td style="text-align:left">true</td>
+<td style="text-align:left">true</td>
+</tr>
+<tr>
+<td style="text-align:left">true</td>
+<td style="text-align:left">false</td>
+<td style="text-align:left">false</td>
+</tr>
+<tr>
+<td style="text-align:left">false</td>
+<td style="text-align:left">true</td>
+<td style="text-align:left">false</td>
+</tr>
+<tr>
+<td style="text-align:left">false</td>
+<td style="text-align:left">false</td>
+<td style="text-align:left">false</td>
+</tr>
+</tbody>
+</table>
+<p>(左から、左辺、右辺、期待される結果。)</p>
+<p>And the test code is below.</p>
+<p>そして、テストコードが次のようになります。</p>
+<pre><code class="lang-csharp">    public IEnumerable&lt;Test&gt; test_operator_and()
+    {
+        return
+            ParameterizedTestBuilder
+            .Case(true, true, true)
+            .Case(true, false, false)
+            .Case(false, true, false)
+            .Case(false, false, false)
+            .Run((left, right, expected) =&gt;
+                (left &amp;&amp; right).Is(expected)
+            );
+    }
+</code></pre><p>The mechanism behind the code is very simple. The builder creates a sequence which invokes the function passed to <code>Run</code> for each <code>Case</code> and yields the result.</p>
+<p>仕組みは非常に単純です。各 <code>Case</code> につき <code>Run</code> に渡された関数を実行して、その結果を <code>yield</code> するようなシーケンスを生成しているのです。</p>
+<p>Because of continuous assertions and test groups, the parameterized test <em>always</em> tests all cases.</p>
+<p>「継続する表明」と「テストグループ」の機能のおかげで、このパラメーター化されたテストは <strong>必ず</strong> すべてのケースをテストします。</p>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/vain0/EnumerableTest/blob/master/documents/articles/tutorials/walk-around.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Copyright © 2015-2016 Microsoft<br>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

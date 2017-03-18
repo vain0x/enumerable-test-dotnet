@@ -1,0 +1,697 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: EnumerableTest
+  name: EnumerableTest
+  href: api/EnumerableTest.html
+  commentId: N:EnumerableTest
+  fullName: EnumerableTest
+  nameWithType: EnumerableTest
+- uid: EnumerableTest.ParameterizedTestBuilder
+  name: ParameterizedTestBuilder
+  href: api/EnumerableTest.ParameterizedTestBuilder.html
+  commentId: T:EnumerableTest.ParameterizedTestBuilder
+  fullName: EnumerableTest.ParameterizedTestBuilder
+  nameWithType: ParameterizedTestBuilder
+- uid: EnumerableTest.ParameterizedTestBuilder.Case*
+  name: Case
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case_
+  commentId: Overload:EnumerableTest.ParameterizedTestBuilder.Case
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case
+  nameWithType: ParameterizedTestBuilder.Case
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``1(``0)
+  name: Case<X>(X)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__1___0_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``1(``0)
+  name.vb: Case(Of X)(X)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X>(X)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X)(X)
+  nameWithType: ParameterizedTestBuilder.Case<X>(X)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X)(X)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``2(``0,``1)
+  name: Case<X0, X1>(X0, X1)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__2___0___1_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``2(``0,``1)
+  name.vb: Case(Of X0, X1)(X0, X1)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1>(X0, X1)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1)(X0, X1)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1>(X0, X1)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1)(X0, X1)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``2(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1}},``0,``1)
+  name: Case<X0, X1>(ParameterizedTestBuilder<Tuple<X0, X1>>, X0, X1)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__2_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1_____0___1_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``2(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1}},``0,``1)
+  name.vb: Case(Of X0, X1)(ParameterizedTestBuilder(Of Tuple(Of X0, X1)), X0, X1)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1>>, X0, X1)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1)), X0, X1)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1>(ParameterizedTestBuilder<Tuple<X0, X1>>, X0, X1)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1)(ParameterizedTestBuilder(Of Tuple(Of X0, X1)), X0, X1)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``3(``0,``1,``2)
+  name: Case<X0, X1, X2>(X0, X1, X2)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__3___0___1___2_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``3(``0,``1,``2)
+  name.vb: Case(Of X0, X1, X2)(X0, X1, X2)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2>(X0, X1, X2)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2)(X0, X1, X2)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2>(X0, X1, X2)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2)(X0, X1, X2)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``3(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2}},``0,``1,``2)
+  name: Case<X0, X1, X2>(ParameterizedTestBuilder<Tuple<X0, X1, X2>>, X0, X1, X2)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__3_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2_____0___1___2_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``3(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2}},``0,``1,``2)
+  name.vb: Case(Of X0, X1, X2)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2)), X0, X1, X2)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2>>, X0, X1, X2)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2)), X0, X1, X2)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2>(ParameterizedTestBuilder<Tuple<X0, X1, X2>>, X0, X1, X2)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2)), X0, X1, X2)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``4(``0,``1,``2,``3)
+  name: Case<X0, X1, X2, X3>(X0, X1, X2, X3)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__4___0___1___2___3_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``4(``0,``1,``2,``3)
+  name.vb: Case(Of X0, X1, X2, X3)(X0, X1, X2, X3)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2, X3>(X0, X1, X2, X3)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2, X3)(X0, X1, X2, X3)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2, X3>(X0, X1, X2, X3)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2, X3)(X0, X1, X2, X3)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``4(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3}},``0,``1,``2,``3)
+  name: Case<X0, X1, X2, X3>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>>, X0, X1, X2, X3)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__4_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3_____0___1___2___3_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``4(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3}},``0,``1,``2,``3)
+  name.vb: Case(Of X0, X1, X2, X3)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3)), X0, X1, X2, X3)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2, X3>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3>>, X0, X1, X2, X3)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2, X3)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3)), X0, X1, X2, X3)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2, X3>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>>, X0, X1, X2, X3)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2, X3)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3)), X0, X1, X2, X3)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``5(``0,``1,``2,``3,``4)
+  name: Case<X0, X1, X2, X3, X4>(X0, X1, X2, X3, X4)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__5___0___1___2___3___4_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``5(``0,``1,``2,``3,``4)
+  name.vb: Case(Of X0, X1, X2, X3, X4)(X0, X1, X2, X3, X4)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4>(X0, X1, X2, X3, X4)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4)(X0, X1, X2, X3, X4)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4>(X0, X1, X2, X3, X4)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4)(X0, X1, X2, X3, X4)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``5(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4}},``0,``1,``2,``3,``4)
+  name: Case<X0, X1, X2, X3, X4>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>>, X0, X1, X2, X3, X4)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__5_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___4_____0___1___2___3___4_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``5(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4}},``0,``1,``2,``3,``4)
+  name.vb: Case(Of X0, X1, X2, X3, X4)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4)), X0, X1, X2, X3, X4)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3, X4>>, X0, X1, X2, X3, X4)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3, X4)), X0, X1, X2, X3, X4)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>>, X0, X1, X2, X3, X4)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4)), X0, X1, X2, X3, X4)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``6(``0,``1,``2,``3,``4,``5)
+  name: Case<X0, X1, X2, X3, X4, X5>(X0, X1, X2, X3, X4, X5)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__6___0___1___2___3___4___5_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``6(``0,``1,``2,``3,``4,``5)
+  name.vb: Case(Of X0, X1, X2, X3, X4, X5)(X0, X1, X2, X3, X4, X5)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4, X5>(X0, X1, X2, X3, X4, X5)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4, X5)(X0, X1, X2, X3, X4, X5)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4, X5>(X0, X1, X2, X3, X4, X5)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4, X5)(X0, X1, X2, X3, X4, X5)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``6(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5}},``0,``1,``2,``3,``4,``5)
+  name: Case<X0, X1, X2, X3, X4, X5>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>>, X0, X1, X2, X3, X4, X5)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__6_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___4___5_____0___1___2___3___4___5_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``6(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5}},``0,``1,``2,``3,``4,``5)
+  name.vb: Case(Of X0, X1, X2, X3, X4, X5)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5)), X0, X1, X2, X3, X4, X5)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4, X5>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3, X4, X5>>, X0, X1, X2, X3, X4, X5)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4, X5)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3, X4, X5)), X0, X1, X2, X3, X4, X5)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4, X5>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>>, X0, X1, X2, X3, X4, X5)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4, X5)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5)), X0, X1, X2, X3, X4, X5)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``7(``0,``1,``2,``3,``4,``5,``6)
+  name: Case<X0, X1, X2, X3, X4, X5, X6>(X0, X1, X2, X3, X4, X5, X6)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__7___0___1___2___3___4___5___6_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``7(``0,``1,``2,``3,``4,``5,``6)
+  name.vb: Case(Of X0, X1, X2, X3, X4, X5, X6)(X0, X1, X2, X3, X4, X5, X6)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4, X5, X6>(X0, X1, X2, X3, X4, X5, X6)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4, X5, X6)(X0, X1, X2, X3, X4, X5, X6)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4, X5, X6>(X0, X1, X2, X3, X4, X5, X6)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4, X5, X6)(X0, X1, X2, X3, X4, X5, X6)
+- uid: EnumerableTest.ParameterizedTestBuilder.Case``7(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5,``6}},``0,``1,``2,``3,``4,``5,``6)
+  name: Case<X0, X1, X2, X3, X4, X5, X6>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>>, X0, X1, X2, X3, X4, X5, X6)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Case__7_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___4___5___6_____0___1___2___3___4___5___6_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Case``7(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5,``6}},``0,``1,``2,``3,``4,``5,``6)
+  name.vb: Case(Of X0, X1, X2, X3, X4, X5, X6)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5, X6)), X0, X1, X2, X3, X4, X5, X6)
+  fullName: EnumerableTest.ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4, X5, X6>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3, X4, X5, X6>>, X0, X1, X2, X3, X4, X5, X6)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4, X5, X6)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3, X4, X5, X6)), X0, X1, X2, X3, X4, X5, X6)
+  nameWithType: ParameterizedTestBuilder.Case<X0, X1, X2, X3, X4, X5, X6>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>>, X0, X1, X2, X3, X4, X5, X6)
+  nameWithType.vb: ParameterizedTestBuilder.Case(Of X0, X1, X2, X3, X4, X5, X6)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5, X6)), X0, X1, X2, X3, X4, X5, X6)
+- uid: EnumerableTest.ParameterizedTestBuilder.Run*
+  name: Run
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run_
+  commentId: Overload:EnumerableTest.ParameterizedTestBuilder.Run
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run
+  nameWithType: ParameterizedTestBuilder.Run
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``2(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1}},System.Func{``0,``1,EnumerableTest.Test})
+  name: Run<X0, X1>(ParameterizedTestBuilder<Tuple<X0, X1>>, Func<X0, X1, Test>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__2_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___System_Func___0___1_EnumerableTest_Test__
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``2(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1}},System.Func{``0,``1,EnumerableTest.Test})
+  name.vb: Run(Of X0, X1)(ParameterizedTestBuilder(Of Tuple(Of X0, X1)), Func(Of X0, X1, Test))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1>>, System.Func<X0, X1, EnumerableTest.Test>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1)), System.Func(Of X0, X1, EnumerableTest.Test))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1>(ParameterizedTestBuilder<Tuple<X0, X1>>, Func<X0, X1, Test>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1)(ParameterizedTestBuilder(Of Tuple(Of X0, X1)), Func(Of X0, X1, Test))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``2(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1}},System.Func{``0,``1,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name: Run<X0, X1>(ParameterizedTestBuilder<Tuple<X0, X1>>, Func<X0, X1, IEnumerable<Test>>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__2_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___System_Func___0___1_System_Collections_Generic_IEnumerable_EnumerableTest_Test___
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``2(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1}},System.Func{``0,``1,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name.vb: Run(Of X0, X1)(ParameterizedTestBuilder(Of Tuple(Of X0, X1)), Func(Of X0, X1, IEnumerable(Of Test)))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1>>, System.Func<X0, X1, System.Collections.Generic.IEnumerable<EnumerableTest.Test>>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1)), System.Func(Of X0, X1, System.Collections.Generic.IEnumerable(Of EnumerableTest.Test)))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1>(ParameterizedTestBuilder<Tuple<X0, X1>>, Func<X0, X1, IEnumerable<Test>>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1)(ParameterizedTestBuilder(Of Tuple(Of X0, X1)), Func(Of X0, X1, IEnumerable(Of Test)))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``3(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2}},System.Func{``0,``1,``2,EnumerableTest.Test})
+  name: Run<X0, X1, X2>(ParameterizedTestBuilder<Tuple<X0, X1, X2>>, Func<X0, X1, X2, Test>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__3_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___System_Func___0___1___2_EnumerableTest_Test__
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``3(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2}},System.Func{``0,``1,``2,EnumerableTest.Test})
+  name.vb: Run(Of X0, X1, X2)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2)), Func(Of X0, X1, X2, Test))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2>>, System.Func<X0, X1, X2, EnumerableTest.Test>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2)), System.Func(Of X0, X1, X2, EnumerableTest.Test))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2>(ParameterizedTestBuilder<Tuple<X0, X1, X2>>, Func<X0, X1, X2, Test>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2)), Func(Of X0, X1, X2, Test))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``3(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2}},System.Func{``0,``1,``2,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name: Run<X0, X1, X2>(ParameterizedTestBuilder<Tuple<X0, X1, X2>>, Func<X0, X1, X2, IEnumerable<Test>>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__3_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___System_Func___0___1___2_System_Collections_Generic_IEnumerable_EnumerableTest_Test___
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``3(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2}},System.Func{``0,``1,``2,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name.vb: Run(Of X0, X1, X2)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2)), Func(Of X0, X1, X2, IEnumerable(Of Test)))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2>>, System.Func<X0, X1, X2, System.Collections.Generic.IEnumerable<EnumerableTest.Test>>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2)), System.Func(Of X0, X1, X2, System.Collections.Generic.IEnumerable(Of EnumerableTest.Test)))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2>(ParameterizedTestBuilder<Tuple<X0, X1, X2>>, Func<X0, X1, X2, IEnumerable<Test>>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2)), Func(Of X0, X1, X2, IEnumerable(Of Test)))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``4(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3}},System.Func{``0,``1,``2,``3,EnumerableTest.Test})
+  name: Run<X0, X1, X2, X3>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>>, Func<X0, X1, X2, X3, Test>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__4_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___System_Func___0___1___2___3_EnumerableTest_Test__
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``4(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3}},System.Func{``0,``1,``2,``3,EnumerableTest.Test})
+  name.vb: Run(Of X0, X1, X2, X3)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3)), Func(Of X0, X1, X2, X3, Test))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2, X3>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3>>, System.Func<X0, X1, X2, X3, EnumerableTest.Test>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2, X3)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3)), System.Func(Of X0, X1, X2, X3, EnumerableTest.Test))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2, X3>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>>, Func<X0, X1, X2, X3, Test>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2, X3)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3)), Func(Of X0, X1, X2, X3, Test))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``4(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3}},System.Func{``0,``1,``2,``3,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name: Run<X0, X1, X2, X3>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>>, Func<X0, X1, X2, X3, IEnumerable<Test>>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__4_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___System_Func___0___1___2___3_System_Collections_Generic_IEnumerable_EnumerableTest_Test___
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``4(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3}},System.Func{``0,``1,``2,``3,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name.vb: Run(Of X0, X1, X2, X3)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3)), Func(Of X0, X1, X2, X3, IEnumerable(Of Test)))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2, X3>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3>>, System.Func<X0, X1, X2, X3, System.Collections.Generic.IEnumerable<EnumerableTest.Test>>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2, X3)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3)), System.Func(Of X0, X1, X2, X3, System.Collections.Generic.IEnumerable(Of EnumerableTest.Test)))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2, X3>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3>>, Func<X0, X1, X2, X3, IEnumerable<Test>>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2, X3)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3)), Func(Of X0, X1, X2, X3, IEnumerable(Of Test)))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``5(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4}},System.Func{``0,``1,``2,``3,``4,EnumerableTest.Test})
+  name: Run<X0, X1, X2, X3, X4>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>>, Func<X0, X1, X2, X3, X4, Test>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__5_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___4___System_Func___0___1___2___3___4_EnumerableTest_Test__
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``5(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4}},System.Func{``0,``1,``2,``3,``4,EnumerableTest.Test})
+  name.vb: Run(Of X0, X1, X2, X3, X4)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4)), Func(Of X0, X1, X2, X3, X4, Test))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3, X4>>, System.Func<X0, X1, X2, X3, X4, EnumerableTest.Test>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3, X4)), System.Func(Of X0, X1, X2, X3, X4, EnumerableTest.Test))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>>, Func<X0, X1, X2, X3, X4, Test>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4)), Func(Of X0, X1, X2, X3, X4, Test))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``5(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4}},System.Func{``0,``1,``2,``3,``4,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name: Run<X0, X1, X2, X3, X4>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>>, Func<X0, X1, X2, X3, X4, IEnumerable<Test>>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__5_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___4___System_Func___0___1___2___3___4_System_Collections_Generic_IEnumerable_EnumerableTest_Test___
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``5(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4}},System.Func{``0,``1,``2,``3,``4,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name.vb: Run(Of X0, X1, X2, X3, X4)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4)), Func(Of X0, X1, X2, X3, X4, IEnumerable(Of Test)))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3, X4>>, System.Func<X0, X1, X2, X3, X4, System.Collections.Generic.IEnumerable<EnumerableTest.Test>>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3, X4)), System.Func(Of X0, X1, X2, X3, X4, System.Collections.Generic.IEnumerable(Of EnumerableTest.Test)))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4>>, Func<X0, X1, X2, X3, X4, IEnumerable<Test>>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4)), Func(Of X0, X1, X2, X3, X4, IEnumerable(Of Test)))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``6(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5}},System.Func{``0,``1,``2,``3,``4,``5,EnumerableTest.Test})
+  name: Run<X0, X1, X2, X3, X4, X5>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>>, Func<X0, X1, X2, X3, X4, X5, Test>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__6_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___4___5___System_Func___0___1___2___3___4___5_EnumerableTest_Test__
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``6(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5}},System.Func{``0,``1,``2,``3,``4,``5,EnumerableTest.Test})
+  name.vb: Run(Of X0, X1, X2, X3, X4, X5)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5)), Func(Of X0, X1, X2, X3, X4, X5, Test))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4, X5>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3, X4, X5>>, System.Func<X0, X1, X2, X3, X4, X5, EnumerableTest.Test>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4, X5)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3, X4, X5)), System.Func(Of X0, X1, X2, X3, X4, X5, EnumerableTest.Test))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4, X5>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>>, Func<X0, X1, X2, X3, X4, X5, Test>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4, X5)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5)), Func(Of X0, X1, X2, X3, X4, X5, Test))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``6(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5}},System.Func{``0,``1,``2,``3,``4,``5,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name: Run<X0, X1, X2, X3, X4, X5>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>>, Func<X0, X1, X2, X3, X4, X5, IEnumerable<Test>>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__6_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___4___5___System_Func___0___1___2___3___4___5_System_Collections_Generic_IEnumerable_EnumerableTest_Test___
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``6(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5}},System.Func{``0,``1,``2,``3,``4,``5,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name.vb: Run(Of X0, X1, X2, X3, X4, X5)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5)), Func(Of X0, X1, X2, X3, X4, X5, IEnumerable(Of Test)))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4, X5>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3, X4, X5>>, System.Func<X0, X1, X2, X3, X4, X5, System.Collections.Generic.IEnumerable<EnumerableTest.Test>>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4, X5)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3, X4, X5)), System.Func(Of X0, X1, X2, X3, X4, X5, System.Collections.Generic.IEnumerable(Of EnumerableTest.Test)))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4, X5>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5>>, Func<X0, X1, X2, X3, X4, X5, IEnumerable<Test>>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4, X5)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5)), Func(Of X0, X1, X2, X3, X4, X5, IEnumerable(Of Test)))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``7(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5,``6}},System.Func{``0,``1,``2,``3,``4,``5,``6,EnumerableTest.Test})
+  name: Run<X0, X1, X2, X3, X4, X5, X6>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>>, Func<X0, X1, X2, X3, X4, X5, X6, Test>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__7_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___4___5___6___System_Func___0___1___2___3___4___5___6_EnumerableTest_Test__
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``7(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5,``6}},System.Func{``0,``1,``2,``3,``4,``5,``6,EnumerableTest.Test})
+  name.vb: Run(Of X0, X1, X2, X3, X4, X5, X6)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5, X6)), Func(Of X0, X1, X2, X3, X4, X5, X6, Test))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4, X5, X6>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3, X4, X5, X6>>, System.Func<X0, X1, X2, X3, X4, X5, X6, EnumerableTest.Test>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4, X5, X6)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3, X4, X5, X6)), System.Func(Of X0, X1, X2, X3, X4, X5, X6, EnumerableTest.Test))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4, X5, X6>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>>, Func<X0, X1, X2, X3, X4, X5, X6, Test>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4, X5, X6)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5, X6)), Func(Of X0, X1, X2, X3, X4, X5, X6, Test))
+- uid: EnumerableTest.ParameterizedTestBuilder.Run``7(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5,``6}},System.Func{``0,``1,``2,``3,``4,``5,``6,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name: Run<X0, X1, X2, X3, X4, X5, X6>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>>, Func<X0, X1, X2, X3, X4, X5, X6, IEnumerable<Test>>)
+  href: api/EnumerableTest.ParameterizedTestBuilder.html#EnumerableTest_ParameterizedTestBuilder_Run__7_EnumerableTest_ParameterizedTestBuilder_System_Tuple___0___1___2___3___4___5___6___System_Func___0___1___2___3___4___5___6_System_Collections_Generic_IEnumerable_EnumerableTest_Test___
+  commentId: M:EnumerableTest.ParameterizedTestBuilder.Run``7(EnumerableTest.ParameterizedTestBuilder{System.Tuple{``0,``1,``2,``3,``4,``5,``6}},System.Func{``0,``1,``2,``3,``4,``5,``6,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name.vb: Run(Of X0, X1, X2, X3, X4, X5, X6)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5, X6)), Func(Of X0, X1, X2, X3, X4, X5, X6, IEnumerable(Of Test)))
+  fullName: EnumerableTest.ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4, X5, X6>(EnumerableTest.ParameterizedTestBuilder<System.Tuple<X0, X1, X2, X3, X4, X5, X6>>, System.Func<X0, X1, X2, X3, X4, X5, X6, System.Collections.Generic.IEnumerable<EnumerableTest.Test>>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4, X5, X6)(EnumerableTest.ParameterizedTestBuilder(Of System.Tuple(Of X0, X1, X2, X3, X4, X5, X6)), System.Func(Of X0, X1, X2, X3, X4, X5, X6, System.Collections.Generic.IEnumerable(Of EnumerableTest.Test)))
+  nameWithType: ParameterizedTestBuilder.Run<X0, X1, X2, X3, X4, X5, X6>(ParameterizedTestBuilder<Tuple<X0, X1, X2, X3, X4, X5, X6>>, Func<X0, X1, X2, X3, X4, X5, X6, IEnumerable<Test>>)
+  nameWithType.vb: ParameterizedTestBuilder.Run(Of X0, X1, X2, X3, X4, X5, X6)(ParameterizedTestBuilder(Of Tuple(Of X0, X1, X2, X3, X4, X5, X6)), Func(Of X0, X1, X2, X3, X4, X5, X6, IEnumerable(Of Test)))
+- uid: EnumerableTest.ParameterizedTestBuilder`1
+  name: ParameterizedTestBuilder<TParameter>
+  href: api/EnumerableTest.ParameterizedTestBuilder-1.html
+  commentId: T:EnumerableTest.ParameterizedTestBuilder`1
+  name.vb: ParameterizedTestBuilder(Of TParameter)
+  fullName: EnumerableTest.ParameterizedTestBuilder<TParameter>
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder(Of TParameter)
+  nameWithType: ParameterizedTestBuilder<TParameter>
+  nameWithType.vb: ParameterizedTestBuilder(Of TParameter)
+- uid: EnumerableTest.ParameterizedTestBuilder`1.Case(`0)
+  name: Case(TParameter)
+  href: api/EnumerableTest.ParameterizedTestBuilder-1.html#EnumerableTest_ParameterizedTestBuilder_1_Case__0_
+  commentId: M:EnumerableTest.ParameterizedTestBuilder`1.Case(`0)
+  fullName: EnumerableTest.ParameterizedTestBuilder<TParameter>.Case(TParameter)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder(Of TParameter).Case(TParameter)
+  nameWithType: ParameterizedTestBuilder<TParameter>.Case(TParameter)
+  nameWithType.vb: ParameterizedTestBuilder(Of TParameter).Case(TParameter)
+- uid: EnumerableTest.ParameterizedTestBuilder`1.Case*
+  name: Case
+  href: api/EnumerableTest.ParameterizedTestBuilder-1.html#EnumerableTest_ParameterizedTestBuilder_1_Case_
+  commentId: Overload:EnumerableTest.ParameterizedTestBuilder`1.Case
+  fullName: EnumerableTest.ParameterizedTestBuilder<TParameter>.Case
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder(Of TParameter).Case
+  nameWithType: ParameterizedTestBuilder<TParameter>.Case
+  nameWithType.vb: ParameterizedTestBuilder(Of TParameter).Case
+- uid: EnumerableTest.ParameterizedTestBuilder`1.Run(System.Func{`0,EnumerableTest.Test})
+  name: Run(Func<TParameter, Test>)
+  href: api/EnumerableTest.ParameterizedTestBuilder-1.html#EnumerableTest_ParameterizedTestBuilder_1_Run_System_Func__0_EnumerableTest_Test__
+  commentId: M:EnumerableTest.ParameterizedTestBuilder`1.Run(System.Func{`0,EnumerableTest.Test})
+  name.vb: Run(Func(Of TParameter, Test))
+  fullName: EnumerableTest.ParameterizedTestBuilder<TParameter>.Run(System.Func<TParameter, EnumerableTest.Test>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder(Of TParameter).Run(System.Func(Of TParameter, EnumerableTest.Test))
+  nameWithType: ParameterizedTestBuilder<TParameter>.Run(Func<TParameter, Test>)
+  nameWithType.vb: ParameterizedTestBuilder(Of TParameter).Run(Func(Of TParameter, Test))
+- uid: EnumerableTest.ParameterizedTestBuilder`1.Run(System.Func{`0,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name: Run(Func<TParameter, IEnumerable<Test>>)
+  href: api/EnumerableTest.ParameterizedTestBuilder-1.html#EnumerableTest_ParameterizedTestBuilder_1_Run_System_Func__0_System_Collections_Generic_IEnumerable_EnumerableTest_Test___
+  commentId: M:EnumerableTest.ParameterizedTestBuilder`1.Run(System.Func{`0,System.Collections.Generic.IEnumerable{EnumerableTest.Test}})
+  name.vb: Run(Func(Of TParameter, IEnumerable(Of Test)))
+  fullName: EnumerableTest.ParameterizedTestBuilder<TParameter>.Run(System.Func<TParameter, System.Collections.Generic.IEnumerable<EnumerableTest.Test>>)
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder(Of TParameter).Run(System.Func(Of TParameter, System.Collections.Generic.IEnumerable(Of EnumerableTest.Test)))
+  nameWithType: ParameterizedTestBuilder<TParameter>.Run(Func<TParameter, IEnumerable<Test>>)
+  nameWithType.vb: ParameterizedTestBuilder(Of TParameter).Run(Func(Of TParameter, IEnumerable(Of Test)))
+- uid: EnumerableTest.ParameterizedTestBuilder`1.Run*
+  name: Run
+  href: api/EnumerableTest.ParameterizedTestBuilder-1.html#EnumerableTest_ParameterizedTestBuilder_1_Run_
+  commentId: Overload:EnumerableTest.ParameterizedTestBuilder`1.Run
+  fullName: EnumerableTest.ParameterizedTestBuilder<TParameter>.Run
+  fullName.vb: EnumerableTest.ParameterizedTestBuilder(Of TParameter).Run
+  nameWithType: ParameterizedTestBuilder<TParameter>.Run
+  nameWithType.vb: ParameterizedTestBuilder(Of TParameter).Run
+- uid: EnumerableTest.Sdk
+  name: EnumerableTest.Sdk
+  href: api/EnumerableTest.Sdk.html
+  commentId: N:EnumerableTest.Sdk
+  fullName: EnumerableTest.Sdk
+  nameWithType: EnumerableTest.Sdk
+- uid: EnumerableTest.Sdk.AssertionTest
+  name: AssertionTest
+  href: api/EnumerableTest.Sdk.AssertionTest.html
+  commentId: T:EnumerableTest.Sdk.AssertionTest
+  fullName: EnumerableTest.Sdk.AssertionTest
+  nameWithType: AssertionTest
+- uid: EnumerableTest.Sdk.AssertionTest.IsPassed
+  name: IsPassed
+  href: api/EnumerableTest.Sdk.AssertionTest.html#EnumerableTest_Sdk_AssertionTest_IsPassed
+  commentId: P:EnumerableTest.Sdk.AssertionTest.IsPassed
+  fullName: EnumerableTest.Sdk.AssertionTest.IsPassed
+  nameWithType: AssertionTest.IsPassed
+- uid: EnumerableTest.Sdk.AssertionTest.IsPassed*
+  name: IsPassed
+  href: api/EnumerableTest.Sdk.AssertionTest.html#EnumerableTest_Sdk_AssertionTest_IsPassed_
+  commentId: Overload:EnumerableTest.Sdk.AssertionTest.IsPassed
+  fullName: EnumerableTest.Sdk.AssertionTest.IsPassed
+  nameWithType: AssertionTest.IsPassed
+- uid: EnumerableTest.Sdk.DictionaryTestData
+  name: DictionaryTestData
+  href: api/EnumerableTest.Sdk.DictionaryTestData.html
+  commentId: T:EnumerableTest.Sdk.DictionaryTestData
+  fullName: EnumerableTest.Sdk.DictionaryTestData
+  nameWithType: DictionaryTestData
+- uid: EnumerableTest.Sdk.DictionaryTestData.Build
+  name: Build()
+  href: api/EnumerableTest.Sdk.DictionaryTestData.html#EnumerableTest_Sdk_DictionaryTestData_Build
+  commentId: M:EnumerableTest.Sdk.DictionaryTestData.Build
+  fullName: EnumerableTest.Sdk.DictionaryTestData.Build()
+  nameWithType: DictionaryTestData.Build()
+- uid: EnumerableTest.Sdk.DictionaryTestData.Build*
+  name: Build
+  href: api/EnumerableTest.Sdk.DictionaryTestData.html#EnumerableTest_Sdk_DictionaryTestData_Build_
+  commentId: Overload:EnumerableTest.Sdk.DictionaryTestData.Build
+  fullName: EnumerableTest.Sdk.DictionaryTestData.Build
+  nameWithType: DictionaryTestData.Build
+- uid: EnumerableTest.Sdk.DictionaryTestData.Builder
+  name: DictionaryTestData.Builder
+  href: api/EnumerableTest.Sdk.DictionaryTestData.Builder.html
+  commentId: T:EnumerableTest.Sdk.DictionaryTestData.Builder
+  fullName: EnumerableTest.Sdk.DictionaryTestData.Builder
+  nameWithType: DictionaryTestData.Builder
+- uid: EnumerableTest.Sdk.DictionaryTestData.Builder.Add(System.String,System.Object)
+  name: Add(String, Object)
+  href: api/EnumerableTest.Sdk.DictionaryTestData.Builder.html#EnumerableTest_Sdk_DictionaryTestData_Builder_Add_System_String_System_Object_
+  commentId: M:EnumerableTest.Sdk.DictionaryTestData.Builder.Add(System.String,System.Object)
+  fullName: EnumerableTest.Sdk.DictionaryTestData.Builder.Add(System.String, System.Object)
+  nameWithType: DictionaryTestData.Builder.Add(String, Object)
+- uid: EnumerableTest.Sdk.DictionaryTestData.Builder.Add*
+  name: Add
+  href: api/EnumerableTest.Sdk.DictionaryTestData.Builder.html#EnumerableTest_Sdk_DictionaryTestData_Builder_Add_
+  commentId: Overload:EnumerableTest.Sdk.DictionaryTestData.Builder.Add
+  fullName: EnumerableTest.Sdk.DictionaryTestData.Builder.Add
+  nameWithType: DictionaryTestData.Builder.Add
+- uid: EnumerableTest.Sdk.DictionaryTestData.Builder.MakeReadOnly
+  name: MakeReadOnly()
+  href: api/EnumerableTest.Sdk.DictionaryTestData.Builder.html#EnumerableTest_Sdk_DictionaryTestData_Builder_MakeReadOnly
+  commentId: M:EnumerableTest.Sdk.DictionaryTestData.Builder.MakeReadOnly
+  fullName: EnumerableTest.Sdk.DictionaryTestData.Builder.MakeReadOnly()
+  nameWithType: DictionaryTestData.Builder.MakeReadOnly()
+- uid: EnumerableTest.Sdk.DictionaryTestData.Builder.MakeReadOnly*
+  name: MakeReadOnly
+  href: api/EnumerableTest.Sdk.DictionaryTestData.Builder.html#EnumerableTest_Sdk_DictionaryTestData_Builder_MakeReadOnly_
+  commentId: Overload:EnumerableTest.Sdk.DictionaryTestData.Builder.MakeReadOnly
+  fullName: EnumerableTest.Sdk.DictionaryTestData.Builder.MakeReadOnly
+  nameWithType: DictionaryTestData.Builder.MakeReadOnly
+- uid: EnumerableTest.Sdk.DictionaryTestData.GetEnumerator
+  name: GetEnumerator()
+  href: api/EnumerableTest.Sdk.DictionaryTestData.html#EnumerableTest_Sdk_DictionaryTestData_GetEnumerator
+  commentId: M:EnumerableTest.Sdk.DictionaryTestData.GetEnumerator
+  fullName: EnumerableTest.Sdk.DictionaryTestData.GetEnumerator()
+  nameWithType: DictionaryTestData.GetEnumerator()
+- uid: EnumerableTest.Sdk.DictionaryTestData.GetEnumerator*
+  name: GetEnumerator
+  href: api/EnumerableTest.Sdk.DictionaryTestData.html#EnumerableTest_Sdk_DictionaryTestData_GetEnumerator_
+  commentId: Overload:EnumerableTest.Sdk.DictionaryTestData.GetEnumerator
+  fullName: EnumerableTest.Sdk.DictionaryTestData.GetEnumerator
+  nameWithType: DictionaryTestData.GetEnumerator
+- uid: EnumerableTest.Sdk.DictionaryTestData.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,System#Object}}#GetEnumerator
+  name: IEnumerable<KeyValuePair<String, Object>>.GetEnumerator()
+  href: api/EnumerableTest.Sdk.DictionaryTestData.html#EnumerableTest_Sdk_DictionaryTestData_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair_System_String_System_Object___GetEnumerator
+  commentId: M:EnumerableTest.Sdk.DictionaryTestData.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,System#Object}}#GetEnumerator
+  name.vb: System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>>.GetEnumerator()
+  fullName: EnumerableTest.Sdk.DictionaryTestData.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String, System.Object>>.GetEnumerator()
+  fullName.vb: EnumerableTest.Sdk.DictionaryTestData.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>>.GetEnumerator()
+  nameWithType: DictionaryTestData.IEnumerable<KeyValuePair<String, Object>>.GetEnumerator()
+  nameWithType.vb: DictionaryTestData.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>>.GetEnumerator()
+- uid: EnumerableTest.Sdk.DictionaryTestData.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,System#Object}}#GetEnumerator*
+  name: IEnumerable<KeyValuePair<String, Object>>.GetEnumerator
+  href: api/EnumerableTest.Sdk.DictionaryTestData.html#EnumerableTest_Sdk_DictionaryTestData_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair_System_String_System_Object___GetEnumerator_
+  commentId: Overload:EnumerableTest.Sdk.DictionaryTestData.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,System#Object}}#GetEnumerator
+  name.vb: System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>>.GetEnumerator
+  fullName: EnumerableTest.Sdk.DictionaryTestData.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String, System.Object>>.GetEnumerator
+  fullName.vb: EnumerableTest.Sdk.DictionaryTestData.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>>.GetEnumerator
+  nameWithType: DictionaryTestData.IEnumerable<KeyValuePair<String, Object>>.GetEnumerator
+  nameWithType.vb: DictionaryTestData.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String,System.Object>>.GetEnumerator
+- uid: EnumerableTest.Sdk.DictionaryTestData.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  href: api/EnumerableTest.Sdk.DictionaryTestData.html#EnumerableTest_Sdk_DictionaryTestData_System_Collections_IEnumerable_GetEnumerator
+  commentId: M:EnumerableTest.Sdk.DictionaryTestData.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  fullName: EnumerableTest.Sdk.DictionaryTestData.System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: DictionaryTestData.IEnumerable.GetEnumerator()
+  nameWithType.vb: DictionaryTestData.System.Collections.IEnumerable.GetEnumerator()
+- uid: EnumerableTest.Sdk.DictionaryTestData.System#Collections#IEnumerable#GetEnumerator*
+  name: IEnumerable.GetEnumerator
+  href: api/EnumerableTest.Sdk.DictionaryTestData.html#EnumerableTest_Sdk_DictionaryTestData_System_Collections_IEnumerable_GetEnumerator_
+  commentId: Overload:EnumerableTest.Sdk.DictionaryTestData.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator
+  fullName: EnumerableTest.Sdk.DictionaryTestData.System.Collections.IEnumerable.GetEnumerator
+  nameWithType: DictionaryTestData.IEnumerable.GetEnumerator
+  nameWithType.vb: DictionaryTestData.System.Collections.IEnumerable.GetEnumerator
+- uid: EnumerableTest.Sdk.EmptyTestData
+  name: EmptyTestData
+  href: api/EnumerableTest.Sdk.EmptyTestData.html
+  commentId: T:EnumerableTest.Sdk.EmptyTestData
+  fullName: EnumerableTest.Sdk.EmptyTestData
+  nameWithType: EmptyTestData
+- uid: EnumerableTest.Sdk.GroupTest
+  name: GroupTest
+  href: api/EnumerableTest.Sdk.GroupTest.html
+  commentId: T:EnumerableTest.Sdk.GroupTest
+  fullName: EnumerableTest.Sdk.GroupTest
+  nameWithType: GroupTest
+- uid: EnumerableTest.Sdk.GroupTest.ExceptionOrNull
+  name: ExceptionOrNull
+  href: api/EnumerableTest.Sdk.GroupTest.html#EnumerableTest_Sdk_GroupTest_ExceptionOrNull
+  commentId: P:EnumerableTest.Sdk.GroupTest.ExceptionOrNull
+  fullName: EnumerableTest.Sdk.GroupTest.ExceptionOrNull
+  nameWithType: GroupTest.ExceptionOrNull
+- uid: EnumerableTest.Sdk.GroupTest.ExceptionOrNull*
+  name: ExceptionOrNull
+  href: api/EnumerableTest.Sdk.GroupTest.html#EnumerableTest_Sdk_GroupTest_ExceptionOrNull_
+  commentId: Overload:EnumerableTest.Sdk.GroupTest.ExceptionOrNull
+  fullName: EnumerableTest.Sdk.GroupTest.ExceptionOrNull
+  nameWithType: GroupTest.ExceptionOrNull
+- uid: EnumerableTest.Sdk.GroupTest.IsPassed
+  name: IsPassed
+  href: api/EnumerableTest.Sdk.GroupTest.html#EnumerableTest_Sdk_GroupTest_IsPassed
+  commentId: P:EnumerableTest.Sdk.GroupTest.IsPassed
+  fullName: EnumerableTest.Sdk.GroupTest.IsPassed
+  nameWithType: GroupTest.IsPassed
+- uid: EnumerableTest.Sdk.GroupTest.IsPassed*
+  name: IsPassed
+  href: api/EnumerableTest.Sdk.GroupTest.html#EnumerableTest_Sdk_GroupTest_IsPassed_
+  commentId: Overload:EnumerableTest.Sdk.GroupTest.IsPassed
+  fullName: EnumerableTest.Sdk.GroupTest.IsPassed
+  nameWithType: GroupTest.IsPassed
+- uid: EnumerableTest.Sdk.GroupTest.Tests
+  name: Tests
+  href: api/EnumerableTest.Sdk.GroupTest.html#EnumerableTest_Sdk_GroupTest_Tests
+  commentId: P:EnumerableTest.Sdk.GroupTest.Tests
+  fullName: EnumerableTest.Sdk.GroupTest.Tests
+  nameWithType: GroupTest.Tests
+- uid: EnumerableTest.Sdk.GroupTest.Tests*
+  name: Tests
+  href: api/EnumerableTest.Sdk.GroupTest.html#EnumerableTest_Sdk_GroupTest_Tests_
+  commentId: Overload:EnumerableTest.Sdk.GroupTest.Tests
+  fullName: EnumerableTest.Sdk.GroupTest.Tests
+  nameWithType: GroupTest.Tests
+- uid: EnumerableTest.Sdk.TestData
+  name: TestData
+  href: api/EnumerableTest.Sdk.TestData.html
+  commentId: T:EnumerableTest.Sdk.TestData
+  fullName: EnumerableTest.Sdk.TestData
+  nameWithType: TestData
+- uid: EnumerableTest.Sdk.TestData.Empty
+  name: Empty
+  href: api/EnumerableTest.Sdk.TestData.html#EnumerableTest_Sdk_TestData_Empty
+  commentId: P:EnumerableTest.Sdk.TestData.Empty
+  fullName: EnumerableTest.Sdk.TestData.Empty
+  nameWithType: TestData.Empty
+- uid: EnumerableTest.Sdk.TestData.Empty*
+  name: Empty
+  href: api/EnumerableTest.Sdk.TestData.html#EnumerableTest_Sdk_TestData_Empty_
+  commentId: Overload:EnumerableTest.Sdk.TestData.Empty
+  fullName: EnumerableTest.Sdk.TestData.Empty
+  nameWithType: TestData.Empty
+- uid: EnumerableTest.Test
+  name: Test
+  href: api/EnumerableTest.Test.html
+  commentId: T:EnumerableTest.Test
+  fullName: EnumerableTest.Test
+  nameWithType: Test
+- uid: EnumerableTest.Test.Catch*
+  name: Catch
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Catch_
+  commentId: Overload:EnumerableTest.Test.Catch
+  fullName: EnumerableTest.Test.Catch
+  nameWithType: Test.Catch
+- uid: EnumerableTest.Test.Catch``1(System.Action)
+  name: Catch<E>(Action)
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Catch__1_System_Action_
+  commentId: M:EnumerableTest.Test.Catch``1(System.Action)
+  name.vb: Catch(Of E)(Action)
+  fullName: EnumerableTest.Test.Catch<E>(System.Action)
+  fullName.vb: EnumerableTest.Test.Catch(Of E)(System.Action)
+  nameWithType: Test.Catch<E>(Action)
+  nameWithType.vb: Test.Catch(Of E)(Action)
+- uid: EnumerableTest.Test.Catch``1(System.Func{System.Object})
+  name: Catch<E>(Func<Object>)
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Catch__1_System_Func_System_Object__
+  commentId: M:EnumerableTest.Test.Catch``1(System.Func{System.Object})
+  name.vb: Catch(Of E)(Func(Of Object))
+  fullName: EnumerableTest.Test.Catch<E>(System.Func<System.Object>)
+  fullName.vb: EnumerableTest.Test.Catch(Of E)(System.Func(Of System.Object))
+  nameWithType: Test.Catch<E>(Func<Object>)
+  nameWithType.vb: Test.Catch(Of E)(Func(Of Object))
+- uid: EnumerableTest.Test.Data
+  name: Data
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Data
+  commentId: P:EnumerableTest.Test.Data
+  fullName: EnumerableTest.Test.Data
+  nameWithType: Test.Data
+- uid: EnumerableTest.Test.Data*
+  name: Data
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Data_
+  commentId: Overload:EnumerableTest.Test.Data
+  fullName: EnumerableTest.Test.Data
+  nameWithType: Test.Data
+- uid: EnumerableTest.Test.Equal*
+  name: Equal
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Equal_
+  commentId: Overload:EnumerableTest.Test.Equal
+  fullName: EnumerableTest.Test.Equal
+  nameWithType: Test.Equal
+- uid: EnumerableTest.Test.Equal``1(``0,``0)
+  name: Equal<X>(X, X)
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Equal__1___0___0_
+  commentId: M:EnumerableTest.Test.Equal``1(``0,``0)
+  name.vb: Equal(Of X)(X, X)
+  fullName: EnumerableTest.Test.Equal<X>(X, X)
+  fullName.vb: EnumerableTest.Test.Equal(Of X)(X, X)
+  nameWithType: Test.Equal<X>(X, X)
+  nameWithType.vb: Test.Equal(Of X)(X, X)
+- uid: EnumerableTest.Test.Equal``1(``0,``0,System.Collections.IEqualityComparer)
+  name: Equal<X>(X, X, IEqualityComparer)
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Equal__1___0___0_System_Collections_IEqualityComparer_
+  commentId: M:EnumerableTest.Test.Equal``1(``0,``0,System.Collections.IEqualityComparer)
+  name.vb: Equal(Of X)(X, X, IEqualityComparer)
+  fullName: EnumerableTest.Test.Equal<X>(X, X, System.Collections.IEqualityComparer)
+  fullName.vb: EnumerableTest.Test.Equal(Of X)(X, X, System.Collections.IEqualityComparer)
+  nameWithType: Test.Equal<X>(X, X, IEqualityComparer)
+  nameWithType.vb: Test.Equal(Of X)(X, X, IEqualityComparer)
+- uid: EnumerableTest.Test.FromResult(System.String,System.Boolean)
+  name: FromResult(String, Boolean)
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_FromResult_System_String_System_Boolean_
+  commentId: M:EnumerableTest.Test.FromResult(System.String,System.Boolean)
+  fullName: EnumerableTest.Test.FromResult(System.String, System.Boolean)
+  nameWithType: Test.FromResult(String, Boolean)
+- uid: EnumerableTest.Test.FromResult(System.String,System.Boolean,EnumerableTest.Sdk.TestData)
+  name: FromResult(String, Boolean, TestData)
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_FromResult_System_String_System_Boolean_EnumerableTest_Sdk_TestData_
+  commentId: M:EnumerableTest.Test.FromResult(System.String,System.Boolean,EnumerableTest.Sdk.TestData)
+  fullName: EnumerableTest.Test.FromResult(System.String, System.Boolean, EnumerableTest.Sdk.TestData)
+  nameWithType: Test.FromResult(String, Boolean, TestData)
+- uid: EnumerableTest.Test.FromResult*
+  name: FromResult
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_FromResult_
+  commentId: Overload:EnumerableTest.Test.FromResult
+  fullName: EnumerableTest.Test.FromResult
+  nameWithType: Test.FromResult
+- uid: EnumerableTest.Test.IsPassed
+  name: IsPassed
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_IsPassed
+  commentId: P:EnumerableTest.Test.IsPassed
+  fullName: EnumerableTest.Test.IsPassed
+  nameWithType: Test.IsPassed
+- uid: EnumerableTest.Test.IsPassed*
+  name: IsPassed
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_IsPassed_
+  commentId: Overload:EnumerableTest.Test.IsPassed
+  fullName: EnumerableTest.Test.IsPassed
+  nameWithType: Test.IsPassed
+- uid: EnumerableTest.Test.Name
+  name: Name
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Name
+  commentId: P:EnumerableTest.Test.Name
+  fullName: EnumerableTest.Test.Name
+  nameWithType: Test.Name
+- uid: EnumerableTest.Test.Name*
+  name: Name
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Name_
+  commentId: Overload:EnumerableTest.Test.Name
+  fullName: EnumerableTest.Test.Name
+  nameWithType: Test.Name
+- uid: EnumerableTest.Test.Pass
+  name: Pass
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Pass
+  commentId: P:EnumerableTest.Test.Pass
+  fullName: EnumerableTest.Test.Pass
+  nameWithType: Test.Pass
+- uid: EnumerableTest.Test.Pass*
+  name: Pass
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Pass_
+  commentId: Overload:EnumerableTest.Test.Pass
+  fullName: EnumerableTest.Test.Pass
+  nameWithType: Test.Pass
+- uid: EnumerableTest.Test.Satisfy*
+  name: Satisfy
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Satisfy_
+  commentId: Overload:EnumerableTest.Test.Satisfy
+  fullName: EnumerableTest.Test.Satisfy
+  nameWithType: Test.Satisfy
+- uid: EnumerableTest.Test.Satisfy``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})
+  name: Satisfy<X>(X, Expression<Func<X, Boolean>>)
+  href: api/EnumerableTest.Test.html#EnumerableTest_Test_Satisfy__1___0_System_Linq_Expressions_Expression_System_Func___0_System_Boolean___
+  commentId: M:EnumerableTest.Test.Satisfy``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})
+  name.vb: Satisfy(Of X)(X, Expression(Of Func(Of X, Boolean)))
+  fullName: EnumerableTest.Test.Satisfy<X>(X, System.Linq.Expressions.Expression<System.Func<X, System.Boolean>>)
+  fullName.vb: EnumerableTest.Test.Satisfy(Of X)(X, System.Linq.Expressions.Expression(Of System.Func(Of X, System.Boolean)))
+  nameWithType: Test.Satisfy<X>(X, Expression<Func<X, Boolean>>)
+  nameWithType.vb: Test.Satisfy(Of X)(X, Expression(Of Func(Of X, Boolean)))
+- uid: EnumerableTest.TestExtension
+  name: TestExtension
+  href: api/EnumerableTest.TestExtension.html
+  commentId: T:EnumerableTest.TestExtension
+  fullName: EnumerableTest.TestExtension
+  nameWithType: TestExtension
+- uid: EnumerableTest.TestExtension.Is*
+  name: Is
+  href: api/EnumerableTest.TestExtension.html#EnumerableTest_TestExtension_Is_
+  commentId: Overload:EnumerableTest.TestExtension.Is
+  fullName: EnumerableTest.TestExtension.Is
+  nameWithType: TestExtension.Is
+- uid: EnumerableTest.TestExtension.Is``1(``0,``0)
+  name: Is<X>(X, X)
+  href: api/EnumerableTest.TestExtension.html#EnumerableTest_TestExtension_Is__1___0___0_
+  commentId: M:EnumerableTest.TestExtension.Is``1(``0,``0)
+  name.vb: Is(Of X)(X, X)
+  fullName: EnumerableTest.TestExtension.Is<X>(X, X)
+  fullName.vb: EnumerableTest.TestExtension.Is(Of X)(X, X)
+  nameWithType: TestExtension.Is<X>(X, X)
+  nameWithType.vb: TestExtension.Is(Of X)(X, X)
+- uid: EnumerableTest.TestExtension.TestSatisfy*
+  name: TestSatisfy
+  href: api/EnumerableTest.TestExtension.html#EnumerableTest_TestExtension_TestSatisfy_
+  commentId: Overload:EnumerableTest.TestExtension.TestSatisfy
+  fullName: EnumerableTest.TestExtension.TestSatisfy
+  nameWithType: TestExtension.TestSatisfy
+- uid: EnumerableTest.TestExtension.TestSatisfy``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})
+  name: TestSatisfy<X>(X, Expression<Func<X, Boolean>>)
+  href: api/EnumerableTest.TestExtension.html#EnumerableTest_TestExtension_TestSatisfy__1___0_System_Linq_Expressions_Expression_System_Func___0_System_Boolean___
+  commentId: M:EnumerableTest.TestExtension.TestSatisfy``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})
+  name.vb: TestSatisfy(Of X)(X, Expression(Of Func(Of X, Boolean)))
+  fullName: EnumerableTest.TestExtension.TestSatisfy<X>(X, System.Linq.Expressions.Expression<System.Func<X, System.Boolean>>)
+  fullName.vb: EnumerableTest.TestExtension.TestSatisfy(Of X)(X, System.Linq.Expressions.Expression(Of System.Func(Of X, System.Boolean)))
+  nameWithType: TestExtension.TestSatisfy<X>(X, Expression<Func<X, Boolean>>)
+  nameWithType.vb: TestExtension.TestSatisfy(Of X)(X, Expression(Of Func(Of X, Boolean)))
+- uid: EnumerableTest.TestExtension.TestSequence*
+  name: TestSequence
+  href: api/EnumerableTest.TestExtension.html#EnumerableTest_TestExtension_TestSequence_
+  commentId: Overload:EnumerableTest.TestExtension.TestSequence
+  fullName: EnumerableTest.TestExtension.TestSequence
+  nameWithType: TestExtension.TestSequence
+- uid: EnumerableTest.TestExtension.TestSequence``1(System.Collections.Generic.IEnumerable{``0},``0[])
+  name: TestSequence<X>(IEnumerable<X>, X[])
+  href: api/EnumerableTest.TestExtension.html#EnumerableTest_TestExtension_TestSequence__1_System_Collections_Generic_IEnumerable___0____0___
+  commentId: M:EnumerableTest.TestExtension.TestSequence``1(System.Collections.Generic.IEnumerable{``0},``0[])
+  name.vb: TestSequence(Of X)(IEnumerable(Of X), X())
+  fullName: EnumerableTest.TestExtension.TestSequence<X>(System.Collections.Generic.IEnumerable<X>, X[])
+  fullName.vb: EnumerableTest.TestExtension.TestSequence(Of X)(System.Collections.Generic.IEnumerable(Of X), X())
+  nameWithType: TestExtension.TestSequence<X>(IEnumerable<X>, X[])
+  nameWithType.vb: TestExtension.TestSequence(Of X)(IEnumerable(Of X), X())
+- uid: EnumerableTest.TestExtension.ToTestGroup(System.Collections.Generic.IEnumerable{EnumerableTest.Test},System.String)
+  name: ToTestGroup(IEnumerable<Test>, String)
+  href: api/EnumerableTest.TestExtension.html#EnumerableTest_TestExtension_ToTestGroup_System_Collections_Generic_IEnumerable_EnumerableTest_Test__System_String_
+  commentId: M:EnumerableTest.TestExtension.ToTestGroup(System.Collections.Generic.IEnumerable{EnumerableTest.Test},System.String)
+  name.vb: ToTestGroup(IEnumerable(Of Test), String)
+  fullName: EnumerableTest.TestExtension.ToTestGroup(System.Collections.Generic.IEnumerable<EnumerableTest.Test>, System.String)
+  fullName.vb: EnumerableTest.TestExtension.ToTestGroup(System.Collections.Generic.IEnumerable(Of EnumerableTest.Test), System.String)
+  nameWithType: TestExtension.ToTestGroup(IEnumerable<Test>, String)
+  nameWithType.vb: TestExtension.ToTestGroup(IEnumerable(Of Test), String)
+- uid: EnumerableTest.TestExtension.ToTestGroup(System.Collections.Generic.IEnumerable{EnumerableTest.Test},System.String,EnumerableTest.Sdk.TestData)
+  name: ToTestGroup(IEnumerable<Test>, String, TestData)
+  href: api/EnumerableTest.TestExtension.html#EnumerableTest_TestExtension_ToTestGroup_System_Collections_Generic_IEnumerable_EnumerableTest_Test__System_String_EnumerableTest_Sdk_TestData_
+  commentId: M:EnumerableTest.TestExtension.ToTestGroup(System.Collections.Generic.IEnumerable{EnumerableTest.Test},System.String,EnumerableTest.Sdk.TestData)
+  name.vb: ToTestGroup(IEnumerable(Of Test), String, TestData)
+  fullName: EnumerableTest.TestExtension.ToTestGroup(System.Collections.Generic.IEnumerable<EnumerableTest.Test>, System.String, EnumerableTest.Sdk.TestData)
+  fullName.vb: EnumerableTest.TestExtension.ToTestGroup(System.Collections.Generic.IEnumerable(Of EnumerableTest.Test), System.String, EnumerableTest.Sdk.TestData)
+  nameWithType: TestExtension.ToTestGroup(IEnumerable<Test>, String, TestData)
+  nameWithType.vb: TestExtension.ToTestGroup(IEnumerable(Of Test), String, TestData)
+- uid: EnumerableTest.TestExtension.ToTestGroup*
+  name: ToTestGroup
+  href: api/EnumerableTest.TestExtension.html#EnumerableTest_TestExtension_ToTestGroup_
+  commentId: Overload:EnumerableTest.TestExtension.ToTestGroup
+  fullName: EnumerableTest.TestExtension.ToTestGroup
+  nameWithType: TestExtension.ToTestGroup
