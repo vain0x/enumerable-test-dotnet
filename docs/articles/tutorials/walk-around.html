@@ -81,8 +81,8 @@
 <li>(A) <code>X.UnitTest/bin/Debug/X.UnitTest.dll</code></li>
 <li>(B) <code>packages/EnumerableTest.Runner.Wpf/tools/EnumerableTest.Runner.Wpf.exe</code></li>
 </ul>
-<p>Drag (A) and drop to (B). You will see a window opens and displays nothing. Keep it open and continue to read.</p>
-<p>(A) をドラッグして、(B) にドロップすると、真っ白のウィンドウが表示されるはずです。これを開けたまま、続きをお読みください。</p>
+<p>Drag (A) and drop to (B). You will see a window open and display nothing. Keep it open and continue to read.</p>
+<p>(A) をドラッグして、(B) にドロップすると、真っ黒のウィンドウが表示されるはずです。これを開けたまま、続きをお読みください。</p>
 <h2 id="3-overview-概要">3. Overview (概要)</h2>
 <p>To say it simply, to use <strong>EnumerableTest</strong>, all you need to do is to define <em>test methods</em> in which invokes assertion methods like other unit testing frameworks. Assertion methods provided by <strong>EnumerableTest</strong> (for example, <code>Is</code> which asserts two values are equal) returns a value of <code>Test</code> class and your test methods shall <code>yield return</code> them.</p>
 <p><strong>EnumerableTest</strong> の基本的な使い方は、他の単体フレームワークと同様に、テストメソッド (表明メソッドを書き並べたメソッド) を定義するだけです。<strong>EnumerableTest</strong> が提供する表明メソッド (例えば2つの値が等しいことを表明する <code>Is</code> など) は <code>Test</code> 型の値を返しますので、テストメソッドではこれらを <code>yield return</code> していきます。</p>
@@ -96,10 +96,10 @@ using EnumerableTest;
 // テストメソッドを含むクラスを public class として宣言します。
 public class OperatorTest
 {
-    // Define test methods as a public method.
-    // Return type of them must be ``IEnumerable&lt;Test&gt;``.
+    // Define a test method as a public method.
+    // The result type must be ``IEnumerable&lt;Test&gt;`` exactly.
     // テストメソッドを public メソッドとして宣言します。
-    // 返り値の型は IEnumerable&lt;Test&gt; でなければなりません。
+    // 結果型は IEnumerable&lt;Test&gt; でなければなりません。
     public IEnumerable&lt;Test&gt; TestIncrement()
     {
         var n = 0;
@@ -115,7 +115,7 @@ public class OperatorTest
         yield return n.Is(1);
     }
 }
-</code></pre><p>And build the Test project. The test explorer automatically updates the content and shows that the Test is passed.</p>
+</code></pre><p>And build the project. The test explorer automatically updates the content and shows that the test is passed.</p>
 <p>テストプロジェクトをビルドすると、テストエクスプローラーは自動的に更新され、1つのテストが通過(成功)したことを表示します。</p>
 <h3 id="violation-表明違反">Violation (表明違反)</h3>
 <p>Next we show an example of a test which doesn&#39;t pass. Add the following method to the OperatorTest class.</p>
