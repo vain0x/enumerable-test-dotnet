@@ -20,7 +20,7 @@ Then open a "test explorer" which shows results of unit tests. Build your soluti
 - (A) ``X.UnitTest/bin/Debug/X.UnitTest.dll``
 - (B) ``packages/EnumerableTest.Runner.Wpf/tools/EnumerableTest.Runner.Wpf.exe``
 
-Drag (A) and drop to (B). You will see a window opens and displays nothing. Keep it open and continue to read.
+Drag (A) and drop to (B). You will see a window open and display nothing. Keep it open and continue to read.
 
 (A) をドラッグして、(B) にドロップすると、真っ白のウィンドウが表示されるはずです。これを開けたまま、続きをお読みください。
 
@@ -42,10 +42,10 @@ using EnumerableTest;
 // テストメソッドを含むクラスを public class として宣言します。
 public class OperatorTest
 {
-    // Define test methods as a public method.
-    // Return type of them must be ``IEnumerable<Test>``.
+    // Define a test method as a public method.
+    // The result type must be ``IEnumerable<Test>`` exactly.
     // テストメソッドを public メソッドとして宣言します。
-    // 返り値の型は IEnumerable<Test> でなければなりません。
+    // 結果型は IEnumerable<Test> でなければなりません。
     public IEnumerable<Test> TestIncrement()
     {
         var n = 0;
@@ -63,7 +63,7 @@ public class OperatorTest
 }
 ```
 
-And build the Test project. The test explorer automatically updates the content and shows that the Test is passed.
+And build the project. The test explorer automatically updates the content and shows that the test is passed.
 
 テストプロジェクトをビルドすると、テストエクスプローラーは自動的に更新され、1つのテストが通過(成功)したことを表示します。
 
