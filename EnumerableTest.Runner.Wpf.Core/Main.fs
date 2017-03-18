@@ -2,9 +2,11 @@
 
 open System
 open System.IO
-open System.Reactive.Disposables;
+open System.Reactive.Disposables
+open System.Reactive.Subjects
 open System.Reflection
 open EnumerableTest.Runner
+open EnumerableTest.Runner.UI.Notifications
 
 [<Sealed>]
 type Main() =
@@ -12,7 +14,7 @@ type Main() =
     new CompositeDisposable()
 
   let notifier =
-    new ConcreteNotifier()
+    new Notifier<Success, Info, Warning>(new Subject<_>()) :> INotifier
     |> tap disposables.Add
 
   let logFile =

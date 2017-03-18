@@ -47,6 +47,7 @@
     <Compile Include="SerializableTestData.fs" />
     <Compile Include="SerializableTest.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="UI.Notifications.fs" />
     <Compile Include="AssertionCount.fs" />
     <Compile Include="TestStatistic.fs" />
     <Compile Include="TestStatus.fs" />
@@ -58,7 +59,6 @@
     <Compile Include="OneshotTestAssembly.fs" />
     <Compile Include="TestClassResult.fs" />
     <Compile Include="TestClassNotifier.fs" />
-    <Compile Include="Notifier.fs" />
     <Compile Include="LogFile.fs" />
   </ItemGroup>
   <ItemGroup>

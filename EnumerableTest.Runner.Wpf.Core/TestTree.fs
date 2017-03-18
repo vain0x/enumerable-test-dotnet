@@ -10,6 +10,7 @@ open System.Windows.Input
 open Basis.Core
 open Reactive.Bindings
 open EnumerableTest.Runner
+open EnumerableTest.Runner.UI.Notifications
 
 type TestTreeUpdateWarning =
   | MissingNode
@@ -18,7 +19,7 @@ type TestTreeUpdateWarning =
     of TestTreeNode
 
 [<Sealed>]
-type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
+type TestTree(runner: PermanentTestRunner, notifier: INotifier) =
   let root = FolderNode.CreateRoot()
 
   let scheduler = SynchronizationContextScheduler(SynchronizationContext.capture ())
@@ -26,20 +27,9 @@ type TestTree(runner: PermanentTestRunner, notifier: Notifier) =
   let notifyWarning =
     function
     | MissingNode (node, name, path) ->
-      let message =
-        sprintf "Node '%s' doesn't have a child node named '%s'." node.Name name
-      let data =
-        [|
-          ("Node", node :> obj)
-          ("Path", (name :: path |> List.toArray :> obj))
-        |]
-      notifier.NotifyWarning(message, data)
+      notifier.NotifyWarning(Warning.CouldNotFindChildNode (node.Name, name))
     | NotTestMethodNode node ->
-      let message =
-        sprintf "Node '%s' isn't a test method node." node.Name
-      let data =
-        [| ("Node", node :> obj) |]
-      notifier.NotifyWarning(message, data)
+      notifier.NotifyWarning(Warning.NodeIsNotTestMethodNode (node.Name))
 
   let tryRoute path (node: TestTreeNode) =
     match node.RouteOrFailure(path) with

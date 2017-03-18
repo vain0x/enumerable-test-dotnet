@@ -3,11 +3,13 @@
 open System
 open System.IO
 open System.Reactive.Linq
+open System.Reactive.Subjects
 open System.Reflection
 open Argu
 open Basis.Core
 open Reactive.Bindings
 open EnumerableTest.Runner
+open EnumerableTest.Runner.UI.Notifications
 
 module Assembly =
   let tryLoadFile (file: FileInfo) =
@@ -19,8 +21,8 @@ module Assembly =
 
 module Program =
   let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
-    use notifier = new ConcreteNotifier()
-    let warnings = notifier.Warnings()
+    use notifier = new Notifier<Success, Info, Warning>(new Subject<_>()) :> INotifier
+    let warnings = notifier |> Notifier.collectWarnings
     use logFile =
       new LogFile() |> tap
         (fun l -> l.ObserveNotifications(notifier))
@@ -41,10 +43,7 @@ module Program =
         testAssembly.TestCompleted |> Observable.waitTimeout timeout |> ignore<bool>
         testClassNotifier.Complete()
       | Failure e ->
-        notifier.NotifyWarning
-          ( sprintf "Couldn't load an assembly '%s'." assemblyFile.Name
-          , [| ("Path", assemblyFile.FullName :> obj); ("Exception", e :> obj) |]
-          )
+        notifier.NotifyWarning(Warning.CouldNotLoadAssemblyFile (assemblyFile, e))
     printer.PrintWarningsAsync(warnings)
     printer.PrintSummaryAsync(counter.Current)
     printer.JoinAsync() |> Async.RunSynchronously

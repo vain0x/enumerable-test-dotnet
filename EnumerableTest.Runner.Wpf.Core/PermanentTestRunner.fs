@@ -17,7 +17,7 @@ type PermanentTestRunner() =
       this.Dispose()
 
 [<Sealed>]
-type FileLoadingPermanentTestRunner(notifier: Notifier) =
+type FileLoadingPermanentTestRunner(notifier: INotifier) =
   inherit PermanentTestRunner()
 
   let fileNames = HashSet<_>()
