@@ -24,6 +24,3 @@ A unit testing framework for .NET framework.
 - **Barrier-free colors**
     - Blue for the successful status, warm colors for bad statuses.
     - (ja) 成功を青で、失敗を暖色で表します。
-
-## License
-[MIT License](LICENSE.md)
