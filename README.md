@@ -10,7 +10,7 @@ A unit testing framework for .NET framework.
 ![A screen shot of EnumerableTest.Runner.Wpf](documents/images/EnumerableTest.Runner.Wpf.Screenshot.png)
 
 ## Documents
-[Tutorial (チュートリアル)](https://vain0.github.io/EnumerableTest/articles/tutorials/walk-aruond.html)
+[Tutorial (チュートリアル)](https://vain0.github.io/EnumerableTest/articles/tutorials/walk-around.html)
 
 ## Why?
 **EnumerableTest** enables you to write parameterized tests easily because of two features:
