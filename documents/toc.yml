@@ -1,5 +1,7 @@
-- name: Articles
+- name: Articles (記事)
   href: articles/
 - name: Api Documentation
   href: api/
   homepage: api/index.md
+- name: GitHub
+  href: https://github.com/vain0/EnumerableTest

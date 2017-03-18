@@ -3,9 +3,9 @@
     {
       "src": [
         {
-          "cwd": "..\\",
+          "cwd": "../",
           "files": [
-            "**.csproj"
+            "**/EnumerableTest.Core.csproj"
           ],
           "exclude": [
             "**/obj/**",
