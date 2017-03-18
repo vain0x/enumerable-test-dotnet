@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Threading.Tasks;
 using System.Windows;
 using DotNetKit.Windows.Controls;
+using EnumerableTest.Runner.UI.Notifications;
 
 namespace EnumerableTest.Runner.Wpf.UI.Notifications
 {
@@ -20,9 +21,11 @@ namespace EnumerableTest.Runner.Wpf.UI.Notifications
         public override Duration FadeDuration =>
             new Duration(TimeSpan.FromSeconds(1.0));
 
-        public Notification Notification { get; }
+        public IAsyncNotification Notification { get; }
 
-        public AppToastNotification(Notification notification)
+        public string Message => Notification.ToString();
+
+        public AppToastNotification(IAsyncNotification notification)
         {
             Notification = notification;
         }
@@ -31,17 +34,17 @@ namespace EnumerableTest.Runner.Wpf.UI.Notifications
     public sealed class NotificationTemplateSelector
         : DataTemplateSelector
     {
-        string TempalteNameOrNull(NotificationType type)
+        string TempalteNameOrNull(AsyncNotificationType type)
         {
-            if (type == NotificationType.Successful)
+            if (type == AsyncNotificationType.Successful)
             {
                 return "SuccessfulNotificationTemplate";
             }
-            else if (type == NotificationType.Info)
+            else if (type == AsyncNotificationType.Info)
             {
                 return "InfoNotificationTemplate";
             }
-            else if (type == NotificationType.Warning)
+            else if (type == AsyncNotificationType.Warning)
             {
                 return "WarningNotificationTemplate";
             }
@@ -52,10 +55,10 @@ namespace EnumerableTest.Runner.Wpf.UI.Notifications
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             var element = container as FrameworkElement;
-            var notification = item as Notification;
+            var notification = item as AppToastNotification;
             if (element == null || notification == null) return null;
 
-            var templateNameOrNull = TempalteNameOrNull(notification.Type);
+            var templateNameOrNull = TempalteNameOrNull(notification.Notification.Type);
             return
                 templateNameOrNull == null
                     ? null
@@ -64,14 +67,14 @@ namespace EnumerableTest.Runner.Wpf.UI.Notifications
     }
 
     sealed class ToastNotifier
-        : IObserver<Notification>
+        : IObserver<IAsyncNotification>
     {
         public ToastNotificationCollection Collection { get; } =
             new ToastNotificationCollection();
 
         public Window Window { get; }
 
-        public void OnNext(Notification notification)
+        public void OnNext(IAsyncNotification notification)
         {
             Collection.Add(new AppToastNotification(notification));
         }

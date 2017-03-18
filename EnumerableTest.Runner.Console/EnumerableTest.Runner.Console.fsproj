@@ -51,6 +51,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="StructuralTextWriter.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="UI.Notifications.fs" />
     <Compile Include="AssertionCounter.fs" />
     <Compile Include="TestPrinter.fs" />
     <Compile Include="AppArgument.fs" />

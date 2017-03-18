@@ -6,6 +6,7 @@ open System.Reactive.Subjects
 open Persimmon
 open Persimmon.Syntax.UseTestNameByReflection
 open EnumerableTest.Runner
+open EnumerableTest.Runner.UI.Notifications
 open EnumerableTest.Runner.Wpf
 open EnumerableTest.Runner.UnitTest
 
@@ -72,7 +73,7 @@ module ``test TestTree`` =
           override this.Dispose() = ()
       }
     let testTree =
-      new TestTree(runner, new NullNotifier())
+      new TestTree(runner, Notifier.empty)
     {
       SchemaUpdatedObserver =
         schemaUpdated :> IObserver<_>

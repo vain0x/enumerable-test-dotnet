@@ -5,6 +5,7 @@ open System.IO
 open System.Reactive.Disposables
 open System.Reflection
 open System.Text
+open EnumerableTest.Runner.UI.Notifications
 
 type LogFile() =
   let logDirectory =
@@ -51,13 +52,13 @@ type LogFile() =
   let subscriptions =
     new CompositeDisposable()
 
-  member this.ObserveNotifications(notifier: Notifier) =
+  member this.ObserveNotifications(notifier: INotifier<_, _, _>) =
     notifier |> Observable.subscribe
       (function
         | Successful _ -> ()
         | Info _ -> ()
-        | Warning (message, _) ->
-          addWarningAsync message |> Async.Start
+        | Warning n ->
+          addWarningAsync (n.ToString()) |> Async.Start
       )
     |> subscriptions.Add
 

@@ -125,7 +125,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
           do! printNotCompletedMethodsAsync testClassResult.NotCompletedMethods
     }
 
-  let printWarningsAsync (warnings: IReadOnlyList<Notification>) =
+  let printWarningsAsync (warnings: IReadOnlyList<Warning>) =
     async {
       if warnings.Count > 0 then
         do! printHardSeparatorAsync ()
@@ -133,11 +133,7 @@ type TestPrinter(writer: TextWriter, width: int, isVerbose: bool) =
         use indenting = printer.AddIndent()
         for (i, warning) in warnings |> Seq.indexed do
           do! printSoftSeparatorAsync ()
-          do! printer.WriteLineAsync(sprintf "%d. %s" i warning.Message)
-          if isVerbose then
-            use indenting = printer.AddIndent()
-            for KeyValue (key, value) in warning.Data do
-              do! printer.WriteLineAsync(sprintf "%s: %A" key value)
+          do! printer.WriteLineAsync(sprintf "%d. %s" i (warning |> string))
     }
 
   let printSummaryAsync (count: AssertionCount) =

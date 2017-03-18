@@ -15,6 +15,7 @@ open Reactive.Bindings
 open Reactive.Bindings.Extensions
 open EnumerableTest.Sdk
 open EnumerableTest.Runner
+open EnumerableTest.Runner.UI.Notifications
 
 [<AbstractClass>]
 type PermanentTestAssembly() =
@@ -25,7 +26,7 @@ type PermanentTestAssembly() =
   abstract SchemaUpdated: IObservable<TestSuiteSchemaDifference>
 
 [<Sealed>]
-type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
+type FileLoadingPermanentTestAssembly(notifier: INotifier, file: FileInfo) =
   inherit PermanentTestAssembly()
 
   let assemblyName =
@@ -48,13 +49,10 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
   let tryLoad () =
     match OneshotTestAssembly.ofFile file with
     | Success testAssembly ->
-      notifier.NotifyInfo(sprintf "Loading '%s'..." assemblyName)
+      notifier.NotifyInfo(Info.AssemblyLoaded assemblyName)
       testAssembly |> Some
     | Failure e ->
-      notifier.NotifyWarning
-        ( sprintf "Couldn't load an assembly '%s'." assemblyName
-        , [| ("Exception", e :> obj) |]
-        )
+      notifier.NotifyWarning(Warning.CouldNotLoadAssembly (assemblyName, e))
       None
 
   let currentTestAssembly =
@@ -80,11 +78,11 @@ type FileLoadingPermanentTestAssembly(notifier: Notifier, file: FileInfo) =
 
   let unloadSuccessfully () =
     unload ()
-    notifier.NotifySuccess(sprintf "'%s' completed." assemblyName)
+    notifier.NotifySuccess(Success.AssemblyExecutionCompleted assemblyName)
 
   let cancel () =
     unload ()
-    notifier.NotifyWarning(sprintf "Aborting '%s'..." assemblyName, Seq.empty)
+    notifier.NotifyWarning(Warning.AssemblyAborted assemblyName)
 
   let cancelCommand =
     currentTestAssembly
