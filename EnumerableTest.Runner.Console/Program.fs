@@ -23,9 +23,6 @@ module Program =
   let run isVerbose timeout (assemblyFiles: seq<FileInfo>) =
     use notifier = new Notifier<Success, Info, Warning>(new Subject<_>()) :> INotifier
     let warnings = notifier |> Notifier.collectWarnings
-    use logFile =
-      new LogFile() |> tap
-        (fun l -> l.ObserveNotifications(notifier))
     let printer =
         TestPrinter(Console.Out, Console.BufferWidth - 1, isVerbose)
     let counter = AssertionCounter()

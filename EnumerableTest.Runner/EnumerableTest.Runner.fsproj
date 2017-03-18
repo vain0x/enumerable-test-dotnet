@@ -59,7 +59,6 @@
     <Compile Include="OneshotTestAssembly.fs" />
     <Compile Include="TestClassResult.fs" />
     <Compile Include="TestClassNotifier.fs" />
-    <Compile Include="LogFile.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnumerableTest.Core\EnumerableTest.Core.csproj">
