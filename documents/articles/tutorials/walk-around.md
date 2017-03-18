@@ -148,9 +148,9 @@ For example, let's test the `&&` operator, which takes two boolean values and ca
 
 (左から、左辺、右辺、期待される結果。)
 
-And the test code is below. They looks like similar, no?
+And the test code is below.
 
-そして、テストコードが次のようになります。そのまんまですね。
+そして、テストコードが次のようになります。
 
 ```csharp
     public IEnumerable<Test> test_operator_and()
@@ -166,3 +166,11 @@ And the test code is below. They looks like similar, no?
             );
     }
 ```
+
+The mechanism behind the code is very simple. The builder creates a sequence which invokes the function passed to `Run` for each `Case` and yields the result.
+
+仕組みは非常に単純です。各 `Case` につき `Run` に渡された関数を実行して、その結果を `yield` するようなシーケンスを生成しているのです。
+
+Because of continuous assertions and test groups, the parameterized test *always* tests all cases.
+
+「継続する表明」と「テストグループ」の機能のおかげで、このパラメーター化されたテストは **必ず** すべてのケースをテストします。
