@@ -1,4 +1,4 @@
-- name: Articles
+- name: Articles (記事)
   href: articles/
 - name: Api Documentation
   href: api/
