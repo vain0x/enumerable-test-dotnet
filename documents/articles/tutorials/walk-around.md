@@ -22,7 +22,7 @@ Then open a "test explorer" which shows results of unit tests. Build your soluti
 
 Drag (A) and drop to (B). You will see a window open and display nothing. Keep it open and continue to read.
 
-(A) をドラッグして、(B) にドロップすると、真っ白のウィンドウが表示されるはずです。これを開けたまま、続きをお読みください。
+(A) をドラッグして、(B) にドロップすると、真っ黒のウィンドウが表示されるはずです。これを開けたまま、続きをお読みください。
 
 ## 3. Overview (概要)
 To say it simply, to use **EnumerableTest**, all you need to do is to define *test methods* in which invokes assertion methods like other unit testing frameworks. Assertion methods provided by **EnumerableTest** (for example, `Is` which asserts two values are equal) returns a value of `Test` class and your test methods shall ``yield return`` them.
