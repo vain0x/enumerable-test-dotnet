@@ -13,6 +13,12 @@ group Wpf.View
     nuget DotNetKit.Wpf.ToastNotification
     nuget MaterialDesignThemes
 
+group Build
+    source https://nuget.org/api/v2
+
+    nuget FAKE
+    nuget FAKE.Persimmon
+
 group UnitTest
     source https://www.nuget.org/api/v2
 
