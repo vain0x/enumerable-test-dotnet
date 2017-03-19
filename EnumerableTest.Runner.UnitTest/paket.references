@@ -1,6 +1,9 @@
 System.Reactive
 Basis.Core
-Persimmon
-Persimmon.Console
 FSharp.Control.Reactive
 ReactiveProperty
+
+group UnitTest
+    Persimmon
+    Persimmon.Console
+
