@@ -720,6 +720,16 @@ NUGET
       System.Xml.ReaderWriter (>= 4.3) - framework: dnxcore50, netstandard10, >= netstandard13
       System.Xml.XmlDocument (>= 4.3) - framework: dnxcore50, >= netstandard13
 
+GROUP Build
+NUGET
+  remote: https://www.nuget.org/api/v2
+    FAKE (4.56)
+    FAKE.Lib (4.56)
+    FAKE.Persimmon (1.0.4)
+      FAKE.Lib (>= 4.1)
+      Persimmon.Console (>= 1.0.2)
+    Persimmon.Console (1.2)
+
 GROUP UnitTest
 NUGET
   remote: https://www.nuget.org/api/v2

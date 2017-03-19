@@ -1,0 +1,1 @@
+start "" build.bat "Watch"
