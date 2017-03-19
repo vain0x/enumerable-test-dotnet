@@ -2,7 +2,7 @@ System.Reactive
 Basis.Core
 FSharp.Control.Reactive
 ReactiveProperty
-MaterialDesignThemes
 
 group Wpf.View
     DotNetKit.Wpf.ToastNotification
+    MaterialDesignThemes
