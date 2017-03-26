@@ -24,24 +24,24 @@ type AccumulateBehavior<'x> internal (group: GroupSig<'x>) =
       for subscription in Seq.append [|head|] tail do
         subscription ()
 
-  let add obj subscription =
-    match subscriptions.TryGetValue(obj) with
+  let add key subscription =
+    match subscriptions.TryGetValue(key) with
     | (true, (head, tail)) ->
       tail.Add(subscription)
     | (false, _) ->
-      subscriptions.Add(obj, (subscription, ResizeArray()))
+      subscriptions.Add(key, (subscription, ResizeArray()))
 
-  let tryRemove obj =
-    match subscriptions.TryGetValue(obj) with
+  let tryRemove key =
+    match subscriptions.TryGetValue(key) with
     | (true, (head, tail)) ->
       head ()
       if tail.Count = 0 then
-        subscriptions.Remove(obj)
+        subscriptions.Remove(key)
       else
         let index = tail.Count - 1
         let head = tail.[index]
         tail.RemoveAt(index)
-        subscriptions.[obj] <- (head, tail)
+        subscriptions.[key] <- (head, tail)
         true
     | (false, _) ->
       false
@@ -64,50 +64,6 @@ type AccumulateBehavior<'x> internal (group: GroupSig<'x>) =
     |> ignore
     add behavior (removed.OnNext >> removed.OnCompleted)
     Disposable.Create(fun () -> tryRemove behavior |> ignore)
-
-  member this.Add(collection: ObservableCollection<'x>) =
-    let removed = new AsyncSubject<unit>()
-    let list = ResizeArray()
-    let onChanged (e: NotifyCollectionChangedEventArgs) =
-      let add value =
-        list.Add(value)
-        accumulation.Value <-
-          group.Multiply(accumulation.Value, value)
-      let remove value =
-        if list.Remove(value) then
-          accumulation.Value <-
-            group.Divide(accumulation.Value, value)
-      let clear () =
-        accumulation.Value <-
-          list |> Seq.fold (fun a value -> group.Divide(a, value)) accumulation.Value
-        list.Clear()
-      match e.Action with
-      | NotifyCollectionChangedAction.Move -> ()
-      | NotifyCollectionChangedAction.Reset ->
-        clear ()
-      | _ ->
-        let toArray (list: IList) =
-          if list |> isNull
-          then Array.empty
-          else list |> Seq.cast |> Seq.toArray
-        e.OldItems |> toArray |> Seq.iter remove
-        e.NewItems |> toArray |> Seq.iter add
-    let initialChange =
-      NotifyCollectionChangedEventArgs
-        ( NotifyCollectionChangedAction.Add
-        , collection |> Seq.toArray
-        , 0
-        )
-    let finalChange =
-      NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
-    collection
-      .CollectionChanged
-      .StartWith(initialChange)
-      .TakeUntil(removed)
-      .Concat(Observable.Return(finalChange))
-    |> Observable.subscribe onChanged
-    |> ignore
-    add collection (removed.OnNext >> removed.OnCompleted)
 
   member this.Remove(obj) =
     tryRemove obj

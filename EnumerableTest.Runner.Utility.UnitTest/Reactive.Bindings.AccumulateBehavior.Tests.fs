@@ -9,7 +9,7 @@ open Persimmon.Syntax.UseTestNameByReflection
 open Reactive.Bindings
 
 module ``test AccumulateBehavior`` =
-  let ``test Add(behavior)`` =
+  let ``test Add`` =
     test {
       let accumulate = AccumulateBehavior.create GroupSig.ofInt32
       let assert' expected =
@@ -26,7 +26,7 @@ module ``test AccumulateBehavior`` =
       do! assert' 0
     }
 
-  let ``test Add(behavior) many case`` =
+  let ``test Add many case`` =
     test {
       let accumulate = AccumulateBehavior.create GroupSig.ofInt32
       let assert' expected =
@@ -49,38 +49,4 @@ module ``test AccumulateBehavior`` =
 
       subscription2.Dispose()
       do! assert' 0
-    }
-
-  let ``test Add(ObservableCollection)`` =
-    test {
-      let accumulate = AccumulateBehavior.create GroupSig.ofInt32
-      let mutable expected = 0
-      let assert' () =
-        accumulate.Accumulation.Value |> assertEquals expected
-
-      let initialValues = seq { 1..3 }
-      let collection = ObservableCollection<_>(initialValues)
-      expected <- initialValues |> Seq.sum
-
-      accumulate.Add(collection)
-      do! assert' ()
-
-      collection.Add(4)
-      expected <- expected + 4
-      do! assert' ()
-
-      collection.Remove(2) |> ignore
-      expected <- expected - 2
-      do! assert' ()
-
-      collection.[0] <- 100
-      expected <- expected - 1 + 100
-      do! assert' ()
-
-      collection.Move(0, 1)
-      do! assert' ()
-
-      collection.Clear()
-      expected <- 0
-      do! assert' ()
     }
