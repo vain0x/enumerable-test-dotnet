@@ -16,13 +16,13 @@ module ``test AccumulateBehavior`` =
         accumulate.Accumulation.Value |> assertEquals expected
 
       let behavior = ReactiveProperty.create 1
-      accumulate.Add(behavior)
+      let subscription = accumulate.Add(behavior)
       do! assert' 1
 
       behavior.Value <- 2
       do! assert' 2
 
-      do! accumulate.Remove(behavior) |> assertEquals true
+      subscription.Dispose()
       do! assert' 0
     }
 
@@ -34,8 +34,8 @@ module ``test AccumulateBehavior`` =
 
       let behavior1 = ReactiveProperty.create 1
       let behavior2 = ReactiveProperty.create 10
-      accumulate.Add(behavior1)
-      accumulate.Add(behavior2)
+      let subscription1 = accumulate.Add(behavior1)
+      let subscription2 = accumulate.Add(behavior2)
       do! assert' 11
 
       behavior1.Value <- 2
@@ -44,10 +44,10 @@ module ``test AccumulateBehavior`` =
       behavior2.Value <- 20
       do! assert' 22
 
-      accumulate.Remove(behavior1) |> ignore
+      subscription1.Dispose()
       do! assert' 20
-      
-      accumulate.Remove(behavior2) |> ignore
+
+      subscription2.Dispose()
       do! assert' 0
     }
 

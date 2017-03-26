@@ -63,6 +63,7 @@ type AccumulateBehavior<'x> internal (group: GroupSig<'x>) =
       )
     |> ignore
     add behavior (removed.OnNext >> removed.OnCompleted)
+    Disposable.Create(fun () -> tryRemove behavior |> ignore)
 
   member this.Add(collection: ObservableCollection<'x>) =
     let removed = new AsyncSubject<unit>()
