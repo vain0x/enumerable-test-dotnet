@@ -47,9 +47,9 @@
     <Compile Include="Misc.fs" />
     <Compile Include="ErrorHandling.fs" />
     <Compile Include="Collections.fs" />
-    <Compile Include="Control.GroupSig.fs" />
     <Compile Include="IO.fs" />
     <Compile Include="Reflection.fs" />
+    <Compile Include="Signatures.GroupSig.fs" />
     <Compile Include="Threading.fs" />
     <Compile Include="Threading.ConcurrentActionQueue.fs" />
     <Compile Include="Threading.Future.fs" />
