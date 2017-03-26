@@ -47,6 +47,7 @@
     <Compile Include="Persimmon.fs" />
     <Compile Include="Misc.Tests.fs" />
     <Compile Include="Reactive.Tests.fs" />
+    <Compile Include="Reactive.Bindings.AccumulateBehavior.Tests.fs" />
     <Compile Include="Collections.Tests.fs" />
     <Compile Include="Reflection.Tests.fs" />
     <Compile Include="Misc.MarshalValue.Tests.fs" />

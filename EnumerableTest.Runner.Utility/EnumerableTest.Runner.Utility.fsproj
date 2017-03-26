@@ -33,33 +33,6 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\EnumerableTest.Runner.Utility.XML</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Misc.fs" />
-    <Compile Include="ErrorHandling.fs" />
-    <Compile Include="Collections.fs" />
-    <Compile Include="IO.fs" />
-    <Compile Include="Reflection.fs" />
-    <Compile Include="Signatures.GroupSig.fs" />
-    <Compile Include="Threading.fs" />
-    <Compile Include="Threading.ConcurrentActionQueue.fs" />
-    <Compile Include="Threading.Future.fs" />
-    <Compile Include="Reactive.fs" />
-    <Compile Include="Reactive.Bindings.fs" />
-    <Compile Include="Reactive.Bindings.ObservableCommand.fs" />
-    <Compile Include="Misc.AppDomain.fs" />
-    <Compile Include="Misc.MarshalByRefObserver.fs" />
-    <Compile Include="Misc.MarshalValue.fs" />
-  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>
@@ -1378,4 +1351,32 @@
       </ItemGroup>
     </When>
   </Choose>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Misc.fs" />
+    <Compile Include="ErrorHandling.fs" />
+    <Compile Include="Collections.fs" />
+    <Compile Include="IO.fs" />
+    <Compile Include="Reflection.fs" />
+    <Compile Include="Signatures.GroupSig.fs" />
+    <Compile Include="Threading.fs" />
+    <Compile Include="Threading.ConcurrentActionQueue.fs" />
+    <Compile Include="Threading.Future.fs" />
+    <Compile Include="Reactive.fs" />
+    <Compile Include="Reactive.Bindings.fs" />
+    <Compile Include="Reactive.Bindings.AccumulateBehavior.fs" />
+    <Compile Include="Reactive.Bindings.ObservableCommand.fs" />
+    <Compile Include="Misc.AppDomain.fs" />
+    <Compile Include="Misc.MarshalByRefObserver.fs" />
+    <Compile Include="Misc.MarshalValue.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+  </ItemGroup>
 </Project>
