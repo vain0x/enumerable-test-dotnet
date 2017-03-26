@@ -13,7 +13,7 @@ open EnumerableTest.Runner
 type TestTreeNode() =
   abstract Name: string
 
-  abstract Children: ObservableCollection<TestTreeNode>
+  abstract Children: ReactiveCollection<TestTreeNode>
 
   abstract TestStatistic: IReadOnlyReactiveProperty<TestStatistic>
 

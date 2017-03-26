@@ -28,3 +28,16 @@ module ReactiveCommand =
     let it = create canExecute
     it.Subscribe(f) |> ignore<IDisposable>
     it
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module ReactiveCollection =
+  open Reactive.Bindings
+
+  let empty () =
+    new ReactiveCollection<_>()
+
+  let ofSeq xs =
+    let list = new ReactiveCollection<_>()
+    for x in xs do
+      list.Add(x)
+    list

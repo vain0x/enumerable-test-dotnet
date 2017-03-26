@@ -18,7 +18,7 @@ type TestGroupNode(groupTest: SerializableGroupTest) =
         | AssertionTest _ ->
           None
       )
-    |> ObservableCollection
+    |> ReactiveCollection.ofSeq
 
   member this.GroupTest = groupTest
 

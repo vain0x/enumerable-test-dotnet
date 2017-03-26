@@ -14,7 +14,7 @@ open EnumerableTest.Runner
 type FolderNode(name: string) =
   inherit TestTreeNode()
 
-  let children = ObservableCollection<TestTreeNode>()
+  let children = new ReactiveCollection<TestTreeNode>()
 
   let testStatistic =
     children
