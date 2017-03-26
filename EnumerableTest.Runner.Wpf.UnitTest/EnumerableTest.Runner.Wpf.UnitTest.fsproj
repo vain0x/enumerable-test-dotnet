@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="UptodateCollection.Tests.fs" />
     <Compile Include="TestTreeNode.Tests.fs" />
     <Compile Include="TestMethodNode.Tests.fs" />
     <Compile Include="FolderNode.Tests.fs" />
