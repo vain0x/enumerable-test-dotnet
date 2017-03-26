@@ -31,6 +31,7 @@ module ReactiveCommand =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module ReactiveCollection =
+  open System
   open Reactive.Bindings
 
   let empty () =
@@ -41,3 +42,6 @@ module ReactiveCollection =
     for x in xs do
       list.Add(x)
     list
+
+  let mapAcquire f (list: ReactiveCollection<_>) =
+    list.ToReadOnlyReactiveCollection(Func<_, _>(f), disposeElement = true)
