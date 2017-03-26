@@ -14,15 +14,14 @@ open EnumerableTest.Runner
 type FolderNode(name: string) =
   inherit TestTreeNode()
 
-  let children = ObservableCollection<TestTreeNode>()
+  let children = new ReactiveCollection<TestTreeNode>()
 
   let testStatistic =
-    children
-    |> ReadOnlyUptodateCollection.ofObservableCollection
-    |> ReadOnlyUptodateCollection.collect
-      (fun ch -> ch.TestStatistic |> ReadOnlyUptodateCollection.ofUptodate)
-    |> ReadOnlyUptodateCollection.sumBy TestStatistic.groupSig
-    :> IReadOnlyReactiveProperty<_>
+    let accumulation = AccumulateBehavior.create TestStatistic.groupSig
+    let subscriptions =
+      children |> ReactiveCollection.mapAcquire
+        (fun node -> accumulation.Add(node.TestStatistic))
+    accumulation.Accumulation
 
   override this.Name = name
 
