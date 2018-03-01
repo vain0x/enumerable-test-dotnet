@@ -28,8 +28,3 @@ A unit testing framework for .NET framework.
 See the tutorial for more details.
 
 (ja) 詳細はチュートリアルを参照してください。
-
-### Barrier-free colors
-Blue for the successful status, warm colors for bad statuses.
-
-(ja) 成功を青で、失敗を暖色で表します。
