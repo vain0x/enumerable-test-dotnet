@@ -16,7 +16,7 @@ type TestMethodNode(testMethodSchema: TestMethodSchema, cancelCommand: ICommand)
   let name = testMethodSchema.MethodName
 
   let children =
-    ObservableCollection<_>()
+    ReactiveCollection.empty ()
 
   let lastResult = ReactiveProperty.create None
   

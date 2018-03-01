@@ -1,1 +1,0 @@
-packages\Persimmon.Console\tools\Persimmon.Console.exe EnumerableTest.Runner.UnitTest\bin\Debug\EnumerableTest.Runner.UnitTest.dll EnumerableTest.Runner.Utility.UnitTest\bin\Debug\EnumerableTest.Runner.Utility.UnitTest.dll EnumerableTest.Runner.Wpf.UnitTest\bin\Debug\EnumerableTest.Runner.Wpf.UnitTest.dll

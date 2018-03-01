@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="UptodateCollection.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="UI.Notifications.fs" />
     <Compile Include="PermanentTestAssembly.fs" />
